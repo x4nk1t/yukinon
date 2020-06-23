@@ -1,0 +1,1 @@
+ccbot: node src/main.js
