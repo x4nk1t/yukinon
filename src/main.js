@@ -1,8 +1,14 @@
 const discord = require("discord.js")
 const client = new discord.Client()
 
+const startTime = new Date().getTime();
+const AnimeScarper = require('./AnimeScarper.js');
+
 client.on('ready', () => {
-    client.user.setActivity("with x4nk1t")
+    const animeScarper = new AnimeScarper(client)
+    animeScarper.grabLastMessage()
+   
+    client.user.setActivity("with Lelouch")
     console.log('[INFO] Bot started...')
 })
 
