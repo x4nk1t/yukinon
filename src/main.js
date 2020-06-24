@@ -1,15 +1,25 @@
 const discord = require("discord.js")
 const client = new discord.Client()
 
-const startTime = new Date().getTime();
-const AnimeScarper = require('./AnimeScarper.js');
+const AnimeScarper = require('./network/AnimeScarper.js');
+const CommandLoader = require('./commands/CommandLoader.js');
+
+const commandLoader = new CommandLoader(client)
+const animeScarper = new AnimeScarper(client)
 
 client.on('ready', () => {
-    const animeScarper = new AnimeScarper(client)
     animeScarper.grabLastMessage()
    
     client.user.setActivity("with Lelouch")
     console.log('[INFO] Bot started...')
+})
+
+client.on('message', async message => {
+    if(message.author.bot) return;
+    
+    if(message.content.startsWith(commandLoader.prefix)){
+        commandLoader.onCommand(message)
+    }
 })
 
 client.login('NjIwMjE0MTQ2MTUxMDg4MTM5.XvIxvQ.8-IcdV1cXH55bbVXe0SgTy2_DL8')
