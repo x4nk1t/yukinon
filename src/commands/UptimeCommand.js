@@ -4,9 +4,11 @@ const EmbedBuilder = require('../utils/EmbedBuilder.js');
 class UptimeCommand{
     constructor(commandLoader){
         this.commandLoader = commandLoader;
+        this.usage = this.commandLoader.prefix +"uptime";
+        this.description = "Returns the uptime of the bot.";
     }
     
-    onCommand(message, ...commandArgs){
+    onCommand(message, commandArgs){
         var date_future = new Date().getTime();
         var date_now = this.commandLoader.startTime;
 

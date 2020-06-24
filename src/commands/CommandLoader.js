@@ -1,3 +1,4 @@
+const ChatClearCommand = require('./ChatClearCommand.js');
 const HelpCommand = require('./HelpCommand.js');
 const PingCommand = require('./PingCommand.js');
 const UptimeCommand = require('./UptimeCommand.js');
@@ -17,14 +18,19 @@ class CommandLoader{
         var command = this.getCommandByName(commandName)
         
         if(command == null){
-            message.channel.send("Command not found! Use "+ this.prefix +"help to get command list.");
+            const embed = new discord.MessageEmbed()
+                    .setColor("#FF0000")
+                    .setDescription("Command not found! Use "+ this.prefix +"help to get command list.")
+            message.channel.send(embed);
         } else {
-            var commandArgs = message.content.split(' ').shift()
+            var commandArgs = message.content.split(' ')
+            commandArgs.shift()
             command.onCommand(message, commandArgs)
         }
     }
     
     loadAllCommands(){
+        this.loadCommand('chatclear', new ChatClearCommand(this))
         this.loadCommand('help', new HelpCommand(this))
         this.loadCommand('ping', new PingCommand(this))
         this.loadCommand('uptime', new UptimeCommand(this))
