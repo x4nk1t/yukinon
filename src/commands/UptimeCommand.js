@@ -1,4 +1,5 @@
 const discord = require('discord.js');
+const EmbedBuilder = require('../utils/EmbedBuilder.js');
 
 class UptimeCommand{
     constructor(commandLoader){
@@ -22,10 +23,9 @@ class UptimeCommand{
         
         var seconds = Math.round(delta % 60);
         
-        var embed = new discord.MessageEmbed()
+        var embed = new EmbedBuilder().build()
             .setTitle('Uptime')
-            .setColor(this.commandLoader.colorArray[Math.floor(Math.random() * this.commandLoader.colorArray.length)])
-            .addField('Uptime', days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's')
+            .setDescription(days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's')
             .setTimestamp()
         
         message.channel.send(embed);

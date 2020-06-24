@@ -1,4 +1,5 @@
 const discord = require('discord.js');
+const EmbedBuilder = require('../utils/EmbedBuilder.js')
 
 class HelpCommand{
     constructor(commandLoader){
@@ -6,9 +7,8 @@ class HelpCommand{
     }
     
     onCommand(message, ...commandArgs){
-        var embed = new discord.MessageEmbed()
-            .setColor(this.commandLoader.colorArray[Math.floor(Math.random() * this.commandLoader.colorArray.length)])
-            .addField('Help Command', 'WIP')
+        var embed = new EmbedBuilder().build()
+            .setDescription('Help Command \n WIP')
             .setTimestamp()
         
         message.channel.send(embed)

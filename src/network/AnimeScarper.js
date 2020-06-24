@@ -1,13 +1,13 @@
 const request = require('request')
 const cheerio = require('cheerio')
 const discord = require('discord.js')
+const EmbedBuilder = require('../utils/EmbedBuilder.js')
 
 class AnimeScarper {
     constructor(client){
         this.lastSync = [];
         this.baseUrl = 'https://www19.gogoanime.io';
         this.client = client;
-        this.colorArray = ['#FF6633','#FFB399','#FF33FF','#FFFF99','#00B3E6','#E6B333','#3366E6','#999966','#99FF99','#B34D4D','#80B300','#809900','#E6B3B3','#6680B3','#66991A','#FF99E6','#CCFF1A','#FF1A66','#E6331A','#33FFCC','#66994D','#B366CC','#4D8000','#B33300','#CC80CC','#66664D','#991AFF', '#E666FF','#4DB3FF','#1AB399','#E666B3','#33991A','#CC9999','#B3B31A','#00E680','#4D8066','#809980','#E6FF80','#1AFF33','#999933','#FF3380', '#CCCC00','#66E64D','#4D80CC','#9900B3','#E64D66','#4DB380','#FF4D4D','#99E6E6','#6666FF'];
     }
     
     grabLastMessage(){
@@ -15,7 +15,7 @@ class AnimeScarper {
             if(!err){
                 this.lastSync = JSON.parse(JSON.parse(body));
                 this.run()
-                setInterval(() => this.run(), 1000 * 60 * 15)
+                setInterval(() => this.run(), 1000 * 60 * 17)
                 console.log("[INFO] Grab success.");
             } else {
                 console.log("[ERROR] Something went wrong: " + err);
@@ -76,8 +76,7 @@ class AnimeScarper {
     
     sendToChannel(newEpisodes){
         for(var i = 0; i < newEpisodes.length; i++){
-            var embed = new discord.MessageEmbed()
-                .setColor(this.colorArray[Math.floor(Math.random() * this.colorArray.length)])
+            var embed = new EmbedBuilder().build()
                 .setTitle("New Anime just got released!")
                 .setThumbnail(newEpisodes[i].imageUrl)
                 .addFields(
