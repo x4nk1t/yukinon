@@ -7,7 +7,7 @@ const Command = require('./Command.js');
 
 class CommandLoader{
     constructor(server){
-        this.prefix = 'cc!';
+        this.prefix = 'y!';
         this.server = server;
         this.loadedCommands = [];
         this.startTime = new Date().getTime();

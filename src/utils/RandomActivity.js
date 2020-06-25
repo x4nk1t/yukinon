@@ -6,7 +6,7 @@ class RandomActivity {
         this.client = server.client;
         this.changeInSeconds = 37;
         
-        this.activities = ['with Lelouch', 'with cat', 'the world:WATCHING', 'YouTube:WATCHING', 'Code Geass:WATCHING', 'One Piece:WATCHING', 'Anime:WATCHING'];
+        this.activities = ['with Hikigaya-kun', 'with cat', 'the world:WATCHING', 'Oregairu:WATCHING', server.commandLoader.prefix +"help", 'Anime:WATCHING'];
     }
     
     run(){
