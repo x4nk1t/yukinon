@@ -28,6 +28,7 @@ class UptimeCommand{
         var embed = new EmbedBuilder().build()
             .setTitle('Uptime')
             .setDescription(days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's')
+            .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
             .setTimestamp()
         
         message.channel.send(embed);
