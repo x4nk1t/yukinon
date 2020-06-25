@@ -16,7 +16,7 @@ class HelpCommand{
             var commands = this.commandLoader.loadedCommands;
             
             for(var i = 0; i < commands.length; i++){
-                const commandName = commands[i].commandName;
+                const commandName = this.commandLoader.prefix + commands[i].commandName;
                 const usage = commands[i].getCommandClass().usage;
                 const commandDescription = commands[i].getCommandClass().description;
                 

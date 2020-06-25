@@ -2,6 +2,7 @@ const discord = require('discord.js');
 const HelpCommand = require('./HelpCommand.js');
 const ImagesCommand = require('./ImagesCommand.js');
 const PingCommand = require('./PingCommand.js');
+const StatsCommand = require('./StatsCommand.js');
 const UptimeCommand = require('./UptimeCommand.js');
 const Command = require('./Command.js');
 
@@ -37,6 +38,7 @@ class CommandLoader{
         this.loadCommand('help', new HelpCommand(this))
         this.loadCommand('images', new ImagesCommand(this))
         this.loadCommand('ping', new PingCommand(this))
+        this.loadCommand('stats', new StatsCommand(this))
         this.loadCommand('uptime', new UptimeCommand(this))
     }
     
