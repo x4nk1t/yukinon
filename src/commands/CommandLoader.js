@@ -1,4 +1,5 @@
 const discord = require('discord.js');
+const ARCCommand = require('./ARCCommand.js');
 const HelpCommand = require('./HelpCommand.js');
 const ImagesCommand = require('./ImagesCommand.js');
 const PingCommand = require('./PingCommand.js');
@@ -35,6 +36,7 @@ class CommandLoader{
     }
     
     loadAllCommands(){
+        this.loadCommand('arc', new ARCCommand(this))
         this.loadCommand('help', new HelpCommand(this))
         this.loadCommand('images', new ImagesCommand(this))
         this.loadCommand('ping', new PingCommand(this))

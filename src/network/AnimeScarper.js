@@ -9,15 +9,26 @@ class AnimeScarper {
         this.lastSync = [];
         this.baseUrl = 'https://www19.gogoanime.io';
         this.client = server.client;
+        
+        this.animeReleaseChannels = [];
     }
     
     grabLastMessage(){
-        request('https://4nk1t.gq/anime.php?pass=mys3cr3tk3y&get', (err, response, body) => {
+        request('https://4nk1t.gq/api/bot.php?pass=mys3cr3tk3y&getAnimeReleaseChannels', (err, response, body) => {
             if(!err){
-                this.lastSync = JSON.parse(JSON.parse(body));
-                this.run()
-                setInterval(() => this.run(), 1000 * 60 * 17)
-                this.server.logger.info("AnimeScarper Loaded.");
+                this.animeReleaseChannels = JSON.parse(body);
+                this.server.logger.info("Anime release channels loaded.");
+                
+                request('https://4nk1t.gq/api/anime.php?pass=mys3cr3tk3y&get', (err, response, body) => {
+                    if(!err){
+                        this.lastSync = JSON.parse(JSON.parse(body));
+                        this.run()
+                        setInterval(() => this.run(), 1000 * 60 * 17)
+                        this.server.logger.info("Anime Sync Loaded.");
+                    } else {
+                        this.server.logger.error("Something went wrong: " + err);
+                    }
+                })
             } else {
                 this.server.logger.error("Something went wrong: " + err);
             }
@@ -27,13 +38,13 @@ class AnimeScarper {
     syncLastMessage(){
         var toSend = JSON.stringify(this.lastSync);
         var options = {
-            url: 'https://4nk1t.gq/anime.php?pass=mys3cr3tk3y',
+            url: 'https://4nk1t.gq/api/anime.php?pass=mys3cr3tk3y',
             method: 'POST',
             json: toSend
         };
         request(options, (err, response, body) => {
             if(!err){
-                if(body == "ok"){
+                if(body.status == 0){
                     this.server.logger.info("Sync success.");
                 } else {
                     this.server.logger.error("Something went wrong while syncing.");
@@ -86,8 +97,11 @@ class AnimeScarper {
                     {name: "Episode Link:", value: newEpisodes[i].episodeUrl}
                 )
                 .setTimestamp()
-                
-            this.client.channels.cache.get('725243560236154980').send(embed); //TODO: Make this load from my site
+            
+            for(var j = 0; j < this.animeReleaseChannels.length; j++){
+                var chh = this.client.channels.cache.get(this.animeReleaseChannels[j]);
+                if(chh != null) chh.send(embed);
+            }
         }
     }
     
