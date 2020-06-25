@@ -11,6 +11,7 @@ class HelpCommand{
     }
     
     onCommand(message, commandArgs){
+        message.channel.startTyping()
         if(this.helpContent == ""){
             var commands = this.commandLoader.loadedCommands;
             
@@ -28,6 +29,7 @@ class HelpCommand{
             .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
             .setTimestamp()
         
+        message.channel.stopTyping()
         message.channel.send(embed)
     }
 }

@@ -17,6 +17,7 @@ class ImagesCommand{
     onCommand(message, commandArgs){        
         const endpoint = commandArgs[0];
         
+        message.channel.startTyping()
         if(endpoint){
             if(endpoint == "help"){
                 var description = '**SFW**\n';
@@ -31,6 +32,7 @@ class ImagesCommand{
                     description += this.nsfw[i] +', ';
                 }
                 
+                message.channel.stopTyping()
                 message.channel.send(new EmbedBuilder().build()
                     .setTitle('Images Help')
                     .setDescription('**Usage:** '+ this.usage + '\n' + description)
@@ -42,11 +44,13 @@ class ImagesCommand{
             if(this.sfw.includes(endpoint)){
                 this.getImageUrl(this.endpoints[endpoint], (image) => {
                     if(image == null){
+                        message.channel.stopTyping()
                         message.channel.send(new discord.MessageEmbed()
                             .setTitle('Error')
                             .setColor('#FF0000')
                             .setDescription('Something went wrong while retrieving image.'));
                     } else {
+                        message.channel.stopTyping()
                         message.channel.send(new EmbedBuilder().build()
                             .setTitle(endpoint)
                             .setImage(image)
@@ -57,12 +61,14 @@ class ImagesCommand{
             }else if(this.nsfw.includes(endpoint)){
                 if(message.channel.nsfw){
                     const image = this.getImageUrl(this.endpoints[endpoint], (image) => {
+                        message.channel.stopTyping()
                         if(image == null){
                             message.channel.send(new discord.MessageEmbed()
                                 .setTitle('Error')
                                 .setColor('#FF0000')
                                 .setDescription('Something went wrong while retrieving image.'));
                         } else {
+                            message.channel.stopTyping()
                             message.channel.send(new EmbedBuilder().build()
                                 .setTitle(endpoint)
                                 .setImage(image)
@@ -71,11 +77,13 @@ class ImagesCommand{
                         }
                     })
                 } else {
+                    message.channel.stopTyping()
                     message.channel.send(new discord.MessageEmbed()
                         .setColor('#FF0000')
                         .setDescription('This is not **NSFW** enabled channel.'));
                 }
             } else {
+                message.channel.stopTyping()
                 message.channel.send(new discord.MessageEmbed()
                     .setColor('#FF0000')
                     .setDescription('**'+ endpoint +'** doesn\'t exist.'));

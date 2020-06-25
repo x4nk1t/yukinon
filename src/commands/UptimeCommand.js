@@ -9,6 +9,8 @@ class UptimeCommand{
     }
     
     onCommand(message, commandArgs){
+        message.channel.startTyping()
+        
         var date_future = new Date().getTime();
         var date_now = this.commandLoader.startTime;
 
@@ -31,6 +33,7 @@ class UptimeCommand{
             .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
             .setTimestamp()
         
+        message.channel.stopTyping()
         message.channel.send(embed);
     }
 }

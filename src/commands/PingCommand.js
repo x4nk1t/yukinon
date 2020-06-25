@@ -8,8 +8,12 @@ class PingCommand{
     }
     
     onCommand(message, commandArgs){
+        message.channel.startTyping()
+        
         var embed = new EmbedBuilder().build()
             .setDescription(`Pong! Latency is ${new Date().getTime() - message.createdTimestamp}ms.`)
+            
+        message.channel.stopTyping()
         message.channel.send(embed);
     }
 }
