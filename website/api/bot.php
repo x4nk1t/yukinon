@@ -17,7 +17,7 @@ if(isset($_GET['pass'])){
                 file_put_contents('AnimeReleaseChannels.txt', json_encode($channels));
                 echo jsonFormat(0, 'ok');
             } else {
-                echo jsonFormat(1, 'Duplicate entry');
+                echo jsonFormat(1, 'This channel is already added.');
             }
         } elseif (isset($_GET['removeAnimeReleaseChannel'])){
             $channelId = $_GET['removeAnimeReleaseChannel'];
@@ -35,7 +35,7 @@ if(isset($_GET['pass'])){
                 echo jsonFormat(0, 'ok');
                 
             } else {
-                echo jsonFormat(1, 'Not found.');
+                echo jsonFormat(1, 'This channel is not found.');
             }
         } else {
             echo jsonFormat(1, 'Not good argument');

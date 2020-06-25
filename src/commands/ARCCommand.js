@@ -13,23 +13,20 @@ class ARCCommand{
     
     onCommand(message, commandArgs){
         message.channel.startTyping()
-        var embed;
+        var embed = new EmbedBuilder().build()
+            .setTitle('ARC Command')
         
         if(commandArgs[0]){
             if(commandArgs[0] == "add"){
                 this.addChannel(message.channel.id, (data) => {
                     if(data.status == 0){
-                        embed = new EmbedBuilder().build()
-                            .setTitle('ARC Command')
-                            .setDescription('Successfully added this channel to the list.')
-                            .setTimestamp()
+                        embed.setDescription('Successfully added this channel to the list.').setTimestamp()
                         
                         this.commandLoader.server.animeScarper.animeReleaseChannels.push(message.channel.id)
+                    } else if(data.status == 1){
+                        embed.setDescription(data.message).setTimestamp()
                     } else {
-                         embed = new EmbedBuilder().build()
-                            .setTitle('ARC Command')
-                            .setDescription('Something went wrong while removing this channel from the list.')
-                            .setTimestamp()
+                        embed.setDescription('Something went wrong while adding this channel from the list.').setTimestamp()
                     }
                     message.channel.stopTyping()
                     message.channel.send(embed);
@@ -37,17 +34,13 @@ class ARCCommand{
             } else if(commandArgs[0] == "remove"){
                 this.removeChannel(message.channel.id, (data) => {
                     if(data.status == 0){
-                        embed = new EmbedBuilder().build()
-                            .setTitle('ARC Command')
-                            .setDescription('Successfully removed this channel from the list.')
-                            .setTimestamp()
+                        embed.setDescription('Successfully removed this channel from the list.').setTimestamp()
                         var channels = this.commandLoader.server.animeScarper.animeReleaseChannels;
                         channels.splice(channels.indexOf(message.channel.id), 1)
-                    } else {
-                         embed = new EmbedBuilder().build()
-                            .setTitle('ARC Command')
-                            .setDescription('Something went wrong while removing this channel.')
-                            .setTimestamp()
+                    } else if(data.status == 1){
+                        embed.setDescription(data.message).setTimestamp()
+                    } else{
+                         embed.setDescription('Something went wrong while removing this channel.').setTimestamp()
                     }
                     message.channel.stopTyping()
                     message.channel.send(embed);
