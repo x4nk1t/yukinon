@@ -1,4 +1,3 @@
-const ChatClearCommand = require('./ChatClearCommand.js');
 const HelpCommand = require('./HelpCommand.js');
 const PingCommand = require('./PingCommand.js');
 const UptimeCommand = require('./UptimeCommand.js');
@@ -30,7 +29,6 @@ class CommandLoader{
     }
     
     loadAllCommands(){
-        this.loadCommand('chatclear', new ChatClearCommand(this))
         this.loadCommand('help', new HelpCommand(this))
         this.loadCommand('ping', new PingCommand(this))
         this.loadCommand('uptime', new UptimeCommand(this))
