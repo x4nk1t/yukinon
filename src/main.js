@@ -3,14 +3,16 @@ const client = new discord.Client()
 
 const AnimeScarper = require('./network/AnimeScarper.js');
 const CommandLoader = require('./commands/CommandLoader.js');
+const RandomActivity = require('./utils/RandomActivity.js');
 
 const commandLoader = new CommandLoader(client)
 const animeScarper = new AnimeScarper(client)
+const randomActivity = new RandomActivity(client)
 
 client.on('ready', () => {
     animeScarper.grabLastMessage()
-   
-    client.user.setActivity("with Lelouch")
+    randomActivity.run()  
+    
     console.log('[INFO] Bot started...')
 })
 

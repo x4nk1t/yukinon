@@ -100,7 +100,9 @@ class AnimeScarper {
             }
         }
         this.lastSync = newSyncCopy;
-        this.syncLastMessage();
+        if(newSync.length != 0){
+            this.syncLastMessage();
+        }
         return newSync;
     }
 }

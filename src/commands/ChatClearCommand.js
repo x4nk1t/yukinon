@@ -4,7 +4,7 @@ class ChatClearCommand {
     constructor(commandLoader){
         this.commandLoader = commandLoader;
         this.usage = this.commandLoader.prefix+"chatclear <username|*>";
-        this.description = "Clears the chat.";
+        this.description = "Clears the chat. (Requires permission)";
         
         this.authorizedUser = "x4nk1t#3701";
     }
