@@ -93,7 +93,7 @@ class ImagesCommand{
                 var json = JSON.parse(body)
                 callback(json.url);
             } else {
-                console.log('[ERROR] Something went wrong: '+ err)
+                this.server.logger.error('[ERROR] Something went wrong: '+ err)
                 callback(null);
             }
         })

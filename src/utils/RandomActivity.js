@@ -1,8 +1,9 @@
 const discord = require('discord.js')
 
 class RandomActivity {
-    constructor(client){
-        this.client = client;
+    constructor(server){
+        this.server = server;
+        this.client = server.client;
         this.changeInSeconds = 37;
         
         this.activities = ['with Lelouch', 'with cat', 'the world:WATCHING', 'YouTube:WATCHING', 'Code Geass:WATCHING', 'One Piece:WATCHING', 'Anime:WATCHING'];
@@ -12,7 +13,6 @@ class RandomActivity {
         this.show();
         setInterval(() => this.show(), 1000 * this.changeInSeconds)
     }
-    
     
     show(){
         const randomActivity = this.activities[Math.floor(Math.random() * this.activities.length)];

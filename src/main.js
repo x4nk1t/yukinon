@@ -1,26 +1,18 @@
 const discord = require("discord.js")
 const client = new discord.Client()
 
-const AnimeScarper = require('./network/AnimeScarper.js');
-const CommandLoader = require('./commands/CommandLoader.js');
-const RandomActivity = require('./utils/RandomActivity.js');
-
-const commandLoader = new CommandLoader(client)
-const animeScarper = new AnimeScarper(client)
-const randomActivity = new RandomActivity(client)
+const BotServer = require("./BotServer.js");
+const server = new BotServer(client)
 
 client.on('ready', () => {
-    animeScarper.grabLastMessage()
-    randomActivity.run()  
-    
-    console.log('[INFO] Bot started...')
+    server.start()
 })
 
 client.on('message', async message => {
     if(message.author.bot) return;
     
-    if(message.content.startsWith(commandLoader.prefix)){
-        commandLoader.onCommand(message)
+    if(message.content.startsWith(server.commandLoader.prefix)){
+        server.commandLoader.onCommand(message)
     }
 })
 

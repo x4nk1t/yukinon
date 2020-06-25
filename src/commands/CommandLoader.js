@@ -6,12 +6,15 @@ const UptimeCommand = require('./UptimeCommand.js');
 const Command = require('./Command.js');
 
 class CommandLoader{
-    constructor(client){
+    constructor(server){
         this.prefix = 'cc!';
+        this.server = server;
         this.loadedCommands = [];
         this.startTime = new Date().getTime();
-        this.client = client;
+        this.client = server.client;
         this.loadAllCommands();
+        
+        server.logger.info("Commands Loaded.")
     }
     
     onCommand(message){

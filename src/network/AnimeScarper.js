@@ -4,10 +4,11 @@ const discord = require('discord.js')
 const EmbedBuilder = require('../utils/EmbedBuilder.js')
 
 class AnimeScarper {
-    constructor(client){
+    constructor(server){
+        this.server = server;
         this.lastSync = [];
         this.baseUrl = 'https://www19.gogoanime.io';
-        this.client = client;
+        this.client = server.client;
     }
     
     grabLastMessage(){
@@ -16,9 +17,9 @@ class AnimeScarper {
                 this.lastSync = JSON.parse(JSON.parse(body));
                 this.run()
                 setInterval(() => this.run(), 1000 * 60 * 17)
-                console.log("[INFO] Grab success.");
+                this.server.logger.info("AnimeScarper Loaded.");
             } else {
-                console.log("[ERROR] Something went wrong: " + err);
+                this.server.logger.error("Something went wrong: " + err);
             }
         })
     }
@@ -33,12 +34,12 @@ class AnimeScarper {
         request(options, (err, response, body) => {
             if(!err){
                 if(body == "ok"){
-                    console.log("[INFO] Sync success.");
+                    this.server.logger.info("Sync success.");
                 } else {
-                    console.log("[ERROR] Something went wrong while syncing.");
+                    this.server.logger.error("Something went wrong while syncing.");
                 }
             } else {
-                 console.log("[ERROR] Something went wrong:" + err)
+                 this.server.logger.error("Something went wrong:" + err)
             }
         })
     }
@@ -46,7 +47,7 @@ class AnimeScarper {
     run(){
         request(this.baseUrl, (err, response, body) => {
             if(err){
-                console.log("[ERROR] Something went wrong:" + err)
+                this.server.logger.error("Something went wrong:" + err)
             } else {
                 var $ = cheerio.load(body)
                 
