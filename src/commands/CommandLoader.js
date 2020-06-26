@@ -26,7 +26,7 @@ class CommandLoader{
         if(command == null){
             const embed = new discord.MessageEmbed()
                     .setColor("#FF0000")
-                    .setDescription("Command not found! Use "+ this.prefix +"help to get command list.")
+                    .setDescription("Command not found! Use **"+ this.prefix +"help** to get command list.")
             message.channel.send(embed);
         } else {
             var commandArgs = message.content.split(' ')

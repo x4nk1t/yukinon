@@ -7,8 +7,6 @@ class ARCCommand{
         this.commandLoader = commandLoader;
         this.usage = this.commandLoader.prefix +"arc <add|remove>";
         this.description = "Adds/Removes the current channel for anime release posts.";
-        
-        this.baseUrl = "https://4nk1t.gq/api/bot.php?pass=mys3cr3tk3y&";
     }
     
     onCommand(message, commandArgs){
@@ -18,7 +16,7 @@ class ARCCommand{
         
         if(commandArgs[0]){
             if(commandArgs[0] == "add"){
-                this.addChannel(message.channel.id, (data) => {
+                this.commandLoader.server.addChannelToAnimeRelease(message.channel.id, (data) => {
                     if(data.status == 0){
                         embed.setDescription('Successfully added this channel to the list.').setTimestamp()
                         
@@ -32,7 +30,7 @@ class ARCCommand{
                     message.channel.send(embed);
                 })
             } else if(commandArgs[0] == "remove"){
-                this.removeChannel(message.channel.id, (data) => {
+                this.commandLoader.server.removeChannelFromAnimeRelease(message.channel.id, (data) => {
                     if(data.status == 0){
                         embed.setDescription('Successfully removed this channel from the list.').setTimestamp()
                         var channels = this.commandLoader.server.animeScarper.animeReleaseChannels;
@@ -47,28 +45,6 @@ class ARCCommand{
                 })
             }
         }
-    }
-    
-    addChannel(id, callback){
-        request(this.baseUrl +'addAnimeReleaseChannel=' + id, (err, response, body) => {
-            if(!err){
-                const parsed = JSON.parse(body);
-                callback(parsed)
-            } else {
-                this.server.logger.error("Something went wrong: " + err);
-            }
-        })
-    }
-    
-    removeChannel(id, callback){
-        request(this.baseUrl + 'removeAnimeReleaseChannel=' + id, (err, response, body) => {
-            if(!err){
-                const parsed = JSON.parse(body);
-                callback(parsed)
-            } else {
-                this.server.logger.error("Something went wrong: " + err);
-            }
-        })
     }
 }
 
