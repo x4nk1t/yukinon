@@ -21,7 +21,7 @@ class AnimeScarper {
                 
                 request('https://4nk1t.gq/api/anime.php?pass=mys3cr3tk3y&get', (err, response, body) => {
                     if(!err){
-                        this.lastSync = JSON.parse(JSON.parse(body));
+                        this.lastSync = JSON.parse(body);
                         this.run()
                         setInterval(() => this.run(), 1000 * 60 * 17)
                         this.server.logger.info("Anime Sync Loaded.");
@@ -36,11 +36,10 @@ class AnimeScarper {
     }
     
     syncLastMessage(){
-        var toSend = JSON.stringify(this.lastSync);
         var options = {
             url: 'https://4nk1t.gq/api/anime.php?pass=mys3cr3tk3y',
             method: 'POST',
-            json: toSend
+            json: this.lastSync
         };
         request(options, (err, response, body) => {
             if(!err){
