@@ -1,4 +1,5 @@
 const discord = require('discord.js');
+const EmbedBuilder = require('../utils/EmbedBuilder.js');
 
 class CoinFlipCommand{
     constructor(commandLoader){
@@ -10,7 +11,7 @@ class CoinFlipCommand{
     onCommand(message, commandArgs){
         message.channel.startTyping()
         
-        var embed = new discord.MessageEmbed()
+        var embed = new EmbedBuilder().build()
             .setTitle("CoinFlip")
         
         if(commandArgs[0]){
