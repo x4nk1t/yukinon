@@ -5,7 +5,7 @@ if(isset($_GET['pass'])){
             $username = strtolower($_GET['username']);
             $file = __DIR__ .'/anime/'. $username.'.txt';
             if($username == "yukinon" || $username == "baccano"){
-                create_file_if_not_exist($username, $file);
+                create_file_if_not_exist($file);
                 $json_data = file_get_contents('php://input');
             
                 if(isset($_GET['get'])){
@@ -34,7 +34,7 @@ function jsonFormat($status, $message){
     return json_encode(['status' => $status, 'message' => $message]);
 }
 
-function create_file_if_not_exist($username, $filePath){
+function create_file_if_not_exist($filePath){
     if(!file_exists($filePath)){
         $file = fopen($filePath, 'w');
         fclose($file);
