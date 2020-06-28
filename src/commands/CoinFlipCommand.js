@@ -8,7 +8,7 @@ class CoinFlipCommand{
         this.description = "Flips the coin and shows heads/tails.";
     }
     
-    onCommand(message, commandArgs){
+    async onCommand(message, commandArgs){
         message.channel.startTyping()
         
         var embed = new EmbedBuilder().build()
@@ -25,22 +25,28 @@ class CoinFlipCommand{
             }
             
             var flip = this.flip()
-            
-            if(flip == ht){
-                embed.setColor('#00FF00').setDescription('It is a **'+ flip +'**. You Won!')
-            } else {
-                embed.setColor('#FF0000').setDescription('It is a **'+ flip +'**. You Lost!')
-            }
-            
-            message.channel.stopTyping()
-            message.channel.send(embed)
+            message.channel.send(embed.setDescription('Flipping coin....')).then(sent => {
+                setTimeout(() => {
+                    if(flip == ht){
+                        embed.setColor('#00FF00').setDescription('It is a **'+ flip +'**. You Won!')
+                    } else {
+                        embed.setColor('#FF0000').setDescription('It is a **'+ flip +'**. You Lost!')
+                    }
+                    message.channel.stopTyping()
+                    sent.edit(embed)
+                }, 1300)
+            })
         } else {
-            embed.setDescription('It is a **'+ this.flip() +'**')
             
-            message.channel.stopTyping()
-            message.channel.send(embed)
+            message.channel.send(embed.setDescription('Flipping coin...')).then(sent => {
+                embed.setDescription('It is a **'+ this.flip() +'**.')
+                
+                setTimeout(() => {                
+                    message.channel.stopTyping()
+                    sent.edit(embed)
+                }, 1300)
+            })
         }
-        
     }
     
     flip(){
