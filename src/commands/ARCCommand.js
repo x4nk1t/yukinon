@@ -43,7 +43,15 @@ class ARCCommand{
                     message.channel.stopTyping()
                     message.channel.send(embed);
                 })
+            } else {
+                embed.setDescription('**Usage:** '+ this.usage)
+                message.channel.stopTyping()
+                message.channel.send(embed)
             }
+        } else {
+            embed.setDescription('**Usage:** '+ this.usage)
+            message.channel.stopTyping()
+            message.channel.send(embed)
         }
     }
 }

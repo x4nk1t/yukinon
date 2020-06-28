@@ -91,7 +91,7 @@ class ImagesCommand{
         } else {
             message.channel.send(new discord.MessageEmbed()
                 .setColor('#FF0000')
-                .setDescription('Usage: '+ this.usage));
+                .setDescription('**Usage:** '+ this.usage));
         }
     }
     
