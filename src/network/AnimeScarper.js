@@ -11,16 +11,20 @@ class AnimeScarper {
         this.client = server.client;
         
         this.animeReleaseChannels = [];
+        this.username = this.client.user.username;
+        this.baseAnimeUrl = 'https://4nk1t.gq/api/anime.php?pass=mys3cr3tk3y&username='+this.username;
+        this.baseBotUrl = 'https://4nk1t.gq/api/bot.php?pass=mys3cr3tk3y&username='+this.username;
     }
     
     grabLastMessage(){
-        request('https://4nk1t.gq/api/bot.php?pass=mys3cr3tk3y&getAnimeReleaseChannels', (err, response, body) => {
+        request(this.baseBotUrl +'&getAnimeReleaseChannels', (err, response, body) => {
             if(!err){
                 this.animeReleaseChannels = JSON.parse(body);
                 this.server.logger.info("Anime release channels loaded.");
                 
-                request('https://4nk1t.gq/api/anime.php?pass=mys3cr3tk3y&get', (err, response, body) => {
+                request(this.baseAnimeUrl +'&get', (err, response, body) => {
                     if(!err){
+                        if(body == '') body = '[]';
                         this.lastSync = JSON.parse(body);
                         this.run()
                         setInterval(() => this.run(), 1000 * 60 * 17)
@@ -37,7 +41,7 @@ class AnimeScarper {
     
     syncLastMessage(){
         var options = {
-            url: 'https://4nk1t.gq/api/anime.php?pass=mys3cr3tk3y',
+            url: this.baseAnimeUrl,
             method: 'POST',
             json: this.lastSync
         };

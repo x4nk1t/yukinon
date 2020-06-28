@@ -13,21 +13,7 @@ class HelpCommand{
     
     onCommand(message, commandArgs){
         message.channel.startTyping()
-        if(this.helpContent == ""){
-            var commands = this.commandLoader.loadedCommands;
-            var page = 0;
-            
-            for(var i = 0; i < commands.length; i++){
-                if(i != 0 && i % this.helpPerPage == 0) page++;
-                if(this.helpContent[page] == null) this.helpContent[page] = '';
-                
-                const commandName = this.commandLoader.prefix + commands[i].commandName;
-                const usage = commands[i].getCommandClass().usage;
-                const commandDescription = commands[i].getCommandClass().description;
-                
-                this.helpContent[page] += '**'+ commandName + "**\n" + commandDescription + '\n Usage: ' + usage +'\n';
-            }
-        }
+        
         var reqPage = 0;
         if(commandArgs[0]){
             reqPage = commandArgs[0] - 1;
@@ -51,6 +37,22 @@ class HelpCommand{
         
         message.channel.stopTyping()
         message.channel.send(embed)
+    }
+    
+    loadHelpContents(){
+        var commands = this.commandLoader.loadedCommands;
+        var page = 0;
+        
+        for(var i = 0; i < commands.length; i++){
+            if(i != 0 && i % this.helpPerPage == 0) page++;
+            if(this.helpContent[page] == null) this.helpContent[page] = '';
+            
+            const commandName = this.commandLoader.prefix + commands[i].commandName;
+            const usage = commands[i].getCommandClass().usage;
+            const commandDescription = commands[i].getCommandClass().description;
+            
+            this.helpContent[page] += '**'+ commandName + "**\n" + commandDescription + '\n Usage: ' + usage +'\n';
+        }
     }
 }
 

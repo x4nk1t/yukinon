@@ -44,6 +44,8 @@ class CommandLoader{
         this.loadCommand('ping', new PingCommand(this))
         this.loadCommand('stats', new StatsCommand(this))
         this.loadCommand('uptime', new UptimeCommand(this))
+        
+        this.getCommandByName('help').loadHelpContents()
     }
     
     getCommandByName(commandName){
