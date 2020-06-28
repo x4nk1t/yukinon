@@ -36,7 +36,7 @@ class BotServer {
         this.client.on('channelDelete', channel => {
             const channelId = channel.id;
             
-            this.removeChannel(channelId)
+            this.removeChannelFromAnimeRelease(channelId)
         })
     }
     

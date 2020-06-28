@@ -8,7 +8,7 @@ class CoinFlipCommand{
         this.description = "Flips the coin and shows heads/tails.";
     }
     
-    async onCommand(message, commandArgs){
+    onCommand(message, commandArgs){
         message.channel.startTyping()
         
         var embed = new EmbedBuilder().build()
