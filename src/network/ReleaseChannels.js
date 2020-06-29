@@ -1,9 +1,9 @@
 const request = require('request');
+const Network = require('./Network.js');
 
-class ReleaseChannels {
+class ReleaseChannels extends Network{
     constructor(server){
-        this.server = server;
-        this.baseUrl = "https://4nk1t.gq/api/bot.php?pass=mys3cr3tk3y&";
+        super(server, "https://4nk1t.gq/api/bot.php?pass=mys3cr3tk3y&");
     }
     
     add(id, callback = ()=>{}){

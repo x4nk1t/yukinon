@@ -1,9 +1,12 @@
 const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const ReleaseChannels = require('../network/ReleaseChannels.js');
 const Command = require('./Command.js');
 
 class ARCCommand extends Command{
     constructor(commandLoader){
         super(commandLoader, "arc", "Adds/Removes the current channel for anime release posts.", "<add|remove>");
+        
+        this.releaseChannels = new ReleaseChannels(this.server);
     }
     
     execute(message, commandArgs){
@@ -13,7 +16,7 @@ class ARCCommand extends Command{
         
         if(commandArgs[0]){
             if(commandArgs[0] == "add"){
-                this.server.releaseChannels.add(message.channel.id, (data) => {
+                this.releaseChannels.add(message.channel.id, (data) => {
                     if(data.status == 0){
                         embed.setDescription('Successfully added this channel to the list.').setTimestamp()
                         
@@ -27,7 +30,7 @@ class ARCCommand extends Command{
                     message.channel.send(embed);
                 })
             } else if(commandArgs[0] == "remove"){
-                this.server.releaseChannels.remove(message.channel.id, (data) => {
+                this.releaseChannels.remove(message.channel.id, (data) => {
                     if(data.status == 0){
                         embed.setDescription('Successfully removed this channel from the list.').setTimestamp()
                         var channels = this.server.animeScarper.animeReleaseChannels;

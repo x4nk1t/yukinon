@@ -2,14 +2,13 @@ const request = require('request')
 const cheerio = require('cheerio')
 const discord = require('discord.js')
 const EmbedBuilder = require('../utils/EmbedBuilder.js')
+const Network = require('./Network.js')
 
-class AnimeScarper {
+class AnimeScarper extends Network{
     constructor(server){
-        this.server = server;
-        this.lastSync = [];
-        this.baseUrl = 'https://www19.gogoanime.io';
-        this.client = server.client;
+        super(server, 'https://www19.gogoanime.io');
         
+        this.lastSync = [];
         this.animeReleaseChannels = [];
         this.username = this.client.user.username;
         this.baseAnimeUrl = 'https://4nk1t.gq/api/anime.php?pass=mys3cr3tk3y&username='+this.username;

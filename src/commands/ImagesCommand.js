@@ -1,14 +1,14 @@
-const request = require('request');
 const discord = require('discord.js');
 const EmbedBuilder = require('../utils/EmbedBuilder.js');
 const Command = require('./Command.js');
+const Image = require('../network/Images.js');
 
 class ImagesCommand extends Command{
     constructor(commandLoader){
         super(commandLoader, "images", "Shows the images.", "<help|(endpoint)>");
         
-        this.baseUrl = 'https://nekos.life/api/v2';
-        this.endpoints = require('./data/endpoints.json')
+        this.image = new Image(this.server)
+        this.endpoints = require('../utils/data/endpoints.json')
         this.nsfw = ['randomHentaiGif','pussy','nekoGif','neko','lesbian','kuni','cumsluts','classic','boobs','bJ','anal','avatar','yuri','trap','tits','girlSoloGif','girlSolo','pussyWankGif','pussyArt','kemonomimi','kitsune','keta','holo','holoEro','hentai','futanari','femdom','feetGif','eroFeet','feet','ero','eroKitsune','eroKemonomimi','eroNeko','eroYuri','cumArts','blowJob','spank','gasm'];
         this.sfw = ['smug','baka','tickle','slap','poke','pat','neko','nekoGif','meow','lizard','kiss','hug','foxGirl','feed','cuddle','kemonomimi','holo','woof','wallpaper','goose','gecg','avatar','waifu'];
     }
@@ -41,7 +41,7 @@ class ImagesCommand extends Command{
                 return;
             }
             if(this.sfw.includes(endpoint)){
-                this.getImageUrl(this.endpoints[endpoint], (image) => {
+                this.image.getImage(this.endpoints[endpoint], (image) => {
                     if(image == null){
                         message.channel.stopTyping()
                         message.channel.send(new discord.MessageEmbed()
@@ -59,7 +59,7 @@ class ImagesCommand extends Command{
                 })  
             }else if(this.nsfw.includes(endpoint)){
                 if(message.channel.nsfw){
-                    const image = this.getImageUrl(this.endpoints[endpoint], (image) => {
+                    const image = this.image.getImage(this.endpoints[endpoint], (image) => {
                         message.channel.stopTyping()
                         if(image == null){
                             message.channel.send(new discord.MessageEmbed()
@@ -92,18 +92,6 @@ class ImagesCommand extends Command{
                 .setColor('#FF0000')
                 .setDescription('**Usage:** '+ this.usage));
         }
-    }
-    
-    getImageUrl(endpoint, callback){
-        request(this.baseUrl+endpoint, (err, response, body) => {
-            if(!err){
-                var json = JSON.parse(body)
-                callback(json.url);
-            } else {
-                this.server.logger.error('Something went wrong: '+ err)
-                callback(null);
-            }
-        })
     }
 }
 

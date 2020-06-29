@@ -1,5 +1,4 @@
 const AnimeScarper = require('./network/AnimeScarper.js');
-const ReleaseChannels = require('./network/ReleaseChannels.js');
 const CommandLoader = require('./commands/CommandLoader.js');
 const Logger = require('./utils/Logger.js');
 const RandomActivity = require('./utils/RandomActivity.js');
@@ -11,7 +10,6 @@ class BotServer {
         this.commandLoader = new CommandLoader(this)
         this.animeScarper = new AnimeScarper(this)
         this.randomActivity = new RandomActivity(this)
-        this.releaseChannels = new ReleaseChannels(this)
         
         this.startTime = new Date().getTime();
         this.registerEvents()
