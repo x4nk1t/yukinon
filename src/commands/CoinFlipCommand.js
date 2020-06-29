@@ -4,11 +4,10 @@ const Command = require('./Command.js');
 
 class CoinFlipCommand extends Command{
     constructor(commandLoader){
-        super("coinflip", "Flips the coin and shows heads/tails.", commandLoader.prefix +"coinflip [heads|tails]");
-        this.commandLoader = commandLoader;
+        super(commandLoader, "coinflip", "Flips the coin and shows head/tail.", "[head|tail]");
     }
     
-    onCommand(message, commandArgs){
+    execute(message, commandArgs){
         message.channel.startTyping()
         
         var embed = new EmbedBuilder().build()
@@ -17,7 +16,7 @@ class CoinFlipCommand extends Command{
         if(commandArgs[0]){
             var ht = commandArgs[0].toLowerCase();
             
-            if(ht != 'heads' && ht != 'tails') {
+            if(ht != 'head' && ht != 'tail') {
                 embed.setDescription('**Usage:** ' + this.usage)
                 message.channel.stopTyping()
                 message.channel.send(embed)
@@ -28,9 +27,9 @@ class CoinFlipCommand extends Command{
             message.channel.send(embed.setDescription('Flipping coin....')).then(sent => {
                 setTimeout(() => {
                     if(flip == ht){
-                        embed.setColor('#00FF00').setDescription('It is a **'+ flip +'**. You Won!')
+                        embed.setColor('#00FF00').setDescription('Its a **'+ flip +'**. You Won!')
                     } else {
-                        embed.setColor('#FF0000').setDescription('It is a **'+ flip +'**. You Lost!')
+                        embed.setColor('#FF0000').setDescription('Its a **'+ flip +'**. You Lost!')
                     }
                     message.channel.stopTyping()
                     sent.edit(embed)
@@ -39,7 +38,7 @@ class CoinFlipCommand extends Command{
         } else {
             
             message.channel.send(embed.setDescription('Flipping coin...')).then(sent => {
-                embed.setDescription('It is a **'+ this.flip() +'**.')
+                embed.setDescription('Its a **'+ this.flip() +'**.')
                 
                 setTimeout(() => {                
                     message.channel.stopTyping()
@@ -52,7 +51,7 @@ class CoinFlipCommand extends Command{
     flip(){
         const rand = Math.round(Math.random())
         
-        return (rand == 0) ? "heads" : "tails";
+        return (rand == 0) ? "head" : "tail";
     }
 }
 

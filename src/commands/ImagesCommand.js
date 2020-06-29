@@ -5,8 +5,7 @@ const Command = require('./Command.js');
 
 class ImagesCommand extends Command{
     constructor(commandLoader){
-        super("images", "Shows the images.", commandLoader.prefix +"images <help|(endpoint)>");
-        this.commandLoader = commandLoader;
+        super(commandLoader, "images", "Shows the images.", "<help|(endpoint)>");
         
         this.baseUrl = 'https://nekos.life/api/v2';
         this.endpoints = require('./data/endpoints.json')
@@ -14,7 +13,7 @@ class ImagesCommand extends Command{
         this.sfw = ['smug','baka','tickle','slap','poke','pat','neko','nekoGif','meow','lizard','kiss','hug','foxGirl','feed','cuddle','kemonomimi','holo','woof','wallpaper','goose','gecg','avatar','waifu'];
     }
     
-    onCommand(message, commandArgs){        
+    execute(message, commandArgs){        
         const endpoint = commandArgs[0];
         
         message.channel.startTyping()

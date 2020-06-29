@@ -4,14 +4,13 @@ const Command = require('./Command.js');
 
 class HelpCommand extends Command{
     constructor(commandLoader){
-        super("help", "Shows the command info.", commandLoader.prefix +"help [page]");
-        this.commandLoader = commandLoader;
+        super(commandLoader, "help", "Shows the command info.", "[page]");
         
         this.helpContent = [];
         this.helpPerPage = 4;
     }
     
-    onCommand(message, commandArgs){
+    execute(message, commandArgs){
         message.channel.startTyping()
         
         var reqPage = 0;

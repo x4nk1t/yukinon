@@ -13,14 +13,13 @@ class CommandLoader{
         this.prefix = 'y!';
         this.server = server;
         this.loadedCommands = [];
-        this.startTime = new Date().getTime();
         this.client = server.client;
         this.loadAllCommands();
         
         server.logger.info("Commands Loaded.")
     }
     
-    onCommand(message){
+    execute(message){
         var commandName = message.content.split(' ')[0].split(this.prefix)[1]
         var command = this.getCommandByName(commandName)
         
@@ -32,7 +31,7 @@ class CommandLoader{
         } else {
             var commandArgs = message.content.split(' ')
             commandArgs.shift()
-            command.onCommand(message, commandArgs)
+            command.execute(message, commandArgs)
         }
     }
     
@@ -58,7 +57,7 @@ class CommandLoader{
     }
     
     loadCommand(commandClass){
-        this.loadedCommands.push({commandName: commandClass.commandName, commandClass: commandClass})
+        this.loadedCommands.push({commandName: commandClass.name, commandClass: commandClass})
     }
 }
 

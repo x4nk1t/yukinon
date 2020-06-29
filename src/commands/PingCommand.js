@@ -3,11 +3,10 @@ const Command = require('./Command.js');
 
 class PingCommand extends Command{
     constructor(commandLoader){
-        super("ping", "Returns the ping of server and client.", commandLoader.prefix +"ping");
-        this.commandLoader = commandLoader;
+        super(commandLoader, "ping", "Returns the ping of server and client.");
     }
     
-    onCommand(message, commandArgs){
+    execute(message, commandArgs){
         message.channel.startTyping()
         
         var embed = new EmbedBuilder().build()

@@ -4,11 +4,10 @@ const Command = require('./Command.js');
 
 class StatsCommand extends Command{
     constructor(commandLoader){
-        super("stats", "Shows the stats of the bot/server.", commandLoader.prefix +"stats");
-        this.commandLoader = commandLoader;
+        super(commandLoader, "stats", "Shows the stats of the bot/server.");
     }
     
-    onCommand(message, commandArgs){
+    execute(message, commandArgs){
         message.channel.startTyping()
         
         const type = os.type();
@@ -17,7 +16,7 @@ class StatsCommand extends Command{
         const freemem = Math.round(os.freemem() / 1024 / 1024); //IN MB
         const totalmem = Math.round(os.totalmem() /1024 / 1024); //IN MB
         const version = os.version();
-        const totalServer = this.commandLoader.server.client.guilds.cache.size;
+        const totalServer = this.client.guilds.cache.size;
         
         var embed = new EmbedBuilder().build()
             .setTitle('Stats')

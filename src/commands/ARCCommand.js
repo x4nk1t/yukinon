@@ -1,25 +1,23 @@
-const discord = require('discord.js');
 const EmbedBuilder = require('../utils/EmbedBuilder.js');
 const Command = require('./Command.js');
 
 class ARCCommand extends Command{
     constructor(commandLoader){
-        super("arc", "Adds/Removes the current channel for anime release posts.", commandLoader.prefix +"arc <add|remove>");
-        this.commandLoader = commandLoader;
+        super(commandLoader, "arc", "Adds/Removes the current channel for anime release posts.", "<add|remove>");
     }
     
-    onCommand(message, commandArgs){
+    execute(message, commandArgs){
         message.channel.startTyping()
         var embed = new EmbedBuilder().build()
             .setTitle('ARC Command')
         
         if(commandArgs[0]){
             if(commandArgs[0] == "add"){
-                this.commandLoader.server.addChannelToAnimeRelease(message.channel.id, (data) => {
+                this.server.releaseChannels.add(message.channel.id, (data) => {
                     if(data.status == 0){
                         embed.setDescription('Successfully added this channel to the list.').setTimestamp()
                         
-                        this.commandLoader.server.animeScarper.animeReleaseChannels.push(message.channel.id)
+                        this.server.animeScarper.animeReleaseChannels.push(message.channel.id)
                     } else if(data.status == 1){
                         embed.setDescription(data.message).setTimestamp()
                     } else {
@@ -29,10 +27,10 @@ class ARCCommand extends Command{
                     message.channel.send(embed);
                 })
             } else if(commandArgs[0] == "remove"){
-                this.commandLoader.server.removeChannelFromAnimeRelease(message.channel.id, (data) => {
+                this.server.releaseChannels.remove(message.channel.id, (data) => {
                     if(data.status == 0){
                         embed.setDescription('Successfully removed this channel from the list.').setTimestamp()
-                        var channels = this.commandLoader.server.animeScarper.animeReleaseChannels;
+                        var channels = this.server.animeScarper.animeReleaseChannels;
                         channels.splice(channels.indexOf(message.channel.id), 1)
                     } else if(data.status == 1){
                         embed.setDescription(data.message).setTimestamp()
