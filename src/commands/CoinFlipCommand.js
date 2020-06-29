@@ -1,4 +1,3 @@
-const discord = require('discord.js');
 const EmbedBuilder = require('../utils/EmbedBuilder.js');
 const Command = require('./Command.js');
 

@@ -1,5 +1,3 @@
-const discord = require('discord.js')
-
 class RandomActivity {
     constructor(server){
         this.server = server;

@@ -1,6 +1,5 @@
 const request = require('request')
 const cheerio = require('cheerio')
-const discord = require('discord.js')
 const EmbedBuilder = require('../utils/EmbedBuilder.js')
 const Network = require('./Network.js')
 

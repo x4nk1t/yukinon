@@ -1,4 +1,3 @@
-const discord = require('discord.js');
 const EmbedBuilder = require('../utils/EmbedBuilder.js')
 const Command = require('./Command.js');
 
@@ -17,7 +16,7 @@ class HelpCommand extends Command{
         if(commandArgs[0]){
             reqPage = commandArgs[0] - 1;
             if(commandArgs[0] > this.helpContent.length){
-                var embed = new discord.MessageEmbed()
+                var embed = new EmbedBuilder().build()
                     .setColor('#FF0000')
                     .setTitle('Error')
                     .setDescription('That page is not available. Total Available Page: '+ this.helpContent.length)

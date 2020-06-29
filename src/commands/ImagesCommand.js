@@ -1,4 +1,3 @@
-const discord = require('discord.js');
 const EmbedBuilder = require('../utils/EmbedBuilder.js');
 const Command = require('./Command.js');
 const Image = require('../network/Images.js');
@@ -44,7 +43,7 @@ class ImagesCommand extends Command{
                 this.image.getImage(this.endpoints[endpoint], (image) => {
                     if(image == null){
                         message.channel.stopTyping()
-                        message.channel.send(new discord.MessageEmbed()
+                        message.channel.send(new EmbedBuilder().build()
                             .setTitle('Error')
                             .setColor('#FF0000')
                             .setDescription('Something went wrong while retrieving image.'));
@@ -62,7 +61,7 @@ class ImagesCommand extends Command{
                     const image = this.image.getImage(this.endpoints[endpoint], (image) => {
                         message.channel.stopTyping()
                         if(image == null){
-                            message.channel.send(new discord.MessageEmbed()
+                            message.channel.send(new EmbedBuilder().build()
                                 .setTitle('Error')
                                 .setColor('#FF0000')
                                 .setDescription('Something went wrong while retrieving image.'));
@@ -77,18 +76,18 @@ class ImagesCommand extends Command{
                     })
                 } else {
                     message.channel.stopTyping()
-                    message.channel.send(new discord.MessageEmbed()
+                    message.channel.send(new EmbedBuilder().build()
                         .setColor('#FF0000')
                         .setDescription('This is not **NSFW** enabled channel.'));
                 }
             } else {
                 message.channel.stopTyping()
-                message.channel.send(new discord.MessageEmbed()
+                message.channel.send(new EmbedBuilder().build()
                     .setColor('#FF0000')
                     .setDescription('**'+ endpoint +'** doesn\'t exist.'));
             }
         } else {
-            message.channel.send(new discord.MessageEmbed()
+            message.channel.send(new EmbedBuilder().build()
                 .setColor('#FF0000')
                 .setDescription('**Usage:** '+ this.usage));
         }

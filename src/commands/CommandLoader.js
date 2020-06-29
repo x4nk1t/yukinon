@@ -1,4 +1,3 @@
-const discord = require('discord.js');
 const ARCCommand = require('./ARCCommand.js');
 const CoinFlipCommand = require('./CoinFlipCommand.js');
 const HelpCommand = require('./HelpCommand.js');
@@ -24,7 +23,7 @@ class CommandLoader{
         var command = this.getCommandByName(commandName)
         
         if(command == null){
-            const embed = new discord.MessageEmbed()
+            const embed = new EmbedBuilder().build()
                     .setColor("#FF0000")
                     .setDescription("Command not found! Use **"+ this.prefix +"help** to get command list.")
             message.channel.send(embed);
