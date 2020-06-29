@@ -1,15 +1,9 @@
 class Commmand {
-    constructor(commandName, commandClass){
-        this.commandName = commandName;
-        this.commandClass = commandClass;
-    }
-    
-    getCommandName(){
-        return this.commandName;
-    }
-    
-    getCommandClass(){
-        return this.commandClass;
+    constructor(commandPrefix, description = "", usage = "", aliases = []){
+        this.commandPrefix = commandPrefix;
+        this.description = description;
+        this.usage = usage;
+        this.aliases = aliases;
     }
 }
 module.exports = Commmand;

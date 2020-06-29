@@ -1,11 +1,11 @@
 const discord = require('discord.js');
 const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Command = require('./Command.js');
 
-class UptimeCommand{
+class UptimeCommand extends Command{
     constructor(commandLoader){
+        super("uptime", "Returns the uptime of the bot.", commandLoader.prefix +"uptime");
         this.commandLoader = commandLoader;
-        this.usage = this.commandLoader.prefix +"uptime";
-        this.description = "Returns the uptime of the bot.";
     }
     
     onCommand(message, commandArgs){

@@ -1,10 +1,10 @@
 const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Command = require('./Command.js');
 
-class PingCommand{
+class PingCommand extends Command{
     constructor(commandLoader){
+        super("ping", "Returns the ping of server and client.", commandLoader.prefix +"ping");
         this.commandLoader = commandLoader;
-        this.usage = this.commandLoader.prefix +"ping";
-        this.description = "Returns the ping of server and client.";
     }
     
     onCommand(message, commandArgs){

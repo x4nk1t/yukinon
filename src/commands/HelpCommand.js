@@ -1,11 +1,11 @@
 const discord = require('discord.js');
 const EmbedBuilder = require('../utils/EmbedBuilder.js')
+const Command = require('./Command.js');
 
-class HelpCommand{
+class HelpCommand extends Command{
     constructor(commandLoader){
+        super("help", "Shows the command info.", commandLoader.prefix +"help [page]");
         this.commandLoader = commandLoader;
-        this.usage = this.commandLoader.prefix +"help [page]";
-        this.description = "Shows the command info.";
         
         this.helpContent = [];
         this.helpPerPage = 4;
@@ -48,8 +48,8 @@ class HelpCommand{
             if(this.helpContent[page] == null) this.helpContent[page] = '';
             
             const commandName = this.commandLoader.prefix + commands[i].commandName;
-            const usage = commands[i].getCommandClass().usage;
-            const commandDescription = commands[i].getCommandClass().description;
+            const usage = commands[i].commandClass.usage;
+            const commandDescription = commands[i].commandClass.description;
             
             this.helpContent[page] += '**'+ commandName + "**\n" + commandDescription + '\n Usage: ' + usage +'\n';
         }

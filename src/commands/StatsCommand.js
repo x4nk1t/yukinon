@@ -1,11 +1,11 @@
-const EmbedBuilder = require('../utils/EmbedBuilder.js');
 const os = require('os')
+const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Command = require('./Command.js');
 
-class StatsCommand{
+class StatsCommand extends Command{
     constructor(commandLoader){
+        super("stats", "Shows the stats of the bot/server.", commandLoader.prefix +"stats");
         this.commandLoader = commandLoader;
-        this.usage = this.commandLoader.prefix +"stats";
-        this.description = "Shows the stats of the bot/server.";
     }
     
     onCommand(message, commandArgs){

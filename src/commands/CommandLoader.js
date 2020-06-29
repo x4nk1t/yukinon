@@ -37,28 +37,28 @@ class CommandLoader{
     }
     
     loadAllCommands(){
-        this.loadCommand('arc', new ARCCommand(this))
-        this.loadCommand('coinflip', new CoinFlipCommand(this))
-        this.loadCommand('help', new HelpCommand(this))
-        this.loadCommand('images', new ImagesCommand(this))
-        this.loadCommand('ping', new PingCommand(this))
-        this.loadCommand('stats', new StatsCommand(this))
-        this.loadCommand('uptime', new UptimeCommand(this))
+        this.loadCommand(new ARCCommand(this))
+        this.loadCommand(new CoinFlipCommand(this))
+        this.loadCommand(new HelpCommand(this))
+        this.loadCommand(new ImagesCommand(this))
+        this.loadCommand(new PingCommand(this))
+        this.loadCommand(new StatsCommand(this))
+        this.loadCommand(new UptimeCommand(this))
         
         this.getCommandByName('help').loadHelpContents()
     }
     
     getCommandByName(commandName){
         for(var i = 0; i < this.loadedCommands.length; i++){
-            if(this.loadedCommands[i].getCommandName() == commandName){
-                return this.loadedCommands[i].getCommandClass();
+            if(this.loadedCommands[i].commandName == commandName){
+                return this.loadedCommands[i].commandClass;
             }
         }
         return null;
     }
     
-    loadCommand(commandName, className){
-        this.loadedCommands.push(new Command(commandName, className))
+    loadCommand(commandClass){
+        this.loadedCommands.push({commandName: commandClass.commandName, commandClass: commandClass})
     }
 }
 

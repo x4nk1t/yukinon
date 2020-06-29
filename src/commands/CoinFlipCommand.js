@@ -1,11 +1,11 @@
 const discord = require('discord.js');
 const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Command = require('./Command.js');
 
-class CoinFlipCommand{
+class CoinFlipCommand extends Command{
     constructor(commandLoader){
+        super("coinflip", "Flips the coin and shows heads/tails.", commandLoader.prefix +"coinflip [heads|tails]");
         this.commandLoader = commandLoader;
-        this.usage = this.commandLoader.prefix +"coinflip [heads|tails]";
-        this.description = "Flips the coin and shows heads/tails.";
     }
     
     onCommand(message, commandArgs){

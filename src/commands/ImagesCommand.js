@@ -1,12 +1,12 @@
 const request = require('request');
 const discord = require('discord.js');
 const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Command = require('./Command.js');
 
-class ImagesCommand{
+class ImagesCommand extends Command{
     constructor(commandLoader){
+        super("images", "Shows the images.", commandLoader.prefix +"images <help|(endpoint)>");
         this.commandLoader = commandLoader;
-        this.usage = this.commandLoader.prefix +"images <help|(endpoint)>";
-        this.description = "Shows the images.";
         
         this.baseUrl = 'https://nekos.life/api/v2';
         this.endpoints = require('./data/endpoints.json')

@@ -1,12 +1,11 @@
-const request = require('request');
 const discord = require('discord.js');
 const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Command = require('./Command.js');
 
-class ARCCommand{
+class ARCCommand extends Command{
     constructor(commandLoader){
+        super("arc", "Adds/Removes the current channel for anime release posts.", commandLoader.prefix +"arc <add|remove>");
         this.commandLoader = commandLoader;
-        this.usage = this.commandLoader.prefix +"arc <add|remove>";
-        this.description = "Adds/Removes the current channel for anime release posts.";
     }
     
     onCommand(message, commandArgs){
