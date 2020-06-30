@@ -4,7 +4,32 @@ class RandomActivity {
         this.client = bot.client;
         this.changeInSeconds = 37;
         
-        this.activities = ['with Hikigaya-kun:PLAYING', 'with cat:PLAYING', 'the world:WATCHING', 'Oregairu:WATCHING', bot.commandLoader.prefix +"help:LISTENING", 'Anime:WATCHING'];
+        this.statuses = [
+            {
+                status: 'with Hikigaya-kun',
+                type: 0
+            },
+            {
+                status: 'with cat',
+                type: 0
+            },
+            {
+                status: 'the world',
+                type: 3
+            },
+            {
+                status: 'Oregairu',
+                type: 3
+            },
+            {
+                status: bot.commandLoader.prefix +'help',
+                type: 2
+            },
+            {
+                status: 'Anime',
+                type: 3
+            }
+        ];
     }
     
     run(){
@@ -13,11 +38,9 @@ class RandomActivity {
     }
     
     show(){
-        const randomActivity = this.activities[Math.floor(Math.random() * this.activities.length)];
-        var type = randomActivity.split(':')[1]
-        var text = randomActivity.split(':')[0]
+        const random = this.statuses[Math.floor(Math.random() * this.statuses.length)];
         
-        this.client.user.setActivity(text, {type: type})
+        this.client.editStatus({name: random.status, type: random.type})
     }
 }
 

@@ -11,15 +11,14 @@ class Bot {
         this.animeScarper = new AnimeScarper(this)
         this.randomActivity = new RandomActivity(this)
         
-        this.startTime = new Date().getTime();
-        this.registerEvents()
+        //this.registerEvents()
     }
     
     start(){
-        this.animeScarper.grabLastMessage()
+        //this.animeScarper.grabLastMessage()
         this.randomActivity.run()
         
-        this.logger.info('Bot running as: '+ this.client.user.tag)
+        this.logger.info('Bot running as: '+ this.client.user.username)
     }
     
     registerEvents(){
