@@ -2,7 +2,7 @@ class RandomActivity {
     constructor(bot){
         this.bot = bot;
         this.client = bot.client;
-        this.changeInSeconds = 3;
+        this.changeInSeconds = 37;
         
         this.statuses = [
             {
