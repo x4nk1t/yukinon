@@ -7,8 +7,8 @@ class Commmand {
         this.usage = (usage == "") ? this.commandName : this.commandName +" "+ usage;
         this.aliases = aliases;
         
-        this.server = commandLoader.server;
-        this.client = this.server.client;
+        this.bot = commandLoader.bot;
+        this.client = this.bot.client;
     }
 }
 module.exports = Commmand;

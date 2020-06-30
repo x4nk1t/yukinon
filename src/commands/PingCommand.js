@@ -3,7 +3,7 @@ const Command = require('./Command.js');
 
 class PingCommand extends Command{
     constructor(commandLoader){
-        super(commandLoader, "ping", "Returns the ping of server and client.");
+        super(commandLoader, "ping", "Returns the ping of bot and user.");
     }
     
     execute(message, commandArgs){

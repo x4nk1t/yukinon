@@ -2,8 +2,8 @@ const request = require('request');
 const Network = require('./Network.js');
 
 class Images extends Network{
-    constructor(server){
-        super(server, 'https://nekos.life/api/v2');
+    constructor(bot){
+        super(bot, 'https://nekos.life/api/v2');
     }
     
     getImage(endpoint, callback){
@@ -12,7 +12,7 @@ class Images extends Network{
                 var json = JSON.parse(body)
                 callback(json.url);
             } else {
-                this.server.logger.error('Something went wrong: '+ err)
+                this.bot.logger.error('Something went wrong: '+ err)
                 callback(null);
             }
         })

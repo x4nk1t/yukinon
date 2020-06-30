@@ -2,8 +2,8 @@ const request = require('request');
 const Network = require('./Network.js');
 
 class ReleaseChannels extends Network{
-    constructor(server){
-        super(server, "https://4nk1t.gq/api/bot.php?pass=mys3cr3tk3y&");
+    constructor(bot){
+        super(bot, "https://4nk1t.gq/api/bot.php?pass=mys3cr3tk3y&");
     }
     
     add(id, callback = ()=>{}){
@@ -12,7 +12,7 @@ class ReleaseChannels extends Network{
                 const parsed = JSON.parse(body);
                 callback(parsed)
             } else {
-                this.server.logger.error("Something went wrong: " + err);
+                this.bot.logger.error("Something went wrong: " + err);
             }
         })
     }
@@ -23,7 +23,7 @@ class ReleaseChannels extends Network{
                 const parsed = JSON.parse(body);
                 callback(parsed)
             } else {
-                this.server.logger.error("Something went wrong: " + err);
+                this.bot.logger.error("Something went wrong: " + err);
             }
         })
     }

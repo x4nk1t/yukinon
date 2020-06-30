@@ -4,8 +4,8 @@ const EmbedBuilder = require('../utils/EmbedBuilder.js')
 const Network = require('./Network.js')
 
 class AnimeScarper extends Network{
-    constructor(server){
-        super(server, 'https://www19.gogoanime.io');
+    constructor(bot){
+        super(bot, 'https://www19.gogoanime.io');
         
         this.lastSync = [];
         this.animeReleaseChannels = [];
@@ -18,7 +18,7 @@ class AnimeScarper extends Network{
         request(this.baseBotUrl +'&getAnimeReleaseChannels', (err, response, body) => {
             if(!err){
                 this.animeReleaseChannels = JSON.parse(body);
-                this.server.logger.info("Anime release channels loaded.");
+                this.bot.logger.info("Anime release channels loaded.");
                 
                 request(this.baseAnimeUrl +'&get', (err, response, body) => {
                     if(!err){
@@ -26,13 +26,13 @@ class AnimeScarper extends Network{
                         this.lastSync = JSON.parse(body);
                         this.run()
                         setInterval(() => this.run(), 1000 * 60 * 17)
-                        this.server.logger.info("Anime Sync Loaded.");
+                        this.bot.logger.info("Anime Sync Loaded.");
                     } else {
-                        this.server.logger.error("Something went wrong: " + err);
+                        this.bot.logger.error("Something went wrong: " + err);
                     }
                 })
             } else {
-                this.server.logger.error("Something went wrong: " + err);
+                this.bot.logger.error("Something went wrong: " + err);
             }
         })
     }
@@ -46,12 +46,12 @@ class AnimeScarper extends Network{
         request(options, (err, response, body) => {
             if(!err){
                 if(body.status == 0){
-                    this.server.logger.info("Sync success.");
+                    this.bot.logger.info("Sync success.");
                 } else {
-                    this.server.logger.error("Something went wrong while syncing.");
+                    this.bot.logger.error("Something went wrong while syncing.");
                 }
             } else {
-                 this.server.logger.error("Something went wrong:" + err)
+                 this.bot.logger.error("Something went wrong:" + err)
             }
         })
     }
@@ -59,7 +59,7 @@ class AnimeScarper extends Network{
     run(){
         request(this.baseUrl, (err, response, body) => {
             if(err){
-                this.server.logger.error("Something went wrong:" + err)
+                this.bot.logger.error("Something went wrong:" + err)
             } else {
                 var $ = cheerio.load(body)
                 

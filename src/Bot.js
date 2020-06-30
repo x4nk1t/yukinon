@@ -3,7 +3,7 @@ const CommandLoader = require('./commands/CommandLoader.js');
 const Logger = require('./utils/Logger.js');
 const RandomActivity = require('./utils/RandomActivity.js');
 
-class BotServer {
+class Bot {
     constructor(client){
         this.client = client;
         this.logger = new Logger(this);
@@ -39,4 +39,4 @@ class BotServer {
     }
 }
 
-module.exports = BotServer
+module.exports = Bot

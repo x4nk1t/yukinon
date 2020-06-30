@@ -1,10 +1,10 @@
 class RandomActivity {
-    constructor(server){
-        this.server = server;
-        this.client = server.client;
+    constructor(bot){
+        this.bot = bot;
+        this.client = bot.client;
         this.changeInSeconds = 37;
         
-        this.activities = ['with Hikigaya-kun', 'with cat', 'the world:WATCHING', 'Oregairu:WATCHING', server.commandLoader.prefix +"help", 'Anime:WATCHING'];
+        this.activities = ['with Hikigaya-kun', 'with cat', 'the world:WATCHING', 'Oregairu:WATCHING', bot.commandLoader.prefix +"help", 'Anime:WATCHING'];
     }
     
     run(){

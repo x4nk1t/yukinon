@@ -6,7 +6,7 @@ class ARCCommand extends Command{
     constructor(commandLoader){
         super(commandLoader, "arc", "Adds/Removes the current channel for anime release posts.", "<add|remove>");
         
-        this.releaseChannels = new ReleaseChannels(this.server);
+        this.releaseChannels = new ReleaseChannels(this.bot);
     }
     
     execute(message, commandArgs){
@@ -20,7 +20,7 @@ class ARCCommand extends Command{
                     if(data.status == 0){
                         embed.setDescription('Successfully added this channel to the list.').setTimestamp()
                         
-                        this.server.animeScarper.animeReleaseChannels.push(message.channel.id)
+                        this.bot.animeScarper.animeReleaseChannels.push(message.channel.id)
                     } else if(data.status == 1){
                         embed.setDescription(data.message).setTimestamp()
                     } else {
@@ -33,7 +33,7 @@ class ARCCommand extends Command{
                 this.releaseChannels.remove(message.channel.id, (data) => {
                     if(data.status == 0){
                         embed.setDescription('Successfully removed this channel from the list.').setTimestamp()
-                        var channels = this.server.animeScarper.animeReleaseChannels;
+                        var channels = this.bot.animeScarper.animeReleaseChannels;
                         channels.splice(channels.indexOf(message.channel.id), 1)
                     } else if(data.status == 1){
                         embed.setDescription(data.message).setTimestamp()

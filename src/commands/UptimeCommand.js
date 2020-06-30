@@ -10,7 +10,7 @@ class UptimeCommand extends Command{
         message.channel.startTyping()
         
         var date_future = new Date().getTime();
-        var date_now = this.server.startTime;
+        var date_now = this.bot.startTime;
 
         var delta = Math.abs(date_future - date_now) / 1000;
 

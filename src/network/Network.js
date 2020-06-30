@@ -1,8 +1,8 @@
 class Network {
-    constructor(server, baseUrl){
-        this.server = server;
+    constructor(bot, baseUrl){
+        this.bot = bot;
         this.baseUrl = baseUrl;
-        this.client = server.client;
+        this.client = bot.client;
     }
 }
 

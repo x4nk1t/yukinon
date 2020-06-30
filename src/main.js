@@ -1,11 +1,11 @@
 const discord = require("discord.js")
 const client = new discord.Client()
 
-const BotServer = require("./BotServer.js");
+const Bot = require("./Bot.js");
 
 client.on('ready', () => {
-    const server = new BotServer(client)
-    server.start()
+    const bot = new Bot(client)
+    bot.start()
 })
 
 client.login('NjIwMjE0MTQ2MTUxMDg4MTM5.XvIxvQ.8-IcdV1cXH55bbVXe0SgTy2_DL8')
