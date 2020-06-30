@@ -1,4 +1,4 @@
-const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Color = require('../utils/Color.js');
 const Command = require('./Command.js');
 
 class PingCommand extends Command{
@@ -7,9 +7,9 @@ class PingCommand extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.startTyping()
+        message.channel.sendTyping()
         
-        var embed = new EmbedBuilder().build()
+        var embed = Color.random()
             .setDescription(`Pong! Latency is ${new Date().getTime() - message.createdTimestamp}ms.`)
             
         message.channel.stopTyping()

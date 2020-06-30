@@ -9,6 +9,10 @@ client.on('ready', () => {
     bot.start()
 })
 
+client.on('error', (error) => {
+    console.log('ERROR: '+ error)
+});
+
 process.once('SIGINT', () => {
     try {
         client.disconnect();

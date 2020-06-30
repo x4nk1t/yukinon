@@ -1,5 +1,5 @@
 const os = require('os')
-const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Color = require('../utils/Color.js');
 const Command = require('./Command.js');
 
 class StatsCommand extends Command{
@@ -8,7 +8,7 @@ class StatsCommand extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.startTyping()
+        message.channel.sendTyping()
         
         const type = os.type();
         const cpuCount = os.cpus().length;
@@ -18,7 +18,7 @@ class StatsCommand extends Command{
         const version = os.version();
         const totalServer = this.client.guilds.cache.size;
         
-        var embed = new EmbedBuilder().build()
+        var embed = Color.random()
             .setTitle('Stats')
             .addField('OS', type, true)
             .addField('CPU Count', cpuCount, true)

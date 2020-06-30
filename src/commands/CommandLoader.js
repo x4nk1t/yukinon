@@ -23,10 +23,12 @@ class CommandLoader{
         var command = this.getCommandByName(commandName)
         
         if(command == null){
-            const embed = new EmbedBuilder().build()
-                    .setColor("#FF0000")
-                    .setDescription("Command not found! Use **"+ this.prefix +"help** to get command list.")
-            message.channel.send(embed);
+            message.channel.createMessage({
+                embed: {
+                    color: Color.color('#FF0000'),
+                    description: "Command not found! Use **"+ this.prefix +"help** to get command list."
+                }
+            });
         } else {
             var commandArgs = message.content.split(' ')
             commandArgs.shift()
@@ -36,11 +38,11 @@ class CommandLoader{
     
     loadAllCommands(){
         this.loadCommand(new ARCCommand(this))
-        this.loadCommand(new CoinFlipCommand(this))
+        // this.loadCommand(new CoinFlipCommand(this))
         this.loadCommand(new HelpCommand(this))
-        this.loadCommand(new ImagesCommand(this))
-        this.loadCommand(new PingCommand(this))
-        this.loadCommand(new StatsCommand(this))
+        // this.loadCommand(new ImagesCommand(this))
+        // this.loadCommand(new PingCommand(this))
+        // this.loadCommand(new StatsCommand(this))
         this.loadCommand(new UptimeCommand(this))
         
         this.getCommandByName('help').loadHelpContents()

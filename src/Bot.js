@@ -11,20 +11,20 @@ class Bot {
         this.animeScarper = new AnimeScarper(this)
         this.randomActivity = new RandomActivity(this)
         
-        //this.registerEvents()
+        this.registerEvents()
     }
     
     start(){
-        //this.animeScarper.grabLastMessage()
+        this.animeScarper.grabLastMessage()
         this.randomActivity.run()
         
         this.logger.info('Bot running as: '+ this.client.user.username)
     }
     
     registerEvents(){
-        this.client.on('message', async message => {
+        this.client.on('messageCreate', message => {
             if(message.author.bot) return;
-            
+                        
             if(message.content.startsWith(this.commandLoader.prefix)){
                 this.commandLoader.execute(message)
             }

@@ -1,4 +1,4 @@
-const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Color = require('../utils/Color.js');
 const Command = require('./Command.js');
 const Image = require('../network/Images.js');
 
@@ -15,7 +15,7 @@ class ImagesCommand extends Command{
     execute(message, commandArgs){        
         const endpoint = commandArgs[0];
         
-        message.channel.startTyping()
+        message.channel.sendTyping()
         if(endpoint){
             if(endpoint == "help"){
                 var description = '**SFW**\n';
@@ -31,7 +31,7 @@ class ImagesCommand extends Command{
                 }
                 
                 message.channel.stopTyping()
-                message.channel.send(new EmbedBuilder().build()
+                message.channel.send(Color.random()
                     .setTitle('Images Help')
                     .setDescription('**Usage:** '+ this.usage + '\n' + description)
                     .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
@@ -43,13 +43,13 @@ class ImagesCommand extends Command{
                 this.image.getImage(this.endpoints[endpoint], (image) => {
                     if(image == null){
                         message.channel.stopTyping()
-                        message.channel.send(new EmbedBuilder().build()
+                        message.channel.send(Color.random()
                             .setTitle('Error')
                             .setColor('#FF0000')
                             .setDescription('Something went wrong while retrieving image.'));
                     } else {
                         message.channel.stopTyping()
-                        message.channel.send(new EmbedBuilder().build()
+                        message.channel.send(Color.random()
                             .setTitle(endpoint)
                             .setImage(image)
                             .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
@@ -61,13 +61,13 @@ class ImagesCommand extends Command{
                     const image = this.image.getImage(this.endpoints[endpoint], (image) => {
                         message.channel.stopTyping()
                         if(image == null){
-                            message.channel.send(new EmbedBuilder().build()
+                            message.channel.send(Color.random()
                                 .setTitle('Error')
                                 .setColor('#FF0000')
                                 .setDescription('Something went wrong while retrieving image.'));
                         } else {
                             message.channel.stopTyping()
-                            message.channel.send(new EmbedBuilder().build()
+                            message.channel.send(Color.random()
                                 .setTitle(endpoint)
                                 .setImage(image)
                                 .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
@@ -76,18 +76,18 @@ class ImagesCommand extends Command{
                     })
                 } else {
                     message.channel.stopTyping()
-                    message.channel.send(new EmbedBuilder().build()
+                    message.channel.send(Color.random()
                         .setColor('#FF0000')
                         .setDescription('This is not **NSFW** enabled channel.'));
                 }
             } else {
                 message.channel.stopTyping()
-                message.channel.send(new EmbedBuilder().build()
+                message.channel.send(Color.random()
                     .setColor('#FF0000')
                     .setDescription('**'+ endpoint +'** doesn\'t exist.'));
             }
         } else {
-            message.channel.send(new EmbedBuilder().build()
+            message.channel.send(Color.random()
                 .setColor('#FF0000')
                 .setDescription('**Usage:** '+ this.usage));
         }

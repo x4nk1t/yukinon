@@ -1,4 +1,4 @@
-const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Color = require('../utils/Color.js');
 const Command = require('./Command.js');
 
 class UptimeCommand extends Command{
@@ -7,12 +7,11 @@ class UptimeCommand extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.startTyping()
+        message.channel.sendTyping()
         
-        var date_future = new Date().getTime();
-        var date_now = this.bot.startTime;
-
-        var delta = Math.abs(date_future - date_now) / 1000;
+        var date_in_ms = this.client.uptime;
+        
+        var delta = Math.abs(date_in_ms) / 1000;
 
         var days = Math.floor(delta / 86400);
         delta -= days * 86400;
@@ -25,14 +24,17 @@ class UptimeCommand extends Command{
         
         var seconds = Math.round(delta % 60);
         
-        var embed = new EmbedBuilder().build()
-            .setTitle('Uptime')
-            .setDescription(days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's')
-            .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
-            .setTimestamp()
+        var embed = {
+            title: 'Uptime',
+            color: Color.random(),
+            description: days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's',
+            footer: {
+                text: 'Requested by '+ message.author.username,
+                icon_url: message.author.avatarURL
+            }
+        }
         
-        message.channel.stopTyping()
-        message.channel.send(embed);
+        message.channel.createMessage({embed: embed});
     }
 }
 
