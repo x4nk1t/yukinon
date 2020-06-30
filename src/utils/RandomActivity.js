@@ -4,7 +4,7 @@ class RandomActivity {
         this.client = bot.client;
         this.changeInSeconds = 37;
         
-        this.activities = ['with Hikigaya-kun', 'with cat', 'the world:WATCHING', 'Oregairu:WATCHING', bot.commandLoader.prefix +"help", 'Anime:WATCHING'];
+        this.activities = ['with Hikigaya-kun:PLAYING', 'with cat:PLAYING', 'the world:WATCHING', 'Oregairu:WATCHING', bot.commandLoader.prefix +"help:LISTENING", 'Anime:WATCHING'];
     }
     
     run(){
@@ -16,10 +16,6 @@ class RandomActivity {
         const randomActivity = this.activities[Math.floor(Math.random() * this.activities.length)];
         var type = randomActivity.split(':')[1]
         var text = randomActivity.split(':')[0]
-        if(type == null || type == ""){
-            type = "PLAYING";
-            text = randomActivity;
-        }
         
         this.client.user.setActivity(text, {type: type})
     }
