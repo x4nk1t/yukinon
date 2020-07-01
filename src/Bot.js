@@ -2,6 +2,7 @@ const AnimeScarper = require('./network/AnimeScarper.js');
 const CommandLoader = require('./commands/CommandLoader.js');
 const Logger = require('./utils/Logger.js');
 const RandomActivity = require('./utils/RandomActivity.js');
+const ReleaseChannels = require('./network/ReleaseChannels.js')
 
 class Bot {
     constructor(client){
@@ -33,7 +34,7 @@ class Bot {
         this.client.on('channelDelete', channel => {
             const channelId = channel.id;
             
-            this.releaseChannels.remove(channelId)
+            new ReleaseChannels(this).remove(channelId)
         })
     }
 }
