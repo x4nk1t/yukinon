@@ -40,7 +40,7 @@ class CoinFlipCommand extends Command{
             })
         } else {
             embed.description = 'Flipping coin....';
-        message.channel.createMessage({embed: embed}).then(sent => {
+            message.channel.createMessage({embed: embed}).then(sent => {
                 embed.color = Color.random()
                 embed.description = 'Its a **'+ this.flip() +'**.';
                 
