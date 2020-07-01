@@ -38,11 +38,11 @@ class CommandLoader{
     
     loadAllCommands(){
         this.loadCommand(new ARCCommand(this))
-        // this.loadCommand(new CoinFlipCommand(this))
+        this.loadCommand(new CoinFlipCommand(this))
         this.loadCommand(new HelpCommand(this))
-        // this.loadCommand(new ImagesCommand(this))
-        // this.loadCommand(new PingCommand(this))
-        // this.loadCommand(new StatsCommand(this))
+        this.loadCommand(new ImagesCommand(this))
+        this.loadCommand(new PingCommand(this))
+        this.loadCommand(new StatsCommand(this))
         this.loadCommand(new UptimeCommand(this))
         
         this.getCommandByName('help').loadHelpContents()

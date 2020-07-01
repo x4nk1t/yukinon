@@ -30,66 +30,93 @@ class ImagesCommand extends Command{
                     description += this.nsfw[i] +', ';
                 }
                 
-                message.channel.stopTyping()
-                message.channel.send(Color.random()
-                    .setTitle('Images Help')
-                    .setDescription('**Usage:** '+ this.usage + '\n' + description)
-                    .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
-                    .setTimestamp()
-                );
+                message.channel.createMessage({
+                    embed: {
+                        title: 'Images',
+                        color: Color.random(),
+                        description: '**Usage:** '+ this.usage + '\n' + description,
+                        footer: {
+                            text: 'Requested by '+ message.author.username,
+                            icon_url: message.author.avatarURL
+                        }
+                    }
+                });
                 return;
             }
             if(this.sfw.includes(endpoint)){
                 this.image.getImage(this.endpoints[endpoint], (image) => {
                     if(image == null){
-                        message.channel.stopTyping()
-                        message.channel.send(Color.random()
-                            .setTitle('Error')
-                            .setColor('#FF0000')
-                            .setDescription('Something went wrong while retrieving image.'));
+                        message.channel.createMessage({
+                            embed: {
+                                title: 'ERROR',
+                                color: Color.color('#FF0000'),
+                                description: 'Something went wrong while retrieving image.'
+                            }
+                        })
                     } else {
-                        message.channel.stopTyping()
-                        message.channel.send(Color.random()
-                            .setTitle(endpoint)
-                            .setImage(image)
-                            .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
-                            .setTimestamp());
+                        message.channel.createMessage({
+                            embed: {
+                                title: endpoint,
+                                image: {
+                                    url: image
+                                },
+                                footer: {
+                                    text: 'Requested by '+ message.author.username,
+                                    icon_url: message.author.avatarURL
+                                }
+                            }
+                        })
                     }
                 })  
             }else if(this.nsfw.includes(endpoint)){
                 if(message.channel.nsfw){
                     const image = this.image.getImage(this.endpoints[endpoint], (image) => {
-                        message.channel.stopTyping()
                         if(image == null){
-                            message.channel.send(Color.random()
-                                .setTitle('Error')
-                                .setColor('#FF0000')
-                                .setDescription('Something went wrong while retrieving image.'));
+                            message.channel.createMessage({
+                                embed: {
+                                    title: 'ERROR',
+                                    color: Color.color('#FF0000'),
+                                    description: 'Something went wrong while retrieving image.'
+                                }
+                            })
                         } else {
-                            message.channel.stopTyping()
-                            message.channel.send(Color.random()
-                                .setTitle(endpoint)
-                                .setImage(image)
-                                .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
-                                .setTimestamp());
+                            message.channel.createMessage({
+                                embed: {
+                                    title: endpoint,
+                                    image: {
+                                        url: image
+                                    },
+                                    footer: {
+                                        text: 'Requested by '+ message.author.username,
+                                        icon_url: message.author.avatarURL
+                                    }
+                                }
+                            })
                         }
                     })
                 } else {
-                    message.channel.stopTyping()
-                    message.channel.send(Color.random()
-                        .setColor('#FF0000')
-                        .setDescription('This is not **NSFW** enabled channel.'));
+                    message.channel.createMessage({
+                        embed: {
+                            color: Color.color('#FF0000'),
+                            description: 'This is not **NSFW** enabled channel.'
+                        }
+                    })
                 }
             } else {
-                message.channel.stopTyping()
-                message.channel.send(Color.random()
-                    .setColor('#FF0000')
-                    .setDescription('**'+ endpoint +'** doesn\'t exist.'));
+                message.channel.createMessage({
+                    embed: {
+                        color: Color.color('#FF0000'),
+                        description: '**'+ endpoint +'** doesn\'t exist.'
+                    }
+                })
             }
         } else {
-            message.channel.send(Color.random()
-                .setColor('#FF0000')
-                .setDescription('**Usage:** '+ this.usage));
+            message.channel.createMessage({
+                embed: {
+                    color: Color.color('#FF0000'),
+                    description: '**Usage:** '+ this.usage
+                }
+            })
         }
     }
 }

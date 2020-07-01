@@ -13,7 +13,7 @@ class ARCCommand extends Command{
         message.channel.sendTyping()
         var embed = {
             title: 'ARC',
-            color: Color.random()
+            color: Color.color('#FF0000')
         }
         
         if(commandArgs[0]){
@@ -27,7 +27,6 @@ class ARCCommand extends Command{
                     } else if(data.status == 1){
                         embed.description = data.message
                     } else {
-                        embed.color = Color.color('#FF0000')
                         embed.description = 'Something went wrong while adding this channel from the list.'
                     }
                     message.channel.createMessage({embed: embed});
@@ -35,6 +34,7 @@ class ARCCommand extends Command{
             } else if(commandArgs[0] == "remove"){
                 this.releaseChannels.remove(message.channel.id, (data) => {
                     if(data.status == 0){
+                        embed.color = Color.color('#00FF00')
                         embed.description = 'Successfully removed this channel from the list.'
                         var channels = this.bot.animeScarper.animeReleaseChannels;
                         channels.splice(channels.indexOf(message.channel.id), 1)

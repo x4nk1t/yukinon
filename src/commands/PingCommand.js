@@ -9,11 +9,12 @@ class PingCommand extends Command{
     execute(message, commandArgs){
         message.channel.sendTyping()
         
-        var embed = Color.random()
-            .setDescription(`Pong! Latency is ${new Date().getTime() - message.createdTimestamp}ms.`)
+        var embed = {
+            color: Color.random(),
+            description: `Pong! Latency is ${new Date().getTime() - message.timestamp}ms.`
+        }
             
-        message.channel.stopTyping()
-        message.channel.send(embed);
+        message.channel.createMessage({embed: embed});
     }
 }
 
