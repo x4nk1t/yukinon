@@ -1,7 +1,7 @@
 const Color = require('../utils/Color.js');
 const Command = require('./Command.js');
 
-class CoinFlipCommand extends Command{
+class Coinflip extends Command{
     constructor(commandLoader){
         super(commandLoader, "coinflip", "Flips the coin and shows head/tail.", "[head|tail]");
     }
@@ -58,4 +58,4 @@ class CoinFlipCommand extends Command{
     }
 }
 
-module.exports = CoinFlipCommand;
+module.exports = Coinflip;

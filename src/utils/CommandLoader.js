@@ -1,11 +1,5 @@
-const ARCCommand = require('./ARCCommand.js');
-const CoinFlipCommand = require('./CoinFlipCommand.js');
-const HelpCommand = require('./HelpCommand.js');
-const ImagesCommand = require('./ImagesCommand.js');
-const PingCommand = require('./PingCommand.js');
-const StatsCommand = require('./StatsCommand.js');
-const UptimeCommand = require('./UptimeCommand.js');
-const Command = require('./Command.js');
+const fs = require('fs');
+const Color = require('./Color.js')
 
 class CommandLoader{
     constructor(bot){
@@ -14,8 +8,6 @@ class CommandLoader{
         this.loadedCommands = [];
         this.client = bot.client;
         this.loadAllCommands();
-        
-        bot.logger.info("Commands Loaded.")
     }
     
     execute(message){
@@ -37,15 +29,19 @@ class CommandLoader{
     }
     
     loadAllCommands(){
-        this.loadCommand(new ARCCommand(this))
-        this.loadCommand(new CoinFlipCommand(this))
-        this.loadCommand(new HelpCommand(this))
-        this.loadCommand(new ImagesCommand(this))
-        this.loadCommand(new PingCommand(this))
-        this.loadCommand(new StatsCommand(this))
-        this.loadCommand(new UptimeCommand(this))
-        
-        this.getCommandByName('help').loadHelpContents()
+        var dir = fs.readdirSync(`${__dirname}/../commands`);
+        dir.filter((file) => !(file.split('.')[0] == "Command")).map((d, i) => {
+            const command = require(`${__dirname}/../commands/${d}`)
+            const commandClass = new command(this)
+            
+            if(commandClass.enable){
+                this.loadCommand(commandClass)
+            }
+            if(dir.length - 1 == i + 1){ //-1 Cause command is not counted & +1 to match the count
+                this.getCommandByName('help').loadHelpContents()
+                this.bot.logger.info("Commands Loaded.")
+            }
+        })
     }
     
     getCommandByName(commandName){

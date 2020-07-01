@@ -1,7 +1,7 @@
 const Color = require('../utils/Color.js')
 const Command = require('./Command.js');
 
-class HelpCommand extends Command{
+class Help extends Command{
     constructor(commandLoader){
         super(commandLoader, "help", "Shows the command info.", "[page]");
         
@@ -29,7 +29,7 @@ class HelpCommand extends Command{
         
         message.channel.createMessage({
             embed: {
-                title: 'Help (Page '+ (reqPage + 1)+')',
+                title: 'Help (Page '+ (reqPage + 1)+'/'+this.helpContent.length+')',
                 description: this.helpContent[reqPage],
                 color: Color.random(),
                 footer: {
@@ -57,4 +57,4 @@ class HelpCommand extends Command{
     }
 }
 
-module.exports = HelpCommand
+module.exports = Help

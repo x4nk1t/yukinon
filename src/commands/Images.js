@@ -2,7 +2,7 @@ const Color = require('../utils/Color.js');
 const Command = require('./Command.js');
 const Image = require('../network/Images.js');
 
-class ImagesCommand extends Command{
+class Images extends Command{
     constructor(commandLoader){
         super(commandLoader, "images", "Shows the images.", "<help|(endpoint)>");
         
@@ -121,4 +121,4 @@ class ImagesCommand extends Command{
     }
 }
 
-module.exports = ImagesCommand;
+module.exports = Images;

@@ -2,7 +2,7 @@ const os = require('os')
 const Color = require('../utils/Color.js');
 const Command = require('./Command.js');
 
-class StatsCommand extends Command{
+class Stats extends Command{
     constructor(commandLoader){
         super(commandLoader, "stats", "Shows the stats of the bot/server.");
     }
@@ -72,4 +72,4 @@ class StatsCommand extends Command{
     }
 }
 
-module.exports = StatsCommand
+module.exports = Stats

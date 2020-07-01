@@ -1,5 +1,5 @@
 const AnimeScarper = require('./network/AnimeScarper.js');
-const CommandLoader = require('./commands/CommandLoader.js');
+const CommandLoader = require('./utils/CommandLoader.js');
 const Logger = require('./utils/Logger.js');
 const RandomActivity = require('./utils/RandomActivity.js');
 const ReleaseChannels = require('./network/ReleaseChannels.js')

@@ -2,7 +2,7 @@ const Color = require('../utils/Color.js');
 const ReleaseChannels = require('../network/ReleaseChannels.js');
 const Command = require('./Command.js');
 
-class ARCCommand extends Command{
+class ARC extends Command{
     constructor(commandLoader){
         super(commandLoader, "arc", "Adds/Removes the current channel for anime release posts.", "<add|remove>");
         
@@ -56,4 +56,4 @@ class ARCCommand extends Command{
     }
 }
 
-module.exports = ARCCommand;
+module.exports = ARC;

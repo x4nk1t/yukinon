@@ -1,7 +1,7 @@
 const Color = require('../utils/Color.js');
 const Command = require('./Command.js');
 
-class PingCommand extends Command{
+class Ping extends Command{
     constructor(commandLoader){
         super(commandLoader, "ping", "Returns the ping of bot and user.");
     }
@@ -18,4 +18,4 @@ class PingCommand extends Command{
     }
 }
 
-module.exports = PingCommand
+module.exports = Ping
