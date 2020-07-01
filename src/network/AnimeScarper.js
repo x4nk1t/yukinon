@@ -1,6 +1,6 @@
 const request = require('request')
 const cheerio = require('cheerio')
-const EmbedBuilder = require('../utils/EmbedBuilder.js')
+const Color = require('../utils/Color.js')
 const Network = require('./Network.js')
 
 class AnimeScarper extends Network{
@@ -89,19 +89,29 @@ class AnimeScarper extends Network{
     
     sendToChannel(newEpisodes){
         for(var i = 0; i < newEpisodes.length; i++){
-            var embed = new EmbedBuilder().build()
-                .setTitle("New Anime just got released!")
-                .setThumbnail(newEpisodes[i].imageUrl)
-                .addFields(
-                    {name: "Anime Name:", value: newEpisodes[i].animeName},
-                    {name: "Episode:", value: newEpisodes[i].episodeNum},
-                    {name: "Episode Link:", value: newEpisodes[i].episodeUrl}
-                )
-                .setTimestamp()
-            
             for(var j = 0; j < this.animeReleaseChannels.length; j++){
-                var chh = this.client.channels.cache.get(this.animeReleaseChannels[j]);
-                if(chh != null) chh.send(embed);
+                try{
+                    var chh = this.client.getChannel(this.animeReleaseChannels[j])
+                    
+                    if(chh != null) {
+                        chh.createMessage({
+                            embed: {
+                                title: "New anime just got released!",
+                                color: Color.random(),
+                                thumbnail: {
+                                    url: newEpisodes[i].imageUrl
+                                },
+                                fields: [
+                                    {name: "Anime Name:", value: newEpisodes[i].animeName},
+                                    {name: "Episode:", value: newEpisodes[i].episodeNum},
+                                    {name: "Episode Link:", value: newEpisodes[i].episodeUrl}
+                                ]
+                            }
+                        });
+                    }
+                } catch (exception){
+                    //do nothing
+                }
             }
         }
     }

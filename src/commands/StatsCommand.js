@@ -1,5 +1,5 @@
 const os = require('os')
-const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Color = require('../utils/Color.js');
 const Command = require('./Command.js');
 
 class StatsCommand extends Command{
@@ -8,7 +8,7 @@ class StatsCommand extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.startTyping()
+        message.channel.sendTyping()
         
         const type = os.type();
         const cpuCount = os.cpus().length;
@@ -16,19 +16,59 @@ class StatsCommand extends Command{
         const freemem = Math.round(os.freemem() / 1024 / 1024); //IN MB
         const totalmem = Math.round(os.totalmem() /1024 / 1024); //IN MB
         const version = os.version();
-        const totalServer = this.client.guilds.cache.size;
         
-        var embed = new EmbedBuilder().build()
-            .setTitle('Stats')
-            .addField('OS', type, true)
-            .addField('CPU Count', cpuCount, true)
-            .addField('Arch', arch, true)
-            .addField('Version', version, true)
-            .addField('RAM', (totalmem - freemem) +' MB / ' + totalmem + ' MB', true)
-            .addField('Servers', totalServer, true)
+        var embed = {
+            title: 'Stats',
+            color: Color.random(),
+            fields: [
+                {
+                    name: 'Servers',
+                    value: this.client.guilds.size,
+                    inline: true
+                },
+                {
+                    name: 'Users',
+                    value: this.client.users.size,
+                    inline: true
+                },
+                {
+                    name: 'Shards',
+                    value: this.client.shards.size,
+                    inline: true
+                },
+                {
+                    name: '\u200b',
+                    value: '\u200b'
+                },
+                {
+                    name: 'OS',
+                    value: type,
+                    inline: true
+                },
+                {
+                    name: 'CPU Count',
+                    value: cpuCount,
+                    inline: true
+                },
+                {
+                    name: 'Arch',
+                    value: arch,
+                    inline: true
+                },
+                {
+                    name: 'Version',
+                    value: version,
+                    inline: true
+                },
+                {
+                    name: 'RAM',
+                    value: (totalmem - freemem) +' MB / ' + totalmem + ' MB',
+                    inline: true
+                },
+            ]
+        }
         
-        message.channel.stopTyping()
-        message.channel.send(embed);
+        message.channel.createMessage({embed: embed});
     }
 }
 

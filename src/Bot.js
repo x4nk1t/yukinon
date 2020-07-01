@@ -2,6 +2,7 @@ const AnimeScarper = require('./network/AnimeScarper.js');
 const CommandLoader = require('./commands/CommandLoader.js');
 const Logger = require('./utils/Logger.js');
 const RandomActivity = require('./utils/RandomActivity.js');
+const ReleaseChannels = require('./network/ReleaseChannels.js')
 
 class Bot {
     constructor(client){
@@ -11,7 +12,6 @@ class Bot {
         this.animeScarper = new AnimeScarper(this)
         this.randomActivity = new RandomActivity(this)
         
-        this.startTime = new Date().getTime();
         this.registerEvents()
     }
     
@@ -19,13 +19,13 @@ class Bot {
         this.animeScarper.grabLastMessage()
         this.randomActivity.run()
         
-        this.logger.info('Bot running as: '+ this.client.user.tag)
+        this.logger.info('Bot running as: '+ this.client.user.username)
     }
     
     registerEvents(){
-        this.client.on('message', async message => {
+        this.client.on('messageCreate', message => {
             if(message.author.bot) return;
-            
+                        
             if(message.content.startsWith(this.commandLoader.prefix)){
                 this.commandLoader.execute(message)
             }
@@ -34,7 +34,7 @@ class Bot {
         this.client.on('channelDelete', channel => {
             const channelId = channel.id;
             
-            this.releaseChannels.remove(channelId)
+            new ReleaseChannels(this).remove(channelId)
         })
     }
 }

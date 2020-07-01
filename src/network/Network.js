@@ -1,5 +1,5 @@
 class Network {
-    constructor(bot, baseUrl){
+    constructor(bot, baseUrl = ''){
         this.bot = bot;
         this.baseUrl = baseUrl;
         this.client = bot.client;

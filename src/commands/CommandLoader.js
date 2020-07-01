@@ -23,10 +23,12 @@ class CommandLoader{
         var command = this.getCommandByName(commandName)
         
         if(command == null){
-            const embed = new EmbedBuilder().build()
-                    .setColor("#FF0000")
-                    .setDescription("Command not found! Use **"+ this.prefix +"help** to get command list.")
-            message.channel.send(embed);
+            message.channel.createMessage({
+                embed: {
+                    color: Color.color('#FF0000'),
+                    description: "Command not found! Use **"+ this.prefix +"help** to get command list."
+                }
+            });
         } else {
             var commandArgs = message.content.split(' ')
             commandArgs.shift()

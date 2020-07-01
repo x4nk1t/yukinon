@@ -1,4 +1,4 @@
-const EmbedBuilder = require('../utils/EmbedBuilder.js')
+const Color = require('../utils/Color.js')
 const Command = require('./Command.js');
 
 class HelpCommand extends Command{
@@ -10,31 +10,34 @@ class HelpCommand extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.startTyping()
+        message.channel.sendTyping()
         
         var reqPage = 0;
         if(commandArgs[0]){
             reqPage = commandArgs[0] - 1;
             if(commandArgs[0] > this.helpContent.length){
-                var embed = new EmbedBuilder().build()
-                    .setColor('#FF0000')
-                    .setTitle('Error')
-                    .setDescription('That page is not available. Total Available Page: '+ this.helpContent.length)
-                
-                message.channel.stopTyping()
-                message.channel.send(embed)
+                message.channel.createMessage({
+                    embed: {
+                        title: 'ERROR',
+                        description: 'That page is not available. Total Available Page: '+ this.helpContent.length,
+                        color: Color.color('#FF0000')
+                    }
+                })
                 return;
             }
         }
         
-        var embed = new EmbedBuilder().build()
-            .setTitle('-= Help (Page '+ (reqPage + 1) + ') =-')
-            .setDescription(this.helpContent[reqPage])
-            .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
-            .setTimestamp()
-        
-        message.channel.stopTyping()
-        message.channel.send(embed)
+        message.channel.createMessage({
+            embed: {
+                title: 'Help (Page '+ (reqPage + 1)+')',
+                description: this.helpContent[reqPage],
+                color: Color.random(),
+                footer: {
+                    text: 'Requested by '+ message.author.username,
+                    icon_url: message.author.avatarURL
+                }
+            }
+        })
     }
     
     loadHelpContents(){

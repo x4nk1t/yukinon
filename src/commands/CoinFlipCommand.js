@@ -1,4 +1,4 @@
-const EmbedBuilder = require('../utils/EmbedBuilder.js');
+const Color = require('../utils/Color.js');
 const Command = require('./Command.js');
 
 class CoinFlipCommand extends Command{
@@ -7,41 +7,45 @@ class CoinFlipCommand extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.startTyping()
+        message.channel.sendTyping()
         
-        var embed = new EmbedBuilder().build()
-            .setTitle("CoinFlip")
+        var embed = {
+            title: "CoinFlip",
+            color: Color.random()
+        }
         
         if(commandArgs[0]){
             var ht = commandArgs[0].toLowerCase();
             
             if(ht != 'head' && ht != 'tail') {
-                embed.setDescription('**Usage:** ' + this.usage)
-                message.channel.stopTyping()
-                message.channel.send(embed)
+                embed.description = '**Usage:** ' + this.usage;
+                
+                message.channel.createMessage({embed: embed})
                 return;
             }
             
             var flip = this.flip()
-            message.channel.send(embed.setDescription('Flipping coin....')).then(sent => {
+            embed.description = 'Flipping coin....';
+            message.channel.createMessage({embed: embed}).then(sent => {
                 setTimeout(() => {
                     if(flip == ht){
-                        embed.setColor('#00FF00').setDescription('Its a **'+ flip +'**. You Won!')
+                        embed.color = Color.color('#00FF00')
+                        embed.description = 'Its a **'+ flip +'**. You Won!'
                     } else {
-                        embed.setColor('#FF0000').setDescription('Its a **'+ flip +'**. You Lost!')
+                        embed.color = Color.color('#FF0000')
+                        embed.description = 'Its a **'+ flip +'**. You Lost!'
                     }
-                    message.channel.stopTyping()
-                    sent.edit(embed)
+                    sent.edit({embed: embed})
                 }, 1300)
             })
         } else {
-            
-            message.channel.send(embed.setDescription('Flipping coin...')).then(sent => {
-                embed.setDescription('Its a **'+ this.flip() +'**.')
+            embed.description = 'Flipping coin....';
+            message.channel.createMessage({embed: embed}).then(sent => {
+                embed.color = Color.random()
+                embed.description = 'Its a **'+ this.flip() +'**.';
                 
-                setTimeout(() => {                
-                    message.channel.stopTyping()
-                    sent.edit(embed)
+                setTimeout(() => {
+                    sent.edit({embed: embed})
                 }, 1300)
             })
         }

@@ -1,5 +1,6 @@
-const discord = require("discord.js")
-const client = new discord.Client()
+const Eris = require('eris')
+
+const client = new Eris('NjIwMjE0MTQ2MTUxMDg4MTM5.XvIxvQ.8-IcdV1cXH55bbVXe0SgTy2_DL8')
 
 const Bot = require("./Bot.js");
 
@@ -8,4 +9,17 @@ client.on('ready', () => {
     bot.start()
 })
 
-client.login('NjIwMjE0MTQ2MTUxMDg4MTM5.XvIxvQ.8-IcdV1cXH55bbVXe0SgTy2_DL8')
+client.on('error', (error) => {
+    console.log('ERROR: '+ error)
+});
+
+process.once('SIGINT', () => {
+    try {
+        client.disconnect();
+    } catch (error) {
+        console.log(error);
+    }
+    process.exit(0);
+});
+
+client.connect()
