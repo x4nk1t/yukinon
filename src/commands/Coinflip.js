@@ -7,7 +7,7 @@ class Coinflip extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.sendTyping()
+        message.channel.startTyping()
         
         var embed = {
             title: "CoinFlip",
@@ -20,19 +20,20 @@ class Coinflip extends Command{
             if(ht != 'head' && ht != 'tail') {
                 embed.description = '**Usage:** ' + this.usage;
                 
-                message.channel.createMessage({embed: embed})
+                message.channel.send({embed: embed})
+                message.channel.stopTyping()
                 return;
             }
             
             var flip = this.flip()
             embed.description = 'Flipping coin....';
-            message.channel.createMessage({embed: embed}).then(sent => {
+            message.channel.send({embed: embed}).then(sent => {
                 setTimeout(() => {
                     if(flip == ht){
-                        embed.color = Color.color('#00FF00')
+                        embed.color = '#00FF00'
                         embed.description = 'Its a **'+ flip +'**. You Won!'
                     } else {
-                        embed.color = Color.color('#FF0000')
+                        embed.color = '#FF0000'
                         embed.description = 'Its a **'+ flip +'**. You Lost!'
                     }
                     sent.edit({embed: embed})
@@ -40,7 +41,7 @@ class Coinflip extends Command{
             })
         } else {
             embed.description = 'Flipping coin....';
-            message.channel.createMessage({embed: embed}).then(sent => {
+            message.channel.send({embed: embed}).then(sent => {
                 embed.color = Color.random()
                 embed.description = 'Its a **'+ this.flip() +'**.';
                 
@@ -49,6 +50,7 @@ class Coinflip extends Command{
                 }, 1300)
             })
         }
+        message.channel.stopTyping()
     }
     
     flip(){

@@ -94,7 +94,7 @@ class AnimeScarper extends Network{
                     var chh = this.client.getChannel(this.animeReleaseChannels[j])
                     
                     if(chh != null) {
-                        chh.createMessage({
+                        chh.send({
                             embed: {
                                 title: "New anime just got released!",
                                 color: Color.random(),

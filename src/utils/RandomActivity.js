@@ -40,7 +40,7 @@ class RandomActivity {
     show(){
         const random = this.statuses[Math.floor(Math.random() * this.statuses.length)];
         
-        this.client.editStatus({name: random.status, type: random.type})
+        this.client.user.setActivity(random.status, {type: random.type})
     }
 }
 

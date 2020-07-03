@@ -7,7 +7,7 @@ class Uptime extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.sendTyping()
+        message.channel.startTyping()
         
         var date_in_ms = this.client.uptime;
         
@@ -30,11 +30,12 @@ class Uptime extends Command{
             description: days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's',
             footer: {
                 text: 'Requested by '+ message.author.username,
-                icon_url: message.author.avatarURL
+                icon_url: message.author.displayAvatarURL()
             }
         }
         
-        message.channel.createMessage({embed: embed});
+        message.channel.send({embed: embed});
+        message.channel.stopTyping()
     }
 }
 

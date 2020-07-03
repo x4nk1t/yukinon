@@ -15,7 +15,7 @@ class Images extends Command{
     execute(message, commandArgs){        
         const endpoint = commandArgs[0];
         
-        message.channel.sendTyping()
+        message.channel.startTyping()
         if(endpoint){
             if(endpoint == "help"){
                 var description = '**SFW**\n';
@@ -30,39 +30,41 @@ class Images extends Command{
                     description += this.nsfw[i] +', ';
                 }
                 
-                message.channel.createMessage({
+                message.channel.send({
                     embed: {
                         title: 'Images',
                         color: Color.random(),
                         description: '**Usage:** '+ this.usage + '\n' + description,
                         footer: {
                             text: 'Requested by '+ message.author.username,
-                            icon_url: message.author.avatarURL
+                            icon_url: message.author.displayAvatarURL()
                         }
                     }
                 });
+                message.channel.stopTyping()
                 return;
             }
             if(this.sfw.includes(endpoint)){
                 this.image.getImage(this.endpoints[endpoint], (image) => {
                     if(image == null){
-                        message.channel.createMessage({
+                        message.channel.send({
                             embed: {
                                 title: 'ERROR',
-                                color: Color.color('#FF0000'),
+                                color: '#FF0000',
                                 description: 'Something went wrong while retrieving image.'
                             }
                         })
                     } else {
-                        message.channel.createMessage({
+                        message.channel.send({
                             embed: {
                                 title: endpoint,
+                                color: Color.random(),
                                 image: {
                                     url: image
                                 },
                                 footer: {
                                     text: 'Requested by '+ message.author.username,
-                                    icon_url: message.author.avatarURL
+                                    icon_url: message.author.displayAvatarURL()
                                 }
                             }
                         })
@@ -72,52 +74,54 @@ class Images extends Command{
                 if(message.channel.nsfw){
                     const image = this.image.getImage(this.endpoints[endpoint], (image) => {
                         if(image == null){
-                            message.channel.createMessage({
+                            message.channel.send({
                                 embed: {
                                     title: 'ERROR',
-                                    color: Color.color('#FF0000'),
+                                    color: '#FF0000',
                                     description: 'Something went wrong while retrieving image.'
                                 }
                             })
                         } else {
-                            message.channel.createMessage({
+                            message.channel.send({
                                 embed: {
                                     title: endpoint,
+                                    color: Color.random(),
                                     image: {
                                         url: image
                                     },
                                     footer: {
                                         text: 'Requested by '+ message.author.username,
-                                        icon_url: message.author.avatarURL
+                                        icon_url: message.author.displayAvatarURL()
                                     }
                                 }
                             })
                         }
                     })
                 } else {
-                    message.channel.createMessage({
+                    message.channel.send({
                         embed: {
-                            color: Color.color('#FF0000'),
+                            color: '#FF0000',
                             description: 'This is not **NSFW** enabled channel.'
                         }
                     })
                 }
             } else {
-                message.channel.createMessage({
+                message.channel.send({
                     embed: {
-                        color: Color.color('#FF0000'),
+                        color: '#FF0000',
                         description: '**'+ endpoint +'** doesn\'t exist.'
                     }
                 })
             }
         } else {
-            message.channel.createMessage({
+            message.channel.send({
                 embed: {
-                    color: Color.color('#FF0000'),
+                    color: '#FF0000',
                     description: '**Usage:** '+ this.usage
                 }
             })
         }
+        message.channel.stopTyping()
     }
 }
 

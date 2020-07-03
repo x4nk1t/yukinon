@@ -10,34 +10,36 @@ class Help extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.sendTyping()
+        message.channel.startTyping()
         
         var reqPage = 0;
         if(commandArgs[0]){
             reqPage = commandArgs[0] - 1;
             if(commandArgs[0] > this.helpContent.length){
-                message.channel.createMessage({
+                message.channel.send({
                     embed: {
                         title: 'ERROR',
                         description: 'That page is not available. Total Available Page: '+ this.helpContent.length,
-                        color: Color.color('#FF0000')
+                        color: '#FF0000'
                     }
                 })
+                message.channel.stopTyping()
                 return;
             }
         }
         
-        message.channel.createMessage({
+        message.channel.send({
             embed: {
                 title: 'Help (Page '+ (reqPage + 1)+'/'+this.helpContent.length+')',
                 description: this.helpContent[reqPage],
                 color: Color.random(),
                 footer: {
                     text: 'Requested by '+ message.author.username,
-                    icon_url: message.author.avatarURL
+                    icon_url: message.author.displayAvatarURL()
                 }
             }
         })
+        message.channel.stopTyping()
     }
     
     loadHelpContents(){

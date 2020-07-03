@@ -9,21 +9,21 @@ class Bot {
         this.client = client;
         this.logger = new Logger(this);
         this.commandLoader = new CommandLoader(this)
-        this.animeScarper = new AnimeScarper(this)
+        //this.animeScarper = new AnimeScarper(this)
         this.randomActivity = new RandomActivity(this)
         
         this.registerEvents()
     }
     
     start(){
-        this.animeScarper.grabLastMessage()
+        //this.animeScarper.grabLastMessage()
         this.randomActivity.run()
         
-        this.logger.info('Bot running as: '+ this.client.user.username)
+        this.logger.info('Bot running as: '+ this.client.user.tag)
     }
     
     registerEvents(){
-        this.client.on('messageCreate', message => {
+        this.client.on('message', message => {
             if(message.author.bot) return;
                         
             if(message.content.startsWith(this.commandLoader.prefix)){

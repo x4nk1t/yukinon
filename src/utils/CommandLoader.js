@@ -1,5 +1,4 @@
 const fs = require('fs');
-const Color = require('./Color.js')
 
 class CommandLoader{
     constructor(bot){
@@ -15,9 +14,9 @@ class CommandLoader{
         var command = this.getCommandByName(commandName)
         
         if(command == null){
-            message.channel.createMessage({
+            message.channel.send({
                 embed: {
-                    color: Color.color('#FF0000'),
+                    color: '#FF0000',
                     description: "Command not found! Use **"+ this.prefix +"help** to get command list."
                 }
             });

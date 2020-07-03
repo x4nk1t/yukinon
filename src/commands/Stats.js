@@ -8,7 +8,7 @@ class Stats extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.sendTyping()
+        message.channel.startTyping()
         
         const type = os.type();
         const cpuCount = os.cpus().length;
@@ -23,17 +23,12 @@ class Stats extends Command{
             fields: [
                 {
                     name: 'Servers',
-                    value: this.client.guilds.size,
+                    value: this.client.guilds.cache.array().length,
                     inline: true
                 },
                 {
                     name: 'Users',
-                    value: this.client.users.size,
-                    inline: true
-                },
-                {
-                    name: 'Shards',
-                    value: this.client.shards.size,
+                    value: this.client.users.cache.array().length,
                     inline: true
                 },
                 {
@@ -68,7 +63,8 @@ class Stats extends Command{
             ]
         }
         
-        message.channel.createMessage({embed: embed});
+        message.channel.send({embed: embed});
+        message.channel.stopTyping()
     }
 }
 
