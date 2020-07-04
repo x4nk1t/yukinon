@@ -1,7 +1,6 @@
 const CommandLoader = require('./utils/CommandLoader.js');
 const Logger = require('./utils/Logger.js');
 const RandomActivity = require('./utils/RandomActivity.js');
-const ReleaseChannels = require('./network/ReleaseChannels.js')
 
 class Bot {
     constructor(client){
@@ -26,12 +25,6 @@ class Bot {
             if(message.content.startsWith(this.commandLoader.prefix)){
                 this.commandLoader.execute(message)
             }
-        })
-        
-        this.client.on('channelDelete', channel => {
-            const channelId = channel.id;
-            
-            new ReleaseChannels(this).remove(channelId)
         })
     }
 }
