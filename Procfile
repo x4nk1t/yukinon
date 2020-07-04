@@ -1,1 +1,1 @@
-ccbot: node src/main.js
+bot: node src/main.js
