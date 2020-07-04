@@ -9,14 +9,12 @@ class Bot {
         this.client = client;
         this.logger = new Logger(this);
         this.commandLoader = new CommandLoader(this)
-        //this.animeScarper = new AnimeScarper(this)
         this.randomActivity = new RandomActivity(this)
         
         this.registerEvents()
     }
     
     start(){
-        //this.animeScarper.grabLastMessage()
         this.randomActivity.run()
         
         this.logger.info('Bot running as: '+ this.client.user.tag)
