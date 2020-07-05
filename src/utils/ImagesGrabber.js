@@ -1,9 +1,9 @@
 const request = require('request');
-const Network = require('./Network.js');
 
-class Images extends Network{
+class ImagesGrabber {
     constructor(bot){
-        super(bot, 'https://nekos.life/api/v2');
+        this.bot = bot;
+        this.baseUrl = 'https://nekos.life/api/v2';
     }
     
     getImage(endpoint, callback){
@@ -19,4 +19,4 @@ class Images extends Network{
     }
 }
 
-module.exports = Images
+module.exports = ImagesGrabber
