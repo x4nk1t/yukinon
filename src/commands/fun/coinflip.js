@@ -1,9 +1,14 @@
-const Color = require('../utils/Color.js');
-const Command = require('./Command.js');
+const Color = require('../../utils/Color.js');
+const Command = require('../Command.js');
 
 class Coinflip extends Command{
     constructor(commandLoader){
-        super(commandLoader, "coinflip", "Flips the coin and shows head/tail.", "[head|tail]", ['cf']);
+        super(commandLoader, {
+            name: "coinflip",
+            description: "Flips the coin and shows head/tail.",
+            usage: "[head|tail]",
+            aliases: ['cf']
+        });
     }
     
     execute(message, commandArgs){

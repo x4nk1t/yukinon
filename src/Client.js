@@ -31,19 +31,6 @@ class Client extends discord.Client{
         this.on('ready', () => {
             this.start()
         })
-
-        this.on('error', (error) => {
-            console.log('ERROR: '+ error)
-        });
-
-        process.once('SIGINT', () => {
-            try {
-                this.destroy();
-            } catch (error) {
-                console.log(error);
-            }
-            process.exit(0);
-        });
     }
 }
 

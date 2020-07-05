@@ -1,9 +1,13 @@
-const Color = require('../utils/Color.js')
-const Command = require('./Command.js');
+const Color = require('../../utils/Color.js')
+const Command = require('../Command.js');
 
 class Help extends Command{
     constructor(commandLoader){
-        super(commandLoader, "help", "Shows the command info.", "[page]");
+        super(commandLoader, {
+            name: "help",
+            description: "Shows the command info.",
+            usage: "[page]"
+        });
         
         this.helpContent = [];
         this.helpPerPage = 4;

@@ -1,9 +1,12 @@
-const Color = require('../utils/Color.js');
-const Command = require('./Command.js');
+const Color = require('../../utils/Color.js');
+const Command = require('../Command.js');
 
 class Uptime extends Command{
     constructor(commandLoader){
-        super(commandLoader, "uptime", "Returns the uptime of the bot.");
+        super(commandLoader, {
+            name: "uptime",
+            description: "Returns the uptime of the bot."
+        });
     }
     
     execute(message, commandArgs){

@@ -3,8 +3,8 @@ const fs = require('fs');
 
 class CommandLoader{
     constructor(client){
-        this.prefix = 'y!';
         this.client = client;
+        this.prefix = 'y!';
         this.commands = new Discord.Collection();
         this.aliases = new Discord.Collection();
         
@@ -30,19 +30,20 @@ class CommandLoader{
     }
     
     loadAllCommands(){
-        var dir = fs.readdirSync(`${__dirname}/../commands`);
-        dir.filter((file) => !(file.split('.')[0] == "Command")).map((d, i) => {
-            const command = require(`${__dirname}/../commands/${d}`)
-            const commandClass = new command(this)
+        fs.readdirSync(`${__dirname}/../commands`).filter(f => !(f.endsWith('.js'))).forEach(dir => {
+            const commands = fs.readdirSync(`${__dirname}/../commands/${dir}`).filter(f => f.endsWith('.js'));
             
-            if(commandClass.enable){
-                this.loadCommand(commandClass)
-            }
-            if(dir.length - 1 == i + 1){ //-1 Cause command is not counted & +1 to match the count
-                this.getCommandByName('help').loadHelpContents()
-                this.client.logger.info("Commands Loaded.")
-            }
+            commands.forEach(f => {
+                const command = require(`${__dirname}/../commands/${dir}/${f}`)
+                const commandClass = new command(this)
+                
+                if(commandClass.enable){
+                    this.loadCommand(commandClass)
+                }
+            })
         })
+        this.getCommandByName('help').loadHelpContents()
+        this.client.logger.info("Commands Loaded.")
     }
     
     getCommandByName(name){

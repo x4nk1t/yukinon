@@ -1,9 +1,12 @@
-const Color = require('../utils/Color.js');
-const Command = require('./Command.js');
+const Color = require('../../utils/Color.js');
+const Command = require('../Command.js');
 
 class Ping extends Command{
     constructor(commandLoader){
-        super(commandLoader, "ping", "Returns the ping of client and user.");
+        super(commandLoader, {
+            name: "ping",
+            description: "Returns the ping of bot and user."
+        });
     }
     
     execute(message, commandArgs){

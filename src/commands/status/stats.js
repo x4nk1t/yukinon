@@ -1,10 +1,13 @@
 const os = require('os')
-const Color = require('../utils/Color.js');
-const Command = require('./Command.js');
+const Color = require('../../utils/Color.js');
+const Command = require('../Command.js');
 
 class Stats extends Command{
     constructor(commandLoader){
-        super(commandLoader, "stats", "Shows the stats of the bot/server.");
+        super(commandLoader, {
+            name: "stats",
+            description: "Shows the stats of the bot/server."
+        });
     }
     
     execute(message, commandArgs){

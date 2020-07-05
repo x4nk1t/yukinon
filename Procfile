@@ -1,1 +1,1 @@
-bot: node src/main.js
+bot: node app.js
