@@ -1,4 +1,3 @@
-const Color = require('../../utils/Color.js')
 const Command = require('../Command.js');
 
 class Help extends Command{
@@ -36,7 +35,7 @@ class Help extends Command{
             embed: {
                 title: 'Help (Page '+ (reqPage + 1)+'/'+this.helpContent.length+')',
                 description: this.helpContent[reqPage],
-                color: Color.random(),
+                color: 'RANDOM',
                 footer: {
                     text: 'Requested by '+ message.author.username,
                     icon_url: message.author.displayAvatarURL()

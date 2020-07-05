@@ -1,4 +1,3 @@
-const Color = require('../../utils/Color.js');
 const Command = require('../Command.js');
 const ImagesGrabber = require('../../utils/ImagesGrabber.js');
 
@@ -37,7 +36,7 @@ class Images extends Command{
                 message.channel.send({
                     embed: {
                         title: 'Images',
-                        color: Color.random(),
+                        color: 'RANDOM',
                         description: '**Usage:** '+ this.usage + '\n' + description,
                         footer: {
                             text: 'Requested by '+ message.author.username,
@@ -62,7 +61,7 @@ class Images extends Command{
                         message.channel.send({
                             embed: {
                                 title: endpoint,
-                                color: Color.random(),
+                                color: 'RANDOM',
                                 image: {
                                     url: image
                                 },
@@ -89,7 +88,7 @@ class Images extends Command{
                             message.channel.send({
                                 embed: {
                                     title: endpoint,
-                                    color: Color.random(),
+                                    color: 'RANDOM',
                                     image: {
                                         url: image
                                     },

@@ -1,5 +1,4 @@
 const os = require('os')
-const Color = require('../../utils/Color.js');
 const Command = require('../Command.js');
 
 class Stats extends Command{
@@ -22,7 +21,7 @@ class Stats extends Command{
         
         var embed = {
             title: 'Stats',
-            color: Color.random(),
+            color: 'RANDOM',
             fields: [
                 {
                     name: 'Servers',

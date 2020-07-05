@@ -1,4 +1,3 @@
-const Color = require('../../utils/Color.js');
 const Command = require('../Command.js');
 
 class Uptime extends Command{
@@ -29,7 +28,7 @@ class Uptime extends Command{
         
         var embed = {
             title: 'Uptime',
-            color: Color.random(),
+            color: 'RANDOM',
             description: days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's',
             footer: {
                 text: 'Requested by '+ message.author.username,

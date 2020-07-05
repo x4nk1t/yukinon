@@ -1,4 +1,3 @@
-const Color = require('../../utils/Color.js');
 const Command = require('../Command.js');
 
 class Ping extends Command{
@@ -13,7 +12,7 @@ class Ping extends Command{
         message.channel.startTyping()
         
         var embed = {
-            color: Color.random(),
+            color: 'RANDOM',
             description: `Pong! Latency is ${new Date().getTime() - message.createdTimestamp}ms.`
         }
             

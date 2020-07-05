@@ -1,4 +1,3 @@
-const Color = require('../../utils/Color.js');
 const Command = require('../Command.js');
 
 class Coinflip extends Command{
@@ -16,7 +15,7 @@ class Coinflip extends Command{
         
         var embed = {
             title: "CoinFlip",
-            color: Color.random()
+            color: 'RANDOM'
         }
         
         if(commandArgs[0]){
@@ -47,7 +46,7 @@ class Coinflip extends Command{
         } else {
             embed.description = 'Flipping coin....';
             message.channel.send({embed: embed}).then(sent => {
-                embed.color = Color.random()
+                embed.color = 'RANDOM'
                 embed.description = 'Its a **'+ this.flip() +'**.';
                 
                 setTimeout(() => {
