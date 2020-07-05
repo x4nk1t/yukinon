@@ -1,10 +1,13 @@
+const Discord = require('discord.js');
 const fs = require('fs');
 
 class CommandLoader{
     constructor(client){
         this.prefix = 'y!';
         this.client = client;
-        this.loadedCommands = [];
+        this.commands = new Discord.Collection();
+        this.aliases = new Discord.Collection();
+        
         this.loadAllCommands();
     }
     
@@ -42,17 +45,18 @@ class CommandLoader{
         })
     }
     
-    getCommandByName(commandName){
-        for(var i = 0; i < this.loadedCommands.length; i++){
-            if(this.loadedCommands[i].commandName == commandName){
-                return this.loadedCommands[i].commandClass;
-            }
-        }
-        return null;
+    getCommandByName(name){
+        var command = this.commands.get(name) || this.aliases.get(name)
+        return command;
     }
     
     loadCommand(commandClass){
-        this.loadedCommands.push({commandName: commandClass.name, commandClass: commandClass})
+        this.commands.set(commandClass.name, commandClass)
+        if(commandClass.aliases){
+            commandClass.aliases.forEach(alias => {
+                this.aliases.set(alias, commandClass)
+            })
+        }
     }
 }
 

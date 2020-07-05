@@ -43,19 +43,32 @@ class Help extends Command{
     }
     
     loadHelpContents(){
-        var commands = this.commandLoader.loadedCommands;
+        var commands = this.commandLoader.commands;
         var page = 0;
         
-        for(var i = 0; i < commands.length; i++){
+        commands.array().forEach((command, i) => {
             if(i != 0 && i % this.helpPerPage == 0) page++;
             if(this.helpContent[page] == null) this.helpContent[page] = '';
             
-            const commandName = this.commandLoader.prefix + commands[i].commandName;
-            const usage = commands[i].commandClass.usage;
-            const commandDescription = commands[i].commandClass.description;
+            const commandName = command.commandName;
+            const usage = command.usage;
+            const commandDescription = command.description;
+            var commandAliases = '';
             
-            this.helpContent[page] += '**'+ commandName + "**\n" + commandDescription + '\n Usage: ' + usage +'\n';
-        }
+            if(command.aliases.length){
+                commandAliases = 'Aliases: ';
+                command.aliases.forEach((alias, i) => {
+                    commandAliases += this.prefix + alias;
+                    if(command.aliases.length != i + 1){
+                        commandAliases += ', ';
+                    } else {
+                        commandAliases += '\n';
+                    }
+                })
+            }
+            
+            this.helpContent[page] += '**'+ commandName + '**\n' + commandDescription + '\n Usage: ' + usage +'\n' + commandAliases;
+        })
     }
 }
 

@@ -3,7 +3,7 @@ const Command = require('./Command.js');
 
 class Coinflip extends Command{
     constructor(commandLoader){
-        super(commandLoader, "coinflip", "Flips the coin and shows head/tail.", "[head|tail]");
+        super(commandLoader, "coinflip", "Flips the coin and shows head/tail.", "[head|tail]", ['cf']);
     }
     
     execute(message, commandArgs){
