@@ -1,11 +1,10 @@
 const fs = require('fs');
 
 class CommandLoader{
-    constructor(bot){
+    constructor(client){
         this.prefix = 'y!';
-        this.bot = bot;
+        this.client = client;
         this.loadedCommands = [];
-        this.client = bot.client;
         this.loadAllCommands();
     }
     
@@ -38,7 +37,7 @@ class CommandLoader{
             }
             if(dir.length - 1 == i + 1){ //-1 Cause command is not counted & +1 to match the count
                 this.getCommandByName('help').loadHelpContents()
-                this.bot.logger.info("Commands Loaded.")
+                this.client.logger.info("Commands Loaded.")
             }
         })
     }

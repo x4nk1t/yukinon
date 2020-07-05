@@ -9,8 +9,7 @@ class Commmand {
         
         this.enable = true;
         
-        this.bot = commandLoader.bot;
-        this.client = this.bot.client;
+        this.client = commandLoader.client;
     }
 }
 module.exports = Commmand;

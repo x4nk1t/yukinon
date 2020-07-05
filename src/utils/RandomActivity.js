@@ -1,7 +1,6 @@
 class RandomActivity {
-    constructor(bot){
-        this.bot = bot;
-        this.client = bot.client;
+    constructor(client){
+        this.client = client;
         this.changeInSeconds = 37;
         
         this.statuses = [
@@ -22,7 +21,7 @@ class RandomActivity {
                 type: 3
             },
             {
-                status: bot.commandLoader.prefix +'help',
+                status: client.commandLoader.prefix +'help',
                 type: 2
             },
             {

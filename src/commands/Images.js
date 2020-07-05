@@ -6,7 +6,7 @@ class Images extends Command{
     constructor(commandLoader){
         super(commandLoader, "images", "Shows the images.", "<help|(endpoint)>");
         
-        this.image = new ImagesGrabber(this.bot)
+        this.image = new ImagesGrabber(this.client)
         this.endpoints = require('../utils/data/endpoints.json')
         this.nsfw = ['randomHentaiGif','pussy','nekoGif','neko','lesbian','kuni','cumsluts','classic','boobs','bJ','anal','avatar','yuri','trap','tits','girlSoloGif','girlSolo','pussyWankGif','pussyArt','kemonomimi','kitsune','keta','holo','holoEro','hentai','futanari','femdom','feetGif','eroFeet','feet','ero','eroKitsune','eroKemonomimi','eroNeko','eroYuri','cumArts','blowJob','spank','gasm'];
         this.sfw = ['smug','baka','tickle','slap','poke','pat','neko','nekoGif','meow','lizard','kiss','hug','foxGirl','feed','cuddle','kemonomimi','holo','woof','wallpaper','goose','gecg','avatar','waifu'];

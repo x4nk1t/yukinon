@@ -1,8 +1,8 @@
 const request = require('request');
 
 class ImagesGrabber {
-    constructor(bot){
-        this.bot = bot;
+    constructor(client){
+        this.client = client;
         this.baseUrl = 'https://nekos.life/api/v2';
     }
     
@@ -12,7 +12,7 @@ class ImagesGrabber {
                 var json = JSON.parse(body)
                 callback(json.url);
             } else {
-                this.bot.logger.error('Something went wrong: '+ err)
+                this.client.logger.error('Something went wrong: '+ err)
                 callback(null);
             }
         })

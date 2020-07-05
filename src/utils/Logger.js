@@ -1,6 +1,6 @@
 class Logger {
-    constructor(bot){
-        this.bot = bot;
+    constructor(client){
+        this.client = client;
     }
     
     info(message){
