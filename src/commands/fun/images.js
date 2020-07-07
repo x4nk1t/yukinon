@@ -14,6 +14,12 @@ class Images extends Command{
         this.endpoints = require('../../utils/data/endpoints.json')
         this.nsfw = ['randomHentaiGif','pussy','nekoGif','neko','lesbian','kuni','cumsluts','classic','boobs','bJ','anal','avatar','yuri','trap','tits','girlSoloGif','girlSolo','pussyWankGif','pussyArt','kemonomimi','kitsune','keta','holo','holoEro','hentai','futanari','femdom','feetGif','eroFeet','feet','ero','eroKitsune','eroKemonomimi','eroNeko','eroYuri','cumArts','blowJob','spank','gasm'];
         this.sfw = ['smug','baka','tickle','slap','poke','pat','neko','nekoGif','meow','lizard','kiss','hug','foxGirl','feed','cuddle','kemonomimi','holo','woof','wallpaper','goose','gecg','avatar','waifu'];
+        
+        this.helpContent = '**SFW**\n';
+        this.helpContent += this.sfw.join(', ');
+        
+        this.helpContent += "\n**NSFW**\n";
+        this.helpContent += this.nsfw.join(', ');
     }
     
     execute(message, commandArgs){        
@@ -22,23 +28,11 @@ class Images extends Command{
         message.channel.startTyping()
         if(endpoint){
             if(endpoint == "help"){
-                var description = '**SFW**\n';
-                
-                for(var i = 0; i < this.sfw.length; i++){
-                    description += this.sfw[i] +', ';
-                }
-                
-                description += "\n**NSFW**\n";
-                
-                for(var i = 0; i < this.nsfw.length; i++){
-                    description += this.nsfw[i] +', ';
-                }
-                
                 message.channel.send({
                     embed: {
                         title: 'Images',
                         color: 'RANDOM',
-                        description: '**Usage:** '+ this.usage + '\n' + description,
+                        description: '**Usage:** '+ this.usage + '\n' + this.helpContent,
                         footer: {
                             text: 'Requested by '+ message.author.username,
                             icon_url: message.author.displayAvatarURL()
