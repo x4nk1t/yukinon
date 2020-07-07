@@ -5,7 +5,8 @@ class Help extends Command{
         super(commandLoader, {
             name: "help",
             description: "Shows the command info.",
-            usage: "[page]"
+            usage: "[page]",
+            aliases: ['h', '?']
         });
         
         this.helpContent = [];

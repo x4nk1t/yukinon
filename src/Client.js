@@ -1,5 +1,5 @@
 const discord = require('discord.js')
-const CommandLoader = require('./utils/CommandLoader.js');
+const CommandLoader = require('./commands/CommandLoader.js');
 const Logger = require('./utils/Logger.js');
 const RandomActivity = require('./utils/RandomActivity.js');
 

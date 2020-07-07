@@ -6,7 +6,7 @@ class Coinflip extends Command{
             name: "coinflip",
             description: "Flips the coin and shows head/tail.",
             usage: "[head|tail]",
-            aliases: ['cf']
+            aliases: ['coin', 'cf']
         });
     }
     

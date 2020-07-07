@@ -6,7 +6,8 @@ class Images extends Command{
         super(commandLoader, {
             name: "images",
             description: "Shows the images.",
-            usage: "<help|(endpoint)>"
+            usage: "<help|(endpoint)>",
+            aliases: ['i']
         });
         
         this.image = new ImagesGrabber(this.client)

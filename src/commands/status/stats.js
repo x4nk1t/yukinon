@@ -5,7 +5,8 @@ class Stats extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: "stats",
-            description: "Shows the stats of the bot/server."
+            description: "Shows the stats of the bot/server.",
+            aliases: ['status']
         });
     }
     
