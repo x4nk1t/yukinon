@@ -50,7 +50,7 @@ class Help extends Command{
         var commands = this.commandLoader.commands;
         var page = 0;
         
-        commands.array().forEach((command, i) => {
+        commands.array().sort((a, b) => (a.name < b.name)? -1 : ((a.name > b.name) ? 1 : 0)).forEach((command, i) => {
             if(i != 0 && i % this.helpPerPage == 0) page++;
             if(this.helpContent[page] == null) this.helpContent[page] = '';
             
