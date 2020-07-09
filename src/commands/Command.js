@@ -1,5 +1,11 @@
-class Commmand {
+class Command {
     constructor(commandLoader, options){
+        if(this.constructor === Command){
+            throw new TypeError("Cannot construct Abstract instances directly");
+        }
+        if(this.execute === undefined){
+            throw new TypeError(`Method 'execute()' must be implemented.`)
+        }
         this.commandLoader = commandLoader;
         this.client = commandLoader.client;
         this.prefix = commandLoader.prefix;
@@ -13,4 +19,4 @@ class Commmand {
         this.enable = options.enable || true;
     }
 }
-module.exports = Commmand;
+module.exports = Command;
