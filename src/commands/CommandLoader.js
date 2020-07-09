@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const fs = require('fs');
+const Command = require('./Command.js');
 
 class CommandLoader{
     constructor(client){
@@ -37,8 +38,10 @@ class CommandLoader{
                 const command = require(`${__dirname}/../commands/${dir}/${f}`)
                 const commandClass = new command(this)
                 
-                if(commandClass.enable){
+                if(commandClass instanceof Command && commandClass.enable){
                     this.loadCommand(commandClass)
+                } else {
+                    this.client.logger.error(`Couldn't load ${f}. Either it is not enabled or is not command.`)
                 }
             })
         })

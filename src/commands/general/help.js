@@ -60,8 +60,7 @@ class Help extends Command{
             var commandAliases = '';
             
             if(command.aliases.length){
-                commandAliases = 'Aliases: ';
-                commandAliases += command.aliases.map(alias => this.prefix + alias).join(', ') + '\n';
+                commandAliases = 'Aliases: '+ command.aliases.map(alias => this.prefix + alias).join(', ') + '\n';
             }
             
             this.helpContent[page] += '**'+ commandName + '**\n' + commandDescription + '\n Usage: ' + usage +'\n' + commandAliases;
