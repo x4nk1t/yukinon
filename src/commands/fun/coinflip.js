@@ -1,3 +1,4 @@
+const Discord = require('discord.js')
 const Command = require('../Command.js');
 
 class Coinflip extends Command{
@@ -13,44 +14,45 @@ class Coinflip extends Command{
     execute(message, commandArgs){
         message.channel.startTyping()
         
-        var embed = {
-            title: "CoinFlip",
-            color: 'RANDOM'
-        }
+        var embed = new Discord.MessageEmbed()
+            .setTitle("CoinFlip")
+            .setColor('RANDOM')
         
         if(commandArgs[0]){
             var ht = commandArgs[0].toLowerCase();
             
             if(ht != 'head' && ht != 'tail') {
-                embed.description = '**Usage:** ' + this.usage;
+                embed.setDescription('**Usage:** ' + this.usage);
                 
-                message.channel.send({embed: embed})
+                message.channel.send(embed)
                 message.channel.stopTyping()
                 return;
             }
             
             var flip = this.flip()
-            embed.description = 'Flipping coin....';
-            message.channel.send({embed: embed}).then(sent => {
+            embed.setDescription('Flipping coin....');
+            message.channel.send(embed).then(sent => {
                 setTimeout(() => {
                     if(flip == ht){
-                        embed.color = '#00FF00'
-                        embed.description = 'Its a **'+ flip +'**. You Won!'
+                        embed.setColor('#00FF00')
+                            .setDescription('Its a **'+ flip +'**. You Won!')
+                            .setFooter('Coin flipped by '+ message.author.username)
                     } else {
-                        embed.color = '#FF0000'
-                        embed.description = 'Its a **'+ flip +'**. You Lost!'
+                        embed.setColor('#FF0000')
+                        embed.setDescription('Its a **'+ flip +'**. You Lost!')
                     }
-                    sent.edit({embed: embed})
+                    sent.edit(embed)
                 }, 1300)
             })
         } else {
-            embed.description = 'Flipping coin....';
-            message.channel.send({embed: embed}).then(sent => {
-                embed.color = 'RANDOM'
-                embed.description = 'Its a **'+ this.flip() +'**.';
+            embed.setDescription('Flipping coin....');
+            message.channel.send(embed).then(sent => {
+                embed.setColor('RANDOM')
+                    .setDescription('Its a **'+ this.flip() +'**.')
+                    .setFooter('Coin flipped by '+ message.author.username)
                 
                 setTimeout(() => {
-                    sent.edit({embed: embed})
+                    sent.edit(embed)
                 }, 1300)
             })
         }

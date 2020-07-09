@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class Ping extends Command{
@@ -11,12 +12,11 @@ class Ping extends Command{
     execute(message, commandArgs){
         message.channel.startTyping()
         
-        var embed = {
-            color: 'RANDOM',
-            description: `Pong! Latency is ${new Date().getTime() - message.createdTimestamp}ms.`
-        }
+        var embed = new Discord.MessageEmbed()
+            .setColor('RANDOM')
+            .setDescription(`Pong! Latency is ${new Date().getTime() - message.createdTimestamp}ms.`)
             
-        message.channel.send({embed: embed});
+        message.channel.send(embed);
         message.channel.stopTyping()
     }
 }

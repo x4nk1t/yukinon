@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class Uptime extends Command{
@@ -26,17 +27,13 @@ class Uptime extends Command{
         
         var seconds = Math.round(delta % 60);
         
-        var embed = {
-            title: 'Uptime',
-            color: 'RANDOM',
-            description: days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's',
-            footer: {
-                text: 'Requested by '+ message.author.username,
-                icon_url: message.author.displayAvatarURL()
-            }
-        }
+        var embed = new Discord.MessageEmbed()
+            .setTitle('Uptime')
+            .setColor('RANDOM')
+            .setDescription(days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's')
+            .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
         
-        message.channel.send({embed: embed});
+        message.channel.send(embed);
         message.channel.stopTyping()
     }
 }

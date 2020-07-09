@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class Help extends Command{
@@ -15,34 +16,26 @@ class Help extends Command{
     
     execute(message, commandArgs){
         message.channel.startTyping()
+        var embed = new Discord.MessageEmbed()
         
         var reqPage = 0;
         if(commandArgs[0]){
             reqPage = commandArgs[0] - 1;
             if(commandArgs[0] > this.helpContent.length){
-                message.channel.send({
-                    embed: {
-                        title: 'ERROR',
-                        description: 'That page is not available. Total Available Page: '+ this.helpContent.length,
-                        color: '#FF0000'
-                    }
-                })
+                embed.setTitle('ERROR')
+                    .setDescription('That page is not available. Total Available Page: '+ this.helpContent.length)
+                    .setColor('#FF0000')
+                message.channel.send(embed)
                 message.channel.stopTyping()
                 return;
             }
         }
-        
-        message.channel.send({
-            embed: {
-                title: 'Help (Page '+ (reqPage + 1)+'/'+this.helpContent.length+')',
-                description: this.helpContent[reqPage],
-                color: 'RANDOM',
-                footer: {
-                    text: 'Requested by '+ message.author.username,
-                    icon_url: message.author.displayAvatarURL()
-                }
-            }
-        })
+        embed.setTitle('Help (Page '+ (reqPage + 1)+'/'+this.helpContent.length+')')
+            .setDescription(this.helpContent[reqPage])
+            .setColor('RANDOM')
+            .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
+            
+        message.channel.send(embed)
         message.channel.stopTyping()
     }
     

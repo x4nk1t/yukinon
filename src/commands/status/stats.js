@@ -1,4 +1,5 @@
 const os = require('os')
+const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class Stats extends Command{
@@ -20,10 +21,10 @@ class Stats extends Command{
         const totalmem = Math.round(os.totalmem() /1024 / 1024); //IN MB
         const version = os.version();
         
-        var embed = {
-            title: 'Stats',
-            color: 'RANDOM',
-            fields: [
+        var embed = new Discord.MessageEmbed()
+            .setTitle('Stats')
+            .setColor('RANDOM')
+            .addFields([
                 {
                     name: 'Servers',
                     value: this.client.guilds.cache.array().length,
@@ -63,10 +64,10 @@ class Stats extends Command{
                     value: (totalmem - freemem) +' MB / ' + totalmem + ' MB',
                     inline: true
                 },
-            ]
-        }
+            ])
+            .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
         
-        message.channel.send({embed: embed});
+        message.channel.send(embed);
         message.channel.stopTyping()
     }
 }
