@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const Command = require('../Command.js');
-const ImagesGrabber = require('../../utils/ImagesGrabber.js');
+const ImagesGrabber = require('../../network/ImageGrabber.js');
 
 class Poke extends Command{
     constructor(commandLoader){

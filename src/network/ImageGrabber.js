@@ -1,6 +1,6 @@
 const request = require('request');
 
-class ImagesGrabber {
+class ImageGrabber {
     constructor(client){
         this.client = client;
         this.baseUrl = 'https://nekos.life/api/v2';
@@ -19,4 +19,4 @@ class ImagesGrabber {
     }
 }
 
-module.exports = ImagesGrabber
+module.exports = ImageGrabber

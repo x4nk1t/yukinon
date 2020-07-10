@@ -44,7 +44,7 @@ class CommandLoader{
             })
         })
         this.getCommandByName('help').loadHelpContents()
-        this.client.logger.info("Commands Loaded.")
+        this.client.logger.info(this.commands.array().length +" commands loaded.")
     }
     
     getCommandByName(name){
