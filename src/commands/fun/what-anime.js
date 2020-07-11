@@ -51,13 +51,14 @@ class WhatAnime extends Command{
                 
                 const imageUrl = data.image_url
                 const title = data.title
-                const title_english = data.title_english
+                const title_english = data.title_english ? data.title_english : 'N/A'
                 const type = data.type
                 const source = data.source
                 const episodes = data.episodes || 'N/A'
-                const airing = data.airing
+                const airing = data.airing ? 'Yes' : 'No'
                 const score = data.score
                 const aired = data.aired.string
+                const mal_url = data.url
                 
                 embed.setTitle(title)
                     .setColor('RANDOM')
@@ -69,6 +70,8 @@ class WhatAnime extends Command{
                     .addField('Episodes', episodes, true)
                     .addField('Airing', airing, true)
                     .addField('Aired', aired, true)
+                    .addField('MAL Link', mal_url, true)
+                    .addField('\u200b', '*Note: This might not be accurate.*')
                 
                 message.channel.send(embed)
                 message.channel.stopTyping()
