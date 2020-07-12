@@ -30,6 +30,9 @@ class DBApi {
                 'Content-Type': 'application/json'
             }
         })
+        .catch(error => {
+            this.client.logger.error('Something went wrong: '+ error)
+        })
     }
     
     getAnimeRelease(){
@@ -39,8 +42,7 @@ class DBApi {
                 return data;
             })
             .catch(error => {
-                embed.setDescription('Something went wrong. Try again later.')
-                channel.send(embed)
+                this.client.logger.error('Something went wrong: '+ error)
             })
     }
     
