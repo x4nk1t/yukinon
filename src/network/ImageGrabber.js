@@ -1,4 +1,4 @@
-const request = require('request');
+const fetch = require('node-fetch');
 
 class ImageGrabber {
     constructor(client){
@@ -7,15 +7,14 @@ class ImageGrabber {
     }
     
     getImage(endpoint, callback){
-        request(this.baseUrl+endpoint, (err, response, body) => {
-            if(!err){
-                var json = JSON.parse(body)
-                callback(json.url);
-            } else {
-                this.client.logger.error('Something went wrong: '+ err)
+        fetch(this.baseUrl+endpoint)
+            .then(response => response.json())
+            .then(data => callback(data.url))
+            .catch (error => {
+                this.client.logger.error(error)
                 callback(null);
             }
-        })
+        )
     }
 }
 

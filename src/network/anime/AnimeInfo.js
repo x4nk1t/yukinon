@@ -1,4 +1,4 @@
-const request = require('request');
+const fetch = require('node-fetch');
 
 class AnimeInfo {
     constructor(client){
@@ -7,15 +7,14 @@ class AnimeInfo {
     }
     
     getDetails(mal_id, callback){
-        request(this.baseUrl+mal_id, (err, response, body) => {
-            if(!err){
-                var json = JSON.parse(body)
-                callback(json);
-            } else {
-                this.client.logger.error('Something went wrong: '+ err)
+        fetch(this.baseUrl+mal_id)
+            .then(response => response.json())
+            .then(data => callback(data))
+            .catch (error => {
+                this.client.logger.error(error)
                 callback(null);
             }
-        })
+        )
     }
 }
 

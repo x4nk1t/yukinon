@@ -1,4 +1,4 @@
-const request = require('request');
+const fetch = require('node-fetch');
 
 class WhatAnimeGrabber {
     constructor(client){
@@ -7,19 +7,20 @@ class WhatAnimeGrabber {
     }
     
     getDetails(url, callback){
-        request(this.baseUrl+url, (err, response, body) => {
-            if(!err){
-                if(body.startsWith('"Search limit exceeded.')){
-                    callback(null)
-                    return
+        fetch(this.baseUrl+url)
+            .then(response => response.text())
+            .then(data => {
+                if(data.startsWith('"Search limit exceeded.') || data.startsWith('"Error reading')){
+                    callback(null);
+                } else {
+                    callback(JSON.parse(data))
                 }
-                var json = JSON.parse(body)
-                callback(json);
-            } else {
-                this.client.logger.error('Something went wrong: '+ err)
+            })
+            .catch (error => {
+                this.client.logger.error(error)
                 callback(null);
             }
-        })
+        )
     }
 }
 
