@@ -30,19 +30,24 @@ class DBApi {
                 'Content-Type': 'application/json'
             }
         })
+        .then(response => response.json())
+        .then(data => {
+            callback(false, data)
+        })
         .catch(error => {
             this.client.logger.error('Something went wrong: '+ error)
+            callback(true, {message: 'Something went wrong.'})
         })
     }
     
-    getAnimeRelease(){
+    getAnimeRelease(callback){
         fetch(this.animeReleaseUrl)
             .then(response => response.json())
             .then(data => {
-                return data;
+                callback(false, data)
             })
             .catch(error => {
-                this.client.logger.error('Something went wrong: '+ error)
+                callback(true, {message: 'Something went wrong.'})
             })
     }
     
@@ -50,51 +55,47 @@ class DBApi {
     * Tracking Anime
     */
     
-    getTrackingAnime(channel){
+    getTrackingAnime(channel, callback){
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
             
         fetch(this.trackingAnimeUrl +'?channel_id='+ channel.id)
             .then(response => response.json())
             .then(data => {
-                embed.setDescription(data.message)
-                channel.send(embed)
+                callback(false, data)
             })
             .catch(error => {
-                embed.setDescription('Something went wrong. Try again later.')
-                channel.send(embed)
+                this.client.logger.error('Something went wrong: '+ error)
+                callback(true, {message: 'Something went wrong.'})
             })
     }
     
-    addTrackingAnime(channel, anime_id){
+    addTrackingAnime(channel, anime_id, callback){
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
             
         fetch(this.trackingAnimeUrl +'?channel_id='+ channel.id +'&add='+ anime_id)
             .then(response => response.json())
             .then(data => {
-                embed.setDescription(data.message)
-                channel.send(embed)
+                callback(false, data)
             })
             .catch(error => {
-                embed.setDescription('Something went wrong. Try again later.')
-                channel.send(embed)
+                this.client.logger.error('Something went wrong: '+ error)
+                callback(true, {message: 'Something went wrong.'})
             })
     }
     
-    removeTrackingAnime(channel, anime_id){
+    removeTrackingAnime(channel, anime_id, callback){
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
             
         fetch(this.trackingAnimeUrl +'?channel_id='+ channel.id +'&remove='+ anime_id)
             .then(response => response.json())
             .then(data => {
-                embed.setDescription(data.message)
-                channel.send(embed)
+                callback(false, data)
             })
             .catch(error => {
-                embed.setDescription('Something went wrong. Try again later.')
-                channel.send(embed)
+                callback(true, {message: 'Something went wrong.'})
             })
     }
     
@@ -102,46 +103,42 @@ class DBApi {
     * Release channels
     */
     
-    getReleaseChannels(){
+    getReleaseChannels(callback){
         fetch(this.releaseChannelUrl)
             .then(response => response.json())
             .then(data => {
-                return data;
+                callback(false, data)
             })
             .catch(error => {
-                this.client.logger.error('Something went wrong: '+ error)
+                callback(true, {message: 'Something went wrong.'})
             })
     }
     
-    addReleaseChannel(channel){
+    addReleaseChannel(channel, callback){
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
             
         fetch(this.releaseChannelUrl +'?add='+ channel.id)
             .then(response => response.json())
             .then(data => {
-                embed.setDescription(data.message)
-                channel.send(embed)
+                callback(false, data)
             })
             .catch(error => {
-                embed.setDescription('Something went wrong. Try again later.')
-                channel.send(embed)
+                callback(true, {message: 'Something went wrong.'})
             })
     }
     
-    removeReleaseChannel(channel){
+    removeReleaseChannel(channel, callback){
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
             
         fetch(this.releaseChannelUrl +'?remove='+ channel.id)
             .then(response => response.json())
             .then(data => {
-                embed.setDescription(data.message)
-                channel.send(embed)
+                callback(false, data)
             })
             .catch(error => {
-                embed.setDescription('Something went wrong. Try again later.')
-                channel.send(embed)
+                callback(true, {message: 'Something went wrong.'})
             })
     }
 }
