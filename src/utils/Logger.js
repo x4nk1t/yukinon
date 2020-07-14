@@ -4,11 +4,18 @@ class Logger {
     }
     
     info(message){
-        console.log('[INFO] '+ message);
+        console.log('['+ this.timestamp() +'] [INFO] ' + message);
     }
     
     error(message){
-        console.log('[ERROR] '+ message);
+        console.log('['+ this.timestamp() +'] [INFO] ' + message);
+    }
+    
+    timestamp(){
+        const date = new Date()
+        const timeStamp = date.getHours() +':'+ date.getMinutes() +':'+ ('0'+ date.getSeconds()).slice(-2)
+        
+        return timeStamp
     }
 }
 
