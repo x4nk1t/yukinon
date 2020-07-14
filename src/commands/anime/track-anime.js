@@ -6,7 +6,7 @@ class TrackAnime extends Command{
         super(commandLoader, {
             name: "track-anime",
             description: "Add anime to track in the channel.",
-            usage: "<add|remove> <anime id>",
+            usage: "<add|remove|list> <anime id>",
             aliases: ['track']
         });
     }
@@ -17,10 +17,17 @@ class TrackAnime extends Command{
         const embed = new Discord.MessageEmbed()
             .setColor('#FF0000')
         
-        if(commandArgs[0] && commandArgs[1]){
-            const anime_id = commandArgs[1]
+        if(commandArgs[0]){
             if(commandArgs[0] == "add"){
-                this.client.dbapi.addTrackingAnime(message.channel, anime_id,(error, data) => {
+                commandArgs.shift()
+                const anime = commandArgs.join(' ')
+                if(anime == ''){
+                    embed.setDescription('**Usage:** '+ this.usage)
+                    message.channel.send(embed)
+                    message.channel.stopTyping()
+                    return;
+                }
+                this.client.dbapi.addTrackingAnime(message.channel, anime,(error, data) => {
                     if(!error){
                         embed.setColor('RANDOM')
                     }
@@ -29,7 +36,15 @@ class TrackAnime extends Command{
                     message.channel.stopTyping()
                 })
             } else if (commandArgs[0] == "remove"){
-                this.client.dbapi.removeTrackingAnime(message.channel, anime_id, (error, data) => {
+                commandArgs.shift()
+                const anime = commandArgs.join(' ')
+                if(anime == ''){
+                    embed.setDescription('**Usage:** '+ this.usage)
+                    message.channel.send(embed)
+                    message.channel.stopTyping()
+                    return;
+                }
+                this.client.dbapi.removeTrackingAnime(message.channel, anime, (error, data) => {
                     if(!error){
                         embed.setColor('RANDOM')
                     }
@@ -37,6 +52,21 @@ class TrackAnime extends Command{
                     message.channel.send(embed)
                     message.channel.stopTyping()
                 })
+            } else if(commandArgs[0] == "list") {
+                const channels = this.client.animeLoader.release_channels;
+                channels.forEach(chh => {
+                    if(chh.channel_id == chh.id){
+                        const trackings = chh.tracking
+                        
+                        embed.setColor('RANDOM')
+                        embed.setTitle('This channel is tracking:')
+                        embed.setDescription(trackings)
+                        
+                        message.channel.send(embed)
+                        message.channel.stopTyping()
+                    }
+                })
+                return;
             } else {
                 embed.setDescription('**Usage:** '+ this.usage)
                 message.channel.send(embed)

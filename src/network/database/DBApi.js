@@ -9,13 +9,15 @@ class DBApi {
         this.animeReleaseUrl = this.baseUrl + '/anime_release.php';
         this.trackingAnimeUrl = this.baseUrl + '/tracking_animes.php';
         this.releaseChannelUrl = this.baseUrl + '/release_channels.php';
+        
+        this.cooldown = 2;
     }
     
     /*
     * Anime Release
     */
     
-    addAnimeRelease(name, episode, link, anime_id){
+    addAnimeRelease(name, episode, link, anime_id, callback = () => {}){
         const obj = {
             name: name,
             episode: episode,
@@ -36,7 +38,7 @@ class DBApi {
         })
         .catch(error => {
             this.client.logger.error('Something went wrong: '+ error)
-            callback(true, {message: 'Something went wrong.'})
+            callback(true, {message: 'Something went wrong. Try again later'})
         })
     }
     
@@ -47,7 +49,7 @@ class DBApi {
                 callback(false, data)
             })
             .catch(error => {
-                callback(true, {message: 'Something went wrong.'})
+                callback(true, {message: 'Something went wrong. Try again later'})
             })
     }
     
@@ -66,7 +68,7 @@ class DBApi {
             })
             .catch(error => {
                 this.client.logger.error('Something went wrong: '+ error)
-                callback(true, {message: 'Something went wrong.'})
+                callback(true, {message: 'Something went wrong. Try again later'})
             })
     }
     
@@ -81,7 +83,7 @@ class DBApi {
             })
             .catch(error => {
                 this.client.logger.error('Something went wrong: '+ error)
-                callback(true, {message: 'Something went wrong.'})
+                callback(true, {message: 'Something went wrong. Try again later'})
             })
     }
     
@@ -95,7 +97,7 @@ class DBApi {
                 callback(false, data)
             })
             .catch(error => {
-                callback(true, {message: 'Something went wrong.'})
+                callback(true, {message: 'Something went wrong. Try again later'})
             })
     }
     
@@ -110,7 +112,7 @@ class DBApi {
                 callback(false, data)
             })
             .catch(error => {
-                callback(true, {message: 'Something went wrong.'})
+                callback(true, {message: 'Something went wrong. Try again later'})
             })
     }
     
@@ -124,7 +126,7 @@ class DBApi {
                 callback(false, data)
             })
             .catch(error => {
-                callback(true, {message: 'Something went wrong.'})
+                callback(true, {message: 'Something went wrong. Try again later'})
             })
     }
     
@@ -138,7 +140,7 @@ class DBApi {
                 callback(false, data)
             })
             .catch(error => {
-                callback(true, {message: 'Something went wrong.'})
+                callback(true, {message: 'Something went wrong. Try again later'})
             })
     }
 }
