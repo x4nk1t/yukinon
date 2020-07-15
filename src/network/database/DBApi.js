@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const fetch = require('node-fetch')
+const axios = require('axios')
 
 class DBApi {
     constructor(client){
@@ -10,7 +10,7 @@ class DBApi {
         this.trackingAnimeUrl = this.baseUrl + '/tracking_animes.php';
         this.releaseChannelUrl = this.baseUrl + '/release_channels.php';
         
-        this.cooldown = 2;
+        this.cooldown = 1;
     }
     
     /*
@@ -18,37 +18,42 @@ class DBApi {
     */
     
     addAnimeRelease(name, episode, link, anime_id, callback = () => {}){
+        setInterval(() => {this.cooldown--}, 1000)
+        while(this.cooldown != 0){
+            //do nothing
+        }
+        this.cooldown = 1;
         const obj = {
             name: name,
             episode: episode,
             link: link,
             anime_id: anime_id
         }
+        const buff = Buffer.from(JSON.stringify(obj))
+        const base64 = buff.toString('base64')
         
-        fetch(this.animeReleaseUrl +'?add', {
-            method: 'POST',
-            body: JSON.stringify(obj),
-            headers: {
-                'Content-Type': 'application/json'
-            }
+        axios({
+            method: 'post',
+            url: this.animeReleaseUrl +'?add&json='+ base64,
+            data: obj
         })
-        .then(response => response.json())
-        .then(data => {
-            callback(false, data)
-        })
-        .catch(error => {
-            this.client.logger.error('Something went wrong: '+ error)
-            callback(true, {message: 'Something went wrong. Try again later'})
-        })
+            .then(response => {
+                console.log(response.data)
+                callback(false, response.data)
+            })
+            .catch(error => {
+                this.client.logger.error('Something went wrong: '+ error)
+                callback(true, {message: 'Something went wrong. Try again later'})
+            })
     }
     
     getAnimeRelease(callback){
-        fetch(this.animeReleaseUrl)
-            .then(response => response.json())
-            .then(data => {
-                callback(false, data)
+        axios.get(this.animeReleaseUrl)
+            .then(response => {
+                callback(false, response.data)
             })
             .catch(error => {
+                this.client.logger.error(error)
                 callback(true, {message: 'Something went wrong. Try again later'})
             })
     }
@@ -61,10 +66,9 @@ class DBApi {
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
             
-        fetch(this.trackingAnimeUrl +'?channel_id='+ channel.id)
-            .then(response => response.json())
-            .then(data => {
-                callback(false, data)
+        axios.get(this.trackingAnimeUrl +'?channel_id='+ channel.id)
+            .then(response => {
+                callback(false, response.data)
             })
             .catch(error => {
                 this.client.logger.error('Something went wrong: '+ error)
@@ -76,10 +80,9 @@ class DBApi {
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
             
-        fetch(this.trackingAnimeUrl +'?channel_id='+ channel.id +'&add='+ anime_id)
-            .then(response => response.json())
-            .then(data => {
-                callback(false, data)
+        axios.get(this.trackingAnimeUrl +'?channel_id='+ channel.id +'&add='+ anime_id)
+            .then(response => {
+                callback(false, response.data)
             })
             .catch(error => {
                 this.client.logger.error('Something went wrong: '+ error)
@@ -91,10 +94,9 @@ class DBApi {
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
             
-        fetch(this.trackingAnimeUrl +'?channel_id='+ channel.id +'&remove='+ anime_id)
-            .then(response => response.json())
-            .then(data => {
-                callback(false, data)
+        axios.get(this.trackingAnimeUrl +'?channel_id='+ channel.id +'&remove='+ anime_id)
+            .then(response => {
+                callback(false, response.data)
             })
             .catch(error => {
                 callback(true, {message: 'Something went wrong. Try again later'})
@@ -106,10 +108,9 @@ class DBApi {
     */
     
     getReleaseChannels(callback){
-        fetch(this.releaseChannelUrl)
-            .then(response => response.json())
-            .then(data => {
-                callback(false, data)
+        axios.get(this.releaseChannelUrl)
+            .then(response => {
+                callback(false, response.data)
             })
             .catch(error => {
                 callback(true, {message: 'Something went wrong. Try again later'})
@@ -120,10 +121,9 @@ class DBApi {
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
             
-        fetch(this.releaseChannelUrl +'?add='+ channel.id)
-            .then(response => response.json())
-            .then(data => {
-                callback(false, data)
+        axios.get(this.releaseChannelUrl +'?add='+ channel.id)
+            .then(response => {
+                callback(false, response.data)
             })
             .catch(error => {
                 callback(true, {message: 'Something went wrong. Try again later'})
@@ -134,10 +134,9 @@ class DBApi {
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
             
-        fetch(this.releaseChannelUrl +'?remove='+ channel.id)
-            .then(response => response.json())
-            .then(data => {
-                callback(false, data)
+        axios.get(this.releaseChannelUrl +'?remove='+ channel.id)
+            .then(response => {
+                callback(false, response.data)
             })
             .catch(error => {
                 callback(true, {message: 'Something went wrong. Try again later'})
