@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 
 class AnimeInfo {
     constructor(client){
@@ -7,9 +7,8 @@ class AnimeInfo {
     }
     
     getDetails(mal_id, callback){
-        fetch(this.baseUrl+mal_id)
-            .then(response => response.json())
-            .then(data => callback(data))
+        axios(this.baseUrl+mal_id)
+            .then(response => callback(response.data))
             .catch (error => {
                 this.client.logger.error(error)
                 callback(null);

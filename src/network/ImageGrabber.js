@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 
 class ImageGrabber {
     constructor(client){
@@ -7,9 +7,8 @@ class ImageGrabber {
     }
     
     getImage(endpoint, callback){
-        fetch(this.baseUrl+endpoint)
-            .then(response => response.json())
-            .then(data => callback(data.url))
+        axios(this.baseUrl+endpoint)
+            .then(response => callback(response.data.url))
             .catch (error => {
                 this.client.logger.error(error)
                 callback(null);

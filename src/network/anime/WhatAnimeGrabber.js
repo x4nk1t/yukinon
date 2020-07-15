@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 
 class WhatAnimeGrabber {
     constructor(client){
@@ -7,18 +7,17 @@ class WhatAnimeGrabber {
     }
     
     getDetails(url, callback){
-        fetch(this.baseUrl+url)
-            .then(response => response.text())
-            .then(data => {
-                if(data.startsWith('"Search limit exceeded.') || data.startsWith('"Error reading')){
-                    callback(null);
-                } else {
-                    callback(JSON.parse(data))
-                }
+        axios(this.baseUrl+url)
+            .then(response => {
+                const data = response.data;
+                callback(false, data)
             })
             .catch (error => {
-                this.client.logger.error(error)
-                callback(null);
+                if(error.response.status == 429){
+                    callback(true, {message: 'Rate limited. Try again in 60 seconds'});
+                } else {
+                    callback(true, {message: 'Something went wrong. Try again later'});
+                }
             }
         )
     }

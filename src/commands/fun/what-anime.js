@@ -29,9 +29,9 @@ class WhatAnime extends Command{
             return
         }
         
-        this.whatAnime.getDetails(commandArgs[0], json => {
-            if(json == null){
-                embed.setDescription('Something went wrong while processing. Might have been rate limit.')
+        this.whatAnime.getDetails(commandArgs[0], (error, json) => {
+            if(error){
+                embed.setDescription(json.message)
                 
                 message.channel.send(embed)
                 message.channel.stopTyping()

@@ -8,12 +8,12 @@ class Logger {
     }
     
     error(message){
-        console.log('['+ this.timestamp() +'] [INFO] ' + message);
+        console.log('['+ this.timestamp() +'] [ERROR] ' + message);
     }
     
     timestamp(){
         const date = new Date()
-        const timeStamp = date.getHours() +':'+ date.getMinutes() +':'+ ('0'+ date.getSeconds()).slice(-2)
+        const timeStamp = ('0'+ date.getHours()).slice(-2) +':'+ ('0'+ date.getMinutes()).slice(-2) +':'+ ('0'+ date.getSeconds()).slice(-2)
         
         return timeStamp
     }

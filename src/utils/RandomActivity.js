@@ -27,6 +27,10 @@ class RandomActivity {
             {
                 status: 'Anime',
                 type: 3
+            },
+            {
+                status: 'to x4nk1t',
+                type: 2
             }
         ];
     }

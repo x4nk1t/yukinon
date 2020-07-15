@@ -1,6 +1,5 @@
 const discord = require('discord.js')
 const CommandLoader = require('./commands/CommandLoader.js');
-const DBApi = require('./network/database/DBApi.js');
 const Logger = require('./utils/Logger.js');
 const RandomActivity = require('./utils/RandomActivity.js');
 
@@ -11,7 +10,6 @@ class Client extends discord.Client{
         this.logger = new Logger(this)
         this.commandLoader = new CommandLoader(this)
         this.randomActivity = new RandomActivity(this)
-        this.dbapi = new DBApi(this)
         
         this.registerEvents()
     }
