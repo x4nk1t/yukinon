@@ -39,10 +39,17 @@ class WhatAnime extends Command{
             }
             
             const mal_id = json.docs[0].mal_id;
+            const title_english = json.docs[0].title_english || 'N/A';
+            const title_romanji = json.docs[0].title_romanji || 'N/A';
             
             this.animeInfo.getDetails(mal_id, data => {
                 if(data == null){
-                    embed.setDescription('Something went wrong while grabbing anime detail.')
+                    embed.setTitle(title_romanji)
+                        .setColor('RANDOM')
+                        .setThumbnail(commandArgs[0])
+                        .addField('English', title_english, true)
+                        .addField('MAL Link', 'https://myanimelist.net/anime/'+ mal_id)
+                        .addField('\u200b', '*Note: Full data could not be loaded due to some error.*')
                 
                     message.channel.send(embed)
                     message.channel.stopTyping()
