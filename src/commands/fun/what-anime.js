@@ -40,11 +40,11 @@ class WhatAnime extends Command{
             
             const mal_id = json.docs[0].mal_id;
             const title_english = json.docs[0].title_english || 'N/A';
-            const title_romanji = json.docs[0].title_romanji || 'N/A';
+            const title_romaji = json.docs[0].title_romaji || 'N/A';
             
             this.animeInfo.getDetails(mal_id, data => {
                 if(data == null){
-                    embed.setTitle(title_romanji)
+                    embed.setTitle(title_romaji)
                         .setColor('RANDOM')
                         .setThumbnail(commandArgs[0])
                         .addField('English', title_english, true)
