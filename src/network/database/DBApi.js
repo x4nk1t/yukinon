@@ -1,49 +1,34 @@
-const Discord = require('discord.js');
 const axios = require('axios')
 
 class DBApi {
     constructor(client){
         this.client = client;
-        this.baseUrl = 'http://4nk1t.gq/api';
         
-        this.animeReleaseUrl = this.baseUrl + '/anime_release.php';
-        this.trackingAnimeUrl = this.baseUrl + '/tracking_animes.php';
-        this.releaseChannelUrl = this.baseUrl + '/release_channels.php';
-        
-        this.cooldown = 1;
+        this.animeReleaseUrl = 'https://4nk1t.gq/api/v1/anime_release.php';
+        this.trackingAnimeUrl = 'https://4nk1t.gq/api/v1/tracking_animes.php';
+        this.releaseChannelUrl = 'https://4nk1t.gq/api/v1/release_channels.php';
     }
     
     /*
     * Anime Release
+    * Add option to add multiple entries at once
     */
     
-    addAnimeRelease(name, episode, link, anime_id, callback = () => {}){
-        setInterval(() => {this.cooldown--}, 1000)
-        while(this.cooldown != 0){
-            //do nothing
-        }
-        this.cooldown = 1;
+    addAnimeRelease(name, episode, link, callback = () => {}){
         const obj = {
             name: name,
             episode: episode,
-            link: link,
-            anime_id: anime_id
+            link: link
         }
         const buff = Buffer.from(JSON.stringify(obj))
         const base64 = buff.toString('base64')
         
-        axios({
-            method: 'post',
-            url: this.animeReleaseUrl +'?add&json='+ base64,
-            data: obj
-        })
+        axios.get(this.animeReleaseUrl +'?add&json='+ base64)
             .then(response => {
-                console.log(response.data)
                 callback(false, response.data)
             })
             .catch(error => {
-                this.client.logger.error('Something went wrong: '+ error)
-                callback(true, {message: 'Something went wrong. Try again later'})
+                callback(true, {message: error})
             })
     }
     
@@ -53,8 +38,7 @@ class DBApi {
                 callback(false, response.data)
             })
             .catch(error => {
-                this.client.logger.error(error)
-                callback(true, {message: 'Something went wrong. Try again later'})
+                callback(true, {message: error})
             })
     }
     
@@ -62,44 +46,33 @@ class DBApi {
     * Tracking Anime
     */
     
-    getTrackingAnime(channel, callback){
-        const embed = new Discord.MessageEmbed()
-            .setColor('RANDOM')
-            
+    getTrackingAnime(channel, callback){            
         axios.get(this.trackingAnimeUrl +'?channel_id='+ channel.id)
             .then(response => {
                 callback(false, response.data)
             })
             .catch(error => {
-                this.client.logger.error('Something went wrong: '+ error)
-                callback(true, {message: 'Something went wrong. Try again later'})
+                callback(true, {message: error})
             })
     }
     
-    addTrackingAnime(channel, anime_id, callback){
-        const embed = new Discord.MessageEmbed()
-            .setColor('RANDOM')
-            
+    addTrackingAnime(channel, anime_id, callback){            
         axios.get(this.trackingAnimeUrl +'?channel_id='+ channel.id +'&add='+ anime_id)
             .then(response => {
                 callback(false, response.data)
             })
             .catch(error => {
-                this.client.logger.error('Something went wrong: '+ error)
-                callback(true, {message: 'Something went wrong. Try again later'})
+                callback(true, {message: error})
             })
     }
     
     removeTrackingAnime(channel, anime_id, callback){
-        const embed = new Discord.MessageEmbed()
-            .setColor('RANDOM')
-            
         axios.get(this.trackingAnimeUrl +'?channel_id='+ channel.id +'&remove='+ anime_id)
             .then(response => {
                 callback(false, response.data)
             })
             .catch(error => {
-                callback(true, {message: 'Something went wrong. Try again later'})
+                callback(true, {message: error})
             })
     }
     
@@ -113,33 +86,27 @@ class DBApi {
                 callback(false, response.data)
             })
             .catch(error => {
-                callback(true, {message: 'Something went wrong. Try again later'})
+                callback(true, {message: error})
             })
     }
     
     addReleaseChannel(channel, callback){
-        const embed = new Discord.MessageEmbed()
-            .setColor('RANDOM')
-            
         axios.get(this.releaseChannelUrl +'?add='+ channel.id)
             .then(response => {
                 callback(false, response.data)
             })
             .catch(error => {
-                callback(true, {message: 'Something went wrong. Try again later'})
+                callback(true, {message: error})
             })
     }
     
     removeReleaseChannel(channel, callback){
-        const embed = new Discord.MessageEmbed()
-            .setColor('RANDOM')
-            
         axios.get(this.releaseChannelUrl +'?remove='+ channel.id)
             .then(response => {
                 callback(false, response.data)
             })
             .catch(error => {
-                callback(true, {message: 'Something went wrong. Try again later'})
+                callback(true, {message: error})
             })
     }
 }

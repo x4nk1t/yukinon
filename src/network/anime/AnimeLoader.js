@@ -15,19 +15,19 @@ class AnimeLoader {
     run(){
         this.client.dbapi.getAnimeRelease((error, data) => {
             if(error){
-                this.client.logger.error('Something went wrong in \'run()\'. Trying again in 5 seconds')
-                setTimeout(() => this.run(), 5000)
+                this.client.logger.error('Error occured while loading anime released: '+ data.message)
                 return;
             }
             this.episodes = data;
+            this.client.logger.info('Loaded released anime.')
             
             this.client.dbapi.getReleaseChannels((error2, data2) => {
                 if(error2){
-                    this.client.logger.error('Something went wrong in \'run()\'. Trying again in 5 seconds')
-                    setTimeout(() => this.run(), 5000)
+                    this.client.logger.error('Error occured while loading release channels: '+ data2.message)
                     return
                 }
                 this.release_channels = data2;
+                this.client.logger.info('Loaded release channels.')
                 
                 this.checkTask()
                 setInterval(() => this.run(), 1000 * 60 * this.checkInMinutes)
@@ -36,7 +36,7 @@ class AnimeLoader {
     }
     
     checkTask(){
-        axios(this.baseUrl)
+        axios.get(this.baseUrl)
             .then(response => {
                 const data = response.data
                 const $ = cheerio.load(data)
@@ -55,33 +55,35 @@ class AnimeLoader {
                     details[j] = {};
                     details[j].imageUrl = imgUrl;
                     details[j].name = name;
-                    details[j].episode = episodeNum;
+                    details[j].episode = episodeNum.split(' ')[1];
                     details[j].url = this.baseUrl + url;
                     j++;
                 }
                 this.sendReleases(details)
+            })
+            .catch(error => {
+                this.client.logger.error(error)
             })
     }
     
     sendReleases(details){
         const newEpisodes = this.checkNewEpisodes(details)
         const embed = new Discord.MessageEmbed()
-        newEpisodes.forEach(episode => {
-            this.client.dbapi.addAnimeRelease(episode.name, episode.episode, episode.url, episode.name, (error, data) => {
+        newEpisodes.forEach(async episode => {
+            await this.client.dbapi.addAnimeRelease(episode.name, episode.episode, episode.url, (error, data) => {
                 if(!error){
-                    console.log('posted '+ episode.name)
                     this.release_channels.forEach(channel => {
-                        const id = channel.channel_id
-                        const trackings = channel.tracking;
-                        const tracking = trackings.split(',');
+                        var id = channel.channel_id
+                        var trackings = channel.tracking;
+                        var tracking = trackings.split(',');
                        
                         tracking.forEach(track => {
-                            if(track.toLowerCase().replace(' ', '').replace('\t', '') == episode.name.toLowerCase().replace(' ', '').replace('\t', '')){
+                            if(this.filterName(track) == this.filterName(episode.name)){
                                 const discord_channel = this.client.channels.cache.get(id)
-                                console.log(episode.name)
+                                
                                 discord_channel.send({embed: {
                                     color: 'RANDOM',
-                                    title: 'New anime just got released.',
+                                    title: episode.name +' just got released.',
                                     thumbnail: {
                                         url: episode.imageUrl
                                     },
@@ -95,10 +97,14 @@ class AnimeLoader {
                         })
                     })
                 } else {
-                    this.client.logger.info('Something went wrong while pushing \''+ episode.name +'\'')
+                    this.client.logger.error('Error while posting anime: '+ data.message)
                 }
             })
         })
+    }
+    
+    filterName(string){
+        return string.toLowerCase().replace(' ', '').replace('\t', '')
     }
     
     checkNewEpisodes(details){
