@@ -58,7 +58,6 @@ class WhatAnime extends Command{
                 
                 const imageUrl = data.image_url
                 const title = data.title
-                const title_english = data.title_english ? data.title_english : 'N/A'
                 const type = data.type
                 const source = data.source
                 const episodes = data.episodes || 'N/A'
