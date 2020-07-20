@@ -55,8 +55,8 @@ class TrackAnime extends Command{
             } else if(commandArgs[0] == "list") {
                 const channels = this.client.animeLoader.release_channels;
                 channels.forEach(chh => {
-                    if(chh.channel_id == chh.id){
-                        const trackings = chh.tracking
+                    if(chh.channel_id == message.channel.id){
+                        const trackings = chh.tracking.split(',').join(', ')
                         
                         embed.setColor('RANDOM')
                         embed.setTitle('This channel is tracking:')
