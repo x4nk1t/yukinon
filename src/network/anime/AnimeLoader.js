@@ -7,7 +7,7 @@ class AnimeLoader {
         this.client = client;
         
         this.checkInMinutes = 10;
-        this.baseUrl = 'https://www19.gogoanime.io/';
+        this.baseUrl = 'https://www19.gogoanime.io';
         this.episodes = [];
         this.release_channels = [];
     }
@@ -50,13 +50,14 @@ class AnimeLoader {
                     var imgUrl = img[i].children[1].children[1].attribs.src;
                     var name = img[i].children[1].children[1].attribs.alt;
                     var episodeNum = episode[i].children[0].data;
-                    var url = img[i].children[1].attribs.href;
+                    var link = img[i].children[1].attribs.href;
                     
                     details[j] = {};
                     details[j].imageUrl = imgUrl;
                     details[j].name = name;
                     details[j].episode = episodeNum.split(' ')[1];
-                    details[j].url = this.baseUrl + url;
+                    details[j].link = this.baseUrl + link;
+                    
                     j++;
                 }
                 this.sendReleases(details)
@@ -68,20 +69,20 @@ class AnimeLoader {
     
     sendReleases(details){
         const newEpisodes = this.checkNewEpisodes(details)
-        const embed = new Discord.MessageEmbed()
-        newEpisodes.forEach(async episode => {
-            await this.client.dbapi.addAnimeRelease(episode.name, episode.episode, episode.url, (error, data) => {
-                if(!error){
-                    this.release_channels.forEach(channel => {
-                        var id = channel.channel_id
-                        var trackings = channel.tracking;
-                        var tracking = trackings.split(',');
-                       
-                        tracking.forEach(track => {
-                            if(this.filterName(track) == this.filterName(episode.name)){
-                                const discord_channel = this.client.channels.cache.get(id)
-                                
-                                discord_channel.send({embed: {
+        
+        newEpisodes.forEach(episode => {
+            this.release_channels.forEach(channel => {
+                var id = channel.channel_id
+                var trackings = channel.tracking;
+                var tracking = trackings.split(',');
+                
+                tracking.forEach(track => {
+                    if(this.filterName(track) == this.filterName(episode.name)){
+                        const discord_channel = this.client.channels.cache.get(id)
+                        
+                        if(discord_channel != undefined){
+                            discord_channel.send({
+                                embed: {
                                     color: 'RANDOM',
                                     title: episode.name +' just got released.',
                                     thumbnail: {
@@ -90,17 +91,36 @@ class AnimeLoader {
                                     fields: [
                                         {name: 'Name', value: episode.name, inline: true},
                                         {name: 'Episode', value: episode.episode, inline: true},
-                                        {name: 'Link', value: episode.url}
+                                        {name: 'Link', value: episode.link}
                                     ]
-                                }})
-                            }
-                        })
-                    })
-                } else {
-                    this.client.logger.error('Error while posting anime: '+ data.message)
-                }
+                                }
+                            })
+                        }
+                    }
+                })
             })
         })
+        
+        this.client.dbapi.addAnimeRelease(this.buildObj(newEpisodes), (error, data) => {
+            if(!error){
+                this.client.logger.info(data.message)
+            } else {
+                this.client.logger.error('Error while posting anime: '+ data.message)
+            }
+        })
+    }
+    
+    buildObj(episodes){
+        var array = [];
+        episodes.forEach(episode => {
+            var obj = {};
+            obj.name = episode.name;
+            obj.episode = episode.episode;
+            
+            array.push(obj)
+        })
+        
+        return array
     }
     
     filterName(string){

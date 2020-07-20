@@ -11,16 +11,10 @@ class DBApi {
     
     /*
     * Anime Release
-    * Add option to add multiple entries at once
     */
     
-    addAnimeRelease(name, episode, link, callback = () => {}){
-        const obj = {
-            name: name,
-            episode: episode,
-            link: link
-        }
-        const buff = Buffer.from(JSON.stringify(obj))
+    addAnimeRelease(options, callback = () => {}){
+        const buff = Buffer.from(JSON.stringify(options))
         const base64 = buff.toString('base64')
         
         axios.get(this.animeReleaseUrl +'?add&json='+ base64)
