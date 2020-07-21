@@ -20,7 +20,7 @@ class Client extends discord.Client{
     
     start(){
         this.randomActivity.run()
-        //this.animeLoader.run()
+        this.animeLoader.run()
         
         this.logger.info('Bot running as: '+ this.user.tag)
     }

@@ -30,12 +30,13 @@ class AnimeLoader {
                 this.client.logger.info('Loaded release channels.')
                 
                 this.checkTask()
-                setInterval(() => this.run(), 1000 * 60 * this.checkInMinutes)
+                setInterval(() => this.checkTask(), 1000 * 60 * this.checkInMinutes)
             })
         })
     }
     
     checkTask(){
+        this.client.logger.info('Checking for new animes...')
         axios.get(this.baseUrl)
             .then(response => {
                 const data = response.data
@@ -71,6 +72,8 @@ class AnimeLoader {
         const newEpisodes = this.checkNewEpisodes(details)
         
         newEpisodes.forEach(episode => {
+            this.episodes.push(episode)
+            
             this.release_channels.forEach(channel => {
                 var id = channel.channel_id
                 var trackings = channel.tracking;
