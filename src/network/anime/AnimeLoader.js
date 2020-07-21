@@ -74,33 +74,35 @@ class AnimeLoader {
         newEpisodes.forEach(episode => {
             this.episodes.push(episode)
             
+            var embed = new Discord.MessageEmbed()
+                .setTitle(episode.name.replace('\t', '') +' just got released.')
+                .setColor('RANDOM')
+                .setThumbnail(episode.imageUrl)
+                .addFields(
+                    {name: 'Name', value: episode.name, inline: true},
+                    {name: 'Episode', value: episode.episode, inline: true},
+                    {name: 'Link', value: episode.link}
+                )
+            
             this.release_channels.forEach(channel => {
                 var id = channel.channel_id
                 var trackings = channel.tracking;
                 var tracking = trackings.split(',');
+                var discord_channel = this.client.channels.cache.get(id)
                 
-                tracking.forEach(track => {
-                    if(this.filterName(track) == this.filterName(episode.name)){
-                        const discord_channel = this.client.channels.cache.get(id)
-                        
-                        if(discord_channel != undefined){
-                            discord_channel.send({
-                                embed: {
-                                    color: 'RANDOM',
-                                    title: episode.name +' just got released.',
-                                    thumbnail: {
-                                        url: episode.imageUrl
-                                    },
-                                    fields: [
-                                        {name: 'Name', value: episode.name, inline: true},
-                                        {name: 'Episode', value: episode.episode, inline: true},
-                                        {name: 'Link', value: episode.link}
-                                    ]
-                                }
-                            })
-                        }
+                if(trackings == ''){
+                    if(discord_channel != undefined){
+                        discord_channel.send(embed)
                     }
-                })
+                } else {
+                    tracking.forEach(track => {
+                        if(this.filterName(track) == this.filterName(episode.name)){
+                            if(discord_channel != undefined){
+                                discord_channel.send(embed)
+                            }
+                        }
+                    })
+                }
             })
         })
         

@@ -6,7 +6,7 @@ class TrackAnime extends Command{
         super(commandLoader, {
             name: "track-anime",
             description: "Add anime to track in the channel.",
-            usage: "<add|remove|list> <anime id>",
+            usage: "<add|remove|list|clear> <anime id>",
             aliases: ['track']
         });
     }
@@ -60,12 +60,33 @@ class TrackAnime extends Command{
                     if(chh.channel_id == message.channel.id){
                         const trackings = chh.tracking.split(',').join(', ')
                         
-                        embed.setColor('RANDOM')
-                        embed.setTitle('This channel is tracking:')
-                        embed.setDescription(trackings)
+                        if(trackings.length){
+                            embed.setColor('RANDOM')
+                            embed.setTitle('This channel is tracking:')
+                            embed.setDescription(trackings)
+                        } else {
+                            embed.setDescription('This channel isn\'t tracking any anime.')
+                        }
                         
                         message.channel.send(embed)
                         message.channel.stopTyping()
+                    }
+                })
+                return;
+            } else if(commandArgs[0] == "clear") {
+                const channels = this.client.animeLoader.release_channels;
+                channels.forEach(chh => {
+                    if(chh.channel_id == message.channel.id){
+                        chh.trackings = '';
+                        this.client.dbapi.removeTrackingAnime(message.channel, 'all', (error, data) => {
+                            if(!error){
+                                this.clearTrackArray(message.channel)
+                                embed.setColor('RANDOM')
+                            }
+                            embed.setDescription(data.message)
+                            message.channel.send(embed)
+                            message.channel.stopTyping()
+                        })
                     }
                 })
                 return;
@@ -117,6 +138,15 @@ class TrackAnime extends Command{
                 })
                 
                 chh.tracking = split.join(',') +',';
+            }
+        })
+    }
+    
+    clearTrackArray(channel){
+        var channels = this.client.animeLoader.release_channels;
+        channels.forEach(chh => {
+            if(chh.channel_id == channel.id){
+                chh.tracking = '';
             }
         })
     }
