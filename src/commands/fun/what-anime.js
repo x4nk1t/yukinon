@@ -24,8 +24,7 @@ class WhatAnime extends Command{
             .setColor('#FF0000')
             
         if(!commandArgs[0]){
-            embed.setDescription(`**Usage:** ${this.usage}`)
-            message.channel.send(embed)
+            this.sendUsage(message)
             return
         }
         

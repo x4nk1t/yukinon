@@ -22,9 +22,7 @@ class TrackAnime extends Command{
                 commandArgs.shift()
                 const anime = commandArgs.join(' ')
                 if(anime == ''){
-                    embed.setDescription('**Usage:** '+ this.usage)
-                    message.channel.send(embed)
-                    message.channel.stopTyping()
+                    this.sendUsage(message)
                     return;
                 }
                 this.client.dbapi.addTrackingAnime(message.channel, anime,(error, data) => {
@@ -40,9 +38,7 @@ class TrackAnime extends Command{
                 commandArgs.shift()
                 const anime = commandArgs.join(' ')
                 if(anime == ''){
-                    embed.setDescription('**Usage:** '+ this.usage)
-                    message.channel.send(embed)
-                    message.channel.stopTyping()
+                    this.sendUsage(message)
                     return;
                 }
                 this.client.dbapi.removeTrackingAnime(message.channel, anime, (error, data) => {
@@ -91,14 +87,10 @@ class TrackAnime extends Command{
                 })
                 return;
             } else {
-                embed.setDescription('**Usage:** '+ this.usage)
-                message.channel.send(embed)
-                message.channel.stopTyping()
+                this.sendUsage(message)
             }
         } else {
-            embed.setDescription('**Usage:** '+ this.usage)
-            message.channel.send(embed)
-            message.channel.stopTyping()
+            this.sendUsage(message)
         }
     }
     

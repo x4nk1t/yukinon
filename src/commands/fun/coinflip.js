@@ -22,10 +22,7 @@ class Coinflip extends Command{
             var ht = commandArgs[0].toLowerCase();
             
             if(ht != 'head' && ht != 'tail') {
-                embed.setDescription('**Usage:** ' + this.usage);
-                
-                message.channel.send(embed)
-                message.channel.stopTyping()
+                this.sendUsage(message)
                 return;
             }
             

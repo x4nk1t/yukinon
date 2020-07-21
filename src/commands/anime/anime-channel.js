@@ -39,14 +39,10 @@ class AnimeChannel extends Command{
                     message.channel.stopTyping()
                 })
             } else {
-                embed.setDescription('**Usage:** '+ this.usage)
-                message.channel.send(embed)
-                message.channel.stopTyping()
+                this.sendUsage(message)
             }
         } else {
-            embed.setDescription('**Usage:** '+ this.usage)
-            message.channel.send(embed)
-            message.channel.stopTyping()
+            this.sendUsage(message)
         }
     }
     

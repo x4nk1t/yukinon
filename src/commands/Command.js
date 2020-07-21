@@ -18,5 +18,10 @@ class Command {
         
         this.enable = options.enable || true;
     }
+    
+    sendUsage(message){
+        message.channel.send({embed: {description: '**Usage:** '+ this.usage, color: '#FF0000'}})
+        message.channel.stopTyping()
+    }
 }
 module.exports = Command;
