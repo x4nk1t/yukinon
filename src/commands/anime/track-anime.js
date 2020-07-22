@@ -52,11 +52,13 @@ class TrackAnime extends Command{
                 })
             } else if(commandArgs[0] == "list") {
                 const channels = this.client.animeLoader.release_channels;
+                var found = false;
                 channels.forEach(chh => {
                     if(chh.channel_id == message.channel.id){
+                        found = true;
                         const trackings = chh.tracking.split(',').join(', ')
                         
-                        if(trackings.length){
+                        if(chh.tracking != ''){
                             embed.setColor('RANDOM')
                             embed.setTitle('This channel is tracking:')
                             embed.setDescription(trackings)
@@ -66,14 +68,22 @@ class TrackAnime extends Command{
                         
                         message.channel.send(embed)
                         message.channel.stopTyping()
+                        return;
                     }
                 })
+                if(!found){
+                    embed.setDescription('This channel isn\'t anime release channel.')
+                    message.channel.send(embed)
+                    message.channel.stopTyping();
+                }
                 return;
             } else if(commandArgs[0] == "clear") {
                 const channels = this.client.animeLoader.release_channels;
+                var found = false;
                 channels.forEach(chh => {
                     if(chh.channel_id == message.channel.id){
                         chh.trackings = '';
+                        found = true;
                         this.client.dbapi.removeTrackingAnime(message.channel, 'all', (error, data) => {
                             if(!error){
                                 this.clearTrackArray(message.channel)
@@ -85,6 +95,11 @@ class TrackAnime extends Command{
                         })
                     }
                 })
+                if(!found){
+                    embed.setDescription('This channel isn\'t anime release channel.')
+                    message.channel.send(embed)
+                    message.channel.stopTyping();
+                }
                 return;
             } else {
                 this.sendUsage(message)
