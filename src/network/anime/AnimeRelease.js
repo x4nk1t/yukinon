@@ -6,7 +6,7 @@ class AnimeLoader {
     constructor(client){
         this.client = client;
         
-        this.checkInMinutes = 10;
+        this.checkInMinutes = 29;
         this.baseUrl = 'https://www19.gogoanime.io';
         this.episodes = [];
         this.release_channels = [];

@@ -47,7 +47,7 @@ class AnimeChannel extends Command{
     }
     
     addToArray(channel){
-        var channels = this.client.animeLoader.release_channels;
+        var channels = this.client.animeRelease.release_channels;
         channels.forEach(chh => {
             if(chh.channel_id == channel.id){
                 return;
@@ -57,7 +57,7 @@ class AnimeChannel extends Command{
     }
     
     removeFromArray(channel){
-        var channels = this.client.animeLoader.release_channels;
+        var channels = this.client.animeRelease.release_channels;
         channels.forEach((chh, i) => {
             if(chh.channel_id == channel.id){
                 channels.splice(i, 1)

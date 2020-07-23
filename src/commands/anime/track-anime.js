@@ -51,7 +51,7 @@ class TrackAnime extends Command{
                     message.channel.stopTyping()
                 })
             } else if(commandArgs[0] == "list") {
-                const channels = this.client.animeLoader.release_channels;
+                const channels = this.client.animeRelease.release_channels;
                 var found = false;
                 channels.forEach(chh => {
                     if(chh.channel_id == message.channel.id){
@@ -78,7 +78,7 @@ class TrackAnime extends Command{
                 }
                 return;
             } else if(commandArgs[0] == "clear") {
-                const channels = this.client.animeLoader.release_channels;
+                const channels = this.client.animeRelease.release_channels;
                 var found = false;
                 channels.forEach(chh => {
                     if(chh.channel_id == message.channel.id){
@@ -114,7 +114,7 @@ class TrackAnime extends Command{
     }
     
     addTrackToArray(channel, name){
-        var channels = this.client.animeLoader.release_channels;
+        var channels = this.client.animeRelease.release_channels;
         channels.forEach(chh => {
             if(chh.channel_id == channel.id){
                 var split = chh.tracking.split(',')
@@ -132,7 +132,7 @@ class TrackAnime extends Command{
     }
     
     removeTrackFromArray(channel, name){
-        var channels = this.client.animeLoader.release_channels;
+        var channels = this.client.animeRelease.release_channels;
         channels.forEach(chh => {
             if(chh.channel_id == channel.id){
                 var split = chh.tracking.split(',')
@@ -150,7 +150,7 @@ class TrackAnime extends Command{
     }
     
     clearTrackArray(channel){
-        var channels = this.client.animeLoader.release_channels;
+        var channels = this.client.animeRelease.release_channels;
         channels.forEach(chh => {
             if(chh.channel_id == channel.id){
                 chh.tracking = '';
