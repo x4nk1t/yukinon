@@ -1,9 +1,14 @@
 const discord = require('discord.js')
+const mongoose = require('mongoose')
+
 const CommandLoader = require('./commands/CommandLoader.js');
 const DBApi = require('./network/database/DBApi.js');
 const Logger = require('./utils/Logger.js');
 const AnimeRelease = require('./network/anime/AnimeRelease.js');
 const RandomActivity = require('./utils/RandomActivity.js');
+
+const url = "mongodb+srv://xkiit:GKfrQQBRFwVsujdz@cluster0.mqg3h.mongodb.net/yukinon?retryWrites=true&w=majority";
+mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
 
 class Client extends discord.Client{
     constructor(options = {}){
@@ -14,8 +19,12 @@ class Client extends discord.Client{
         this.randomActivity = new RandomActivity(this)
         this.dbapi = new DBApi(this)
         this.animeRelease = new AnimeRelease(this)
+        this.db = mongoose.connection;
         
         this.registerEvents()
+        
+        this.db.on('error', err => this.logger.error(err))
+        this.db.once('open', () => this.logger.info('Connected to database....'))
     }
     
     start(){
@@ -43,3 +52,5 @@ class Client extends discord.Client{
 }
 
 module.exports = Client
+global.mongoose = mongoose;
+global.dbName = 'yukinon';

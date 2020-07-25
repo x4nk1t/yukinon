@@ -1,12 +1,9 @@
-const axios = require('axios')
+const Channels = require('./models/channel.js')
+const Releases = require('./models/release.js')
 
 class DBApi {
     constructor(client){
         this.client = client;
-        
-        this.animeReleaseUrl = 'https://4nk1t.gq/api/v1/anime_release.php';
-        this.trackingAnimeUrl = 'https://4nk1t.gq/api/v1/tracking_animes.php';
-        this.releaseChannelUrl = 'https://4nk1t.gq/api/v1/release_channels.php';
     }
     
     /*
@@ -14,60 +11,40 @@ class DBApi {
     */
     
     addAnimeRelease(options, callback = () => {}){
-        const buff = Buffer.from(JSON.stringify(options))
-        const base64 = buff.toString('base64')
-        
-        axios.get(this.animeReleaseUrl +'?add&json='+ base64)
-            .then(response => {
-                callback(false, response.data)
-            })
-            .catch(error => {
-                callback(true, {message: error})
-            })
+        Releases.collection.insertMany(options, (err, docs) => {
+            if(err){
+                callback(true, {message: 'Something went wrong'})
+                return
+            }
+            callback(false, {message: 'Successfully added to database.'})
+        })
     }
     
     getAnimeRelease(callback){
-        axios.get(this.animeReleaseUrl)
-            .then(response => {
-                callback(false, response.data)
-            })
-            .catch(error => {
-                callback(true, {message: error})
-            })
+        Releases.collection.find({}, async (err, releases) => {
+            if(err){
+                callback(true, {message: 'Failed to fetch from database.'})
+                return;
+            }
+            const array = await releases.toArray()
+            callback(false, array)
+        })
     }
     
     /*
     * Tracking Anime
     */
     
-    getTrackingAnime(channel, callback){            
-        axios.get(this.trackingAnimeUrl +'?channel_id='+ channel.id)
-            .then(response => {
-                callback(false, response.data)
-            })
-            .catch(error => {
-                callback(true, {message: error})
-            })
+    getTrackingAnime(channel, callback){
+        callback(true, {message: 'Work in progress'})
     }
     
-    addTrackingAnime(channel, anime_id, callback){            
-        axios.get(this.trackingAnimeUrl +'?channel_id='+ channel.id +'&add='+ anime_id)
-            .then(response => {
-                callback(false, response.data)
-            })
-            .catch(error => {
-                callback(true, {message: error})
-            })
+    addTrackingAnime(channel, anime_id, callback){
+        callback(true, {message: 'Work in progress'})
     }
     
     removeTrackingAnime(channel, anime_id, callback){
-        axios.get(this.trackingAnimeUrl +'?channel_id='+ channel.id +'&remove='+ anime_id)
-            .then(response => {
-                callback(false, response.data)
-            })
-            .catch(error => {
-                callback(true, {message: error})
-            })
+        callback(true, {message: 'Work in progress'})
     }
     
     /*
@@ -75,33 +52,71 @@ class DBApi {
     */
     
     getReleaseChannels(callback){
-        axios.get(this.releaseChannelUrl)
-            .then(response => {
-                callback(false, response.data)
-            })
-            .catch(error => {
-                callback(true, {message: error})
-            })
+        Channels.collection.find({}, async (err, channels) => {
+            if(err){
+                callback(true, {message: 'Failed to fetch from database.'})
+                return;
+            }
+            const array = await channels.toArray()
+            callback(false, array)
+        })
     }
     
     addReleaseChannel(channel, callback){
-        axios.get(this.releaseChannelUrl +'?add='+ channel.id)
-            .then(response => {
-                callback(false, response.data)
-            })
-            .catch(error => {
-                callback(true, {message: error})
-            })
+        const id = channel.id;
+        const releaseChannels = this.client.animeRelease.release_channels;
+        var found = false;
+        
+        releaseChannels.forEach(rel => {
+            if(rel.channel_id == id){
+                found = true;
+                callback(true, {message: 'Channel already exists'})
+            }
+        })
+        
+        if(found){
+            return;
+        }
+        
+        const chh = {
+            channel_id: id, 
+            tracking: ''
+        };
+        
+        releaseChannels.push(chh)
+        Channels.collection.insertOne(chh, (err, docs) => {
+            if(err){
+                callback(true, {message: 'Something went wrong'})
+                return
+            }
+            callback(false, {message: 'Successfully added this channel to database.'})
+        })
     }
     
     removeReleaseChannel(channel, callback){
-        axios.get(this.releaseChannelUrl +'?remove='+ channel.id)
-            .then(response => {
-                callback(false, response.data)
-            })
-            .catch(error => {
-                callback(true, {message: error})
-            })
+        const id = channel.id;
+        const releaseChannels = this.client.animeRelease.release_channels;
+        var found = false;
+        
+        releaseChannels.forEach((rel, i) => {
+            if(rel.channel_id == id){
+                found = true
+                Channels.collection.removeOne({channel_id: id}, (err, docs) => {
+                    if(err){
+                        callback(true, {message: 'Something went wrong'})
+                        return
+                    }
+                    releaseChannels.splice(i, 1)
+                    callback(false, {message: 'Successfully removed this channel from database.'})
+                })
+                return;
+            }
+        })
+        if(found){
+            return;
+        }
+        callback(true, {message: 'Channel not found'})
     }
 }
+
 module.exports = DBApi

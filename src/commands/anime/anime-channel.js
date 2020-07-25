@@ -21,7 +21,6 @@ class AnimeChannel extends Command{
             if(commandArgs[0] == "add"){
                 this.client.dbapi.addReleaseChannel(message.channel, (error, data) => {
                     if(!error){
-                        this.addToArray(message.channel)
                         embed.setColor('RANDOM')
                     }
                     embed.setDescription(data.message)
@@ -31,7 +30,6 @@ class AnimeChannel extends Command{
             } else if (commandArgs[0] == "remove"){
                 this.client.dbapi.removeReleaseChannel(message.channel, (error, data) => {
                     if(!error){
-                        this.removeFromArray(message.channel)
                         embed.setColor('RANDOM')
                     }
                     embed.setDescription(data.message)
@@ -44,25 +42,6 @@ class AnimeChannel extends Command{
         } else {
             this.sendUsage(message)
         }
-    }
-    
-    addToArray(channel){
-        var channels = this.client.animeRelease.release_channels;
-        channels.forEach(chh => {
-            if(chh.channel_id == channel.id){
-                return;
-            }
-        })
-        channels.push({channel_id: channel.id, tracking: ''})
-    }
-    
-    removeFromArray(channel){
-        var channels = this.client.animeRelease.release_channels;
-        channels.forEach((chh, i) => {
-            if(chh.channel_id == channel.id){
-                channels.splice(i, 1)
-            }
-        })
     }
 }
 
