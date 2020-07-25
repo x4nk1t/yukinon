@@ -7,7 +7,7 @@ const Logger = require('./utils/Logger.js');
 const AnimeRelease = require('./network/anime/AnimeRelease.js');
 const RandomActivity = require('./utils/RandomActivity.js');
 
-const url = "mongodb+srv://xkiit:GKfrQQBRFwVsujdz@cluster0.mqg3h.mongodb.net/yukinon?retryWrites=true&w=majority";
+const url = process.env.DB_URL;
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
 
 class Client extends discord.Client{
@@ -53,4 +53,3 @@ class Client extends discord.Client{
 
 module.exports = Client
 global.mongoose = mongoose;
-global.dbName = 'yukinon';

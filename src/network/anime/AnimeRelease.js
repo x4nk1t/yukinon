@@ -29,7 +29,7 @@ class AnimeLoader {
                 this.release_channels = data2;
                 this.client.logger.info('Loaded release channels.')
                 
-                //this.checkTask()
+                this.checkTask()
                 setInterval(() => this.checkTask(), 1000 * 60 * this.checkInMinutes)
             })
         })

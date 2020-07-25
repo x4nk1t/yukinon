@@ -35,16 +35,91 @@ class DBApi {
     * Tracking Anime
     */
     
-    getTrackingAnime(channel, callback){
-        callback(true, {message: 'Work in progress'})
+    addTrackingAnime(channel, name, callback){
+        var channels = this.client.animeRelease.release_channels;
+        var found = false;
+        var alreadyAdded = false;
+        
+        channels.forEach(chh => {
+            if(chh.channel_id == channel.id){
+                var split = chh.tracking.split(',')
+                found = true
+                
+                split.forEach((s, i) => {
+                    if(s == '') split.splice(i, 1)
+                    if(this.filterName(s) == this.filterName(name)){
+                        alreadyAdded = true
+                        callback(true, {message: 'This anime is already in tracking list.'})
+                        return;
+                    }
+                })
+                if(!alreadyAdded){
+                    split.push(name)
+                    chh.tracking = split.join(',') + ',';
+                    Channels.collection.updateOne({channel_id: channel.id}, { $set: {tracking: chh.tracking}}, (err, docs) => {
+                        if(err){
+                            callback(true, {message: 'Failed to update the tracking list.'})
+                            return
+                        }
+                        callback(false, {message: 'Successfully added to tracking list'})
+                    })
+                }
+            }
+        })
+        if(!found) callback(true, {message: 'This channel is not a anime release channel.'})
     }
     
-    addTrackingAnime(channel, anime_id, callback){
-        callback(true, {message: 'Work in progress'})
+    removeTrackingAnime(channel, name, callback){
+        var channels = this.client.animeRelease.release_channels;
+        var found = false;
+        
+        channels.forEach(chh => {
+            if(chh.channel_id == channel.id){
+                var split = chh.tracking.split(',')
+                found = true
+                
+                split.forEach((s, i) => {
+                    if(s == '') split.splice(i, 1)
+                    if(this.filterName(s) == this.filterName(name)){
+                        split.splice(i, 1)
+                    }
+                })
+                
+                chh.tracking = split.join(',') +',';
+                Channels.collection.updateOne({channel_id: channel.id}, { $set: {tracking: chh.tracking}}, (err, docs) => {
+                    if(err){
+                        callback(true, {message: 'Failed to update the tracking list.'})
+                        return
+                    }
+                    callback(false, {message: 'Successfully removed from tracking list'})
+                })
+            }
+        })
+        if(!found) callback(true, {message: 'This channel is not a anime release channel.'})
     }
     
-    removeTrackingAnime(channel, anime_id, callback){
-        callback(true, {message: 'Work in progress'})
+    clearTrackingAnime(channel, callback){
+        var channels = this.client.animeRelease.release_channels;
+        var found = false;
+        
+        channels.forEach(chh => {
+            if(chh.channel_id == channel.id){
+                found = true
+                chh.tracking = '';
+                Channels.collection.updateOne({channel_id: channel.id}, { $set: {tracking: chh.tracking}}, (err, docs) => {
+                    if(err){
+                        callback(true, {message: 'Failed to update the tracking list.'})
+                        return
+                    }
+                    callback(false, {message: 'Successfully removed from tracking list'})
+                })
+            }
+        })
+        if(!found) callback(true, {message: 'This channel is not a anime release channel.'})
+    }
+    
+    filterName(string){
+        return string.toLowerCase().replace(' ', '').replace('\t', '')
     }
     
     /*

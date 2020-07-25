@@ -27,7 +27,6 @@ class TrackAnime extends Command{
                 }
                 this.client.dbapi.addTrackingAnime(message.channel, anime,(error, data) => {
                     if(!error){
-                        this.addTrackToArray(message.channel, anime)
                         embed.setColor('RANDOM')
                     }
                     embed.setDescription(data.message)
@@ -43,7 +42,6 @@ class TrackAnime extends Command{
                 }
                 this.client.dbapi.removeTrackingAnime(message.channel, anime, (error, data) => {
                     if(!error){
-                        this.removeTrackFromArray(message.channel, anime)
                         embed.setColor('RANDOM')
                     }
                     embed.setDescription(data.message)
@@ -86,7 +84,6 @@ class TrackAnime extends Command{
                         found = true;
                         this.client.dbapi.removeTrackingAnime(message.channel, 'all', (error, data) => {
                             if(!error){
-                                this.clearTrackArray(message.channel)
                                 embed.setColor('RANDOM')
                             }
                             embed.setDescription(data.message)
@@ -111,51 +108,6 @@ class TrackAnime extends Command{
     
     filterName(string){
         return string.toLowerCase().replace(' ', '').replace('\t', '')
-    }
-    
-    addTrackToArray(channel, name){
-        var channels = this.client.animeRelease.release_channels;
-        channels.forEach(chh => {
-            if(chh.channel_id == channel.id){
-                var split = chh.tracking.split(',')
-                
-                split.forEach((s, i) => {
-                    if(s == '') split.splice(i, 1)
-                    if(this.filterName(s) == this.filterName(name)){
-                        return;
-                    }
-                })
-                split.push(name)
-                chh.tracking = split.join(',') + ',';
-            }
-        })
-    }
-    
-    removeTrackFromArray(channel, name){
-        var channels = this.client.animeRelease.release_channels;
-        channels.forEach(chh => {
-            if(chh.channel_id == channel.id){
-                var split = chh.tracking.split(',')
-                
-                split.forEach((s, i) => {
-                    if(s == '') split.splice(i, 1)
-                    if(this.filterName(s) == this.filterName(name)){
-                        split.splice(i, 1)
-                    }
-                })
-                
-                chh.tracking = split.join(',') +',';
-            }
-        })
-    }
-    
-    clearTrackArray(channel){
-        var channels = this.client.animeRelease.release_channels;
-        channels.forEach(chh => {
-            if(chh.channel_id == channel.id){
-                chh.tracking = '';
-            }
-        })
     }
 }
 
