@@ -19,7 +19,6 @@ class AnimeLoader {
                 return;
             }
             this.episodes = data;
-            this.client.logger.info('Loaded released anime.')
             
             this.client.dbapi.getReleaseChannels((error2, data2) => {
                 if(error2){
@@ -27,7 +26,6 @@ class AnimeLoader {
                     return
                 }
                 this.release_channels = data2;
-                this.client.logger.info('Loaded release channels.')
                 
                 this.checkTask()
                 setInterval(() => this.checkTask(), 1000 * 60 * this.checkInMinutes)
@@ -71,48 +69,50 @@ class AnimeLoader {
     sendReleases(details){
         const newEpisodes = this.checkNewEpisodes(details)
         
-        newEpisodes.forEach(episode => {
-            this.episodes.push(episode)
-            
-            var embed = new Discord.MessageEmbed()
-                .setTitle(episode.name.replace('\t', '') +' just got released.')
-                .setColor('RANDOM')
-                .setThumbnail(episode.imageUrl)
-                .addFields(
-                    {name: 'Name', value: episode.name, inline: true},
-                    {name: 'Episode', value: episode.episode, inline: true},
-                    {name: 'Link', value: episode.link}
-                )
-            
-            this.release_channels.forEach(channel => {
-                var id = channel.channel_id
-                var trackings = channel.tracking;
-                var tracking = trackings.split(',');
-                var discord_channel = this.client.channels.cache.get(id)
+        if(newEpisodes.length){
+            newEpisodes.forEach(episode => {
+                this.episodes.push(episode)
                 
-                if(trackings == ''){
-                    if(discord_channel != undefined){
-                        discord_channel.send(embed)
-                    }
-                } else {
-                    tracking.forEach(track => {
-                        if(this.filterName(track) == this.filterName(episode.name)){
-                            if(discord_channel != undefined){
-                                discord_channel.send(embed)
-                            }
+                var embed = new Discord.MessageEmbed()
+                    .setTitle(episode.name.replace('\t', '') +' just got released.')
+                    .setColor('RANDOM')
+                    .setThumbnail(episode.imageUrl)
+                    .addFields(
+                        {name: 'Name', value: episode.name, inline: true},
+                        {name: 'Episode', value: episode.episode, inline: true},
+                        {name: 'Link', value: episode.link}
+                    )
+                
+                this.release_channels.forEach(channel => {
+                    var id = channel.channel_id
+                    var trackings = channel.tracking;
+                    var tracking = trackings.split(',');
+                    var discord_channel = this.client.channels.cache.get(id)
+                    
+                    if(trackings == ''){
+                        if(discord_channel != undefined){
+                            discord_channel.send(embed)
                         }
-                    })
+                    } else {
+                        tracking.forEach(track => {
+                            if(this.filterName(track) == this.filterName(episode.name)){
+                                if(discord_channel != undefined){
+                                    discord_channel.send(embed)
+                                }
+                            }
+                        })
+                    }
+                })
+            })
+            
+            this.client.dbapi.addAnimeRelease(this.buildObj(newEpisodes), (error, data) => {
+                if(!error){
+                    this.client.logger.info(data.message)
+                } else {
+                    this.client.logger.error('Error while posting anime: '+ data.message)
                 }
             })
-        })
-        
-        this.client.dbapi.addAnimeRelease(this.buildObj(newEpisodes), (error, data) => {
-            if(!error){
-                this.client.logger.info(data.message)
-            } else {
-                this.client.logger.error('Error while posting anime: '+ data.message)
-            }
-        })
+        }
     }
     
     buildObj(episodes){

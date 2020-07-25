@@ -11,9 +11,10 @@ class DBApi {
     */
     
     addAnimeRelease(options, callback = () => {}){
-        Releases.collection.insertMany(options, (err, docs) => {
+        Releases.collection.insertMany(options, err => {
             if(err){
-                callback(true, {message: 'Something went wrong'})
+                this.client.logger.error(err)
+                callback(true, {message: 'Failed to add new anime.'})
                 return
             }
             callback(false, {message: 'Successfully added to database.'})
@@ -111,7 +112,7 @@ class DBApi {
                         callback(true, {message: 'Failed to update the tracking list.'})
                         return
                     }
-                    callback(false, {message: 'Successfully removed from tracking list'})
+                    callback(false, {message: 'Successfully cleared tracking list'})
                 })
             }
         })
@@ -145,7 +146,7 @@ class DBApi {
         releaseChannels.forEach(rel => {
             if(rel.channel_id == id){
                 found = true;
-                callback(true, {message: 'Channel already exists'})
+                callback(true, {message: 'This channel is already a anime release channel.'})
             }
         })
         
@@ -161,7 +162,7 @@ class DBApi {
         releaseChannels.push(chh)
         Channels.collection.insertOne(chh, (err, docs) => {
             if(err){
-                callback(true, {message: 'Something went wrong'})
+                callback(true, {message: 'Failed to add this channel to databse.'})
                 return
             }
             callback(false, {message: 'Successfully added this channel to database.'})
@@ -187,10 +188,7 @@ class DBApi {
                 return;
             }
         })
-        if(found){
-            return;
-        }
-        callback(true, {message: 'Channel not found'})
+        if(!found) callback(true, {message: 'This channel was not found in database.'})
     }
 }
 

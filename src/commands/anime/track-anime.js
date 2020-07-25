@@ -76,27 +76,14 @@ class TrackAnime extends Command{
                 }
                 return;
             } else if(commandArgs[0] == "clear") {
-                const channels = this.client.animeRelease.release_channels;
-                var found = false;
-                channels.forEach(chh => {
-                    if(chh.channel_id == message.channel.id){
-                        chh.trackings = '';
-                        found = true;
-                        this.client.dbapi.removeTrackingAnime(message.channel, 'all', (error, data) => {
-                            if(!error){
-                                embed.setColor('RANDOM')
-                            }
-                            embed.setDescription(data.message)
-                            message.channel.send(embed)
-                            message.channel.stopTyping()
-                        })
+                this.client.dbapi.clearTrackingAnime(message.channel, (error, data) => {
+                    if(!error){
+                        embed.setColor('RANDOM')
                     }
-                })
-                if(!found){
-                    embed.setDescription('This channel isn\'t anime release channel.')
+                    embed.setDescription(data.message)
                     message.channel.send(embed)
-                    message.channel.stopTyping();
-                }
+                    message.channel.stopTyping()
+                })
                 return;
             } else {
                 this.sendUsage(message)
