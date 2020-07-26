@@ -29,7 +29,7 @@ class RandomActivity {
                 type: 3
             },
             {
-                status: 'to x4nk1t',
+                status: 'x4nk1t',
                 type: 2
             }
         ];

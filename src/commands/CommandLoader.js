@@ -16,12 +16,7 @@ class CommandLoader{
         var commandName = message.content.split(' ')[0].split(this.prefix)[1]
         var command = this.getCommandByName(commandName)
         
-        if(command == null){
-            var embed = new Discord.MessageEmbed()
-                .setColor('#FF0000')
-                .setDescription("Command not found! Use **"+ this.prefix +"help** to get command list.")
-            message.channel.send(embed);
-        } else {
+        if(command != null){
             var commandArgs = message.content.split(' ')
             commandArgs.shift()
             command.execute(message, commandArgs)

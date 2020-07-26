@@ -24,7 +24,7 @@ class Client extends discord.Client{
         this.registerEvents()
         
         this.db.on('error', err => this.logger.error(err))
-        this.db.once('open', () => this.logger.info('Connected to database....'))
+        this.db.once('open', () => this.logger.info('Connected to database'))
     }
     
     start(){
