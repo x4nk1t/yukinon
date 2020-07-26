@@ -8,7 +8,7 @@ class mp3 extends Command{
         super(commandLoader, {
             name: "mp3",
             description: "Returns mp3 with YT url.",
-            usage: "<url>",
+            usage: "<yt url>",
         });
     }
     
@@ -19,22 +19,23 @@ class mp3 extends Command{
         
         if(commandArgs[0]){
             var url = commandArgs[0];
+            var video_id = url.split('=')
             
             embed.setColor('RANDOM')
-            embed.setDescription('Downloading and converting now....')
             
-            message.channel.send(embed)
-            message.channel.stopTyping()
-            
-            const d = ytdl(url, {quality: 'highestaudio', filter: 'audioonly'})
-            const stream = d.pipe(fs.createWriteStream('audio.mp3'))
-            
-            stream.on('finish', () => {
-                message.channel.send('<@'+message.author.id +'>, The music you requested.')
+            ytdl.getBasicInfo(url).then(info => {
+                var title = info.playerResponse.videoDetails.title;
                 
-                const file = new Discord.MessageAttachment('audio.mp3')
-                message.channel.send({files: [file]})
-            })            
+                const d = ytdl(url, {quality: 'highestaudio', filter: 'audioonly'})
+                const stream = d.pipe(fs.createWriteStream('./'+ title +'.mp3'))
+                
+                stream.on('finish', () => {
+                    message.channel.send('<@'+message.author.id +'>, The music you requested.')
+                    
+                    const file = new Discord.MessageAttachment('./'+ title +'.mp3')
+                    message.channel.send({files: [file]})
+                })
+            })        
         } else {
             this.sendUsage(message)
         }
