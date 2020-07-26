@@ -26,6 +26,20 @@ class Stats extends Command{
             .setColor('RANDOM')
             .addFields([
                 {
+                    name: 'Ping',
+                    value: (new Date().getTime() - message.createdTimestamp) +'ms',
+                    inline: true
+                },
+                {
+                    name: 'Uptime',
+                    value: this.getUptime(),
+                    inline: true
+                },
+                {
+                    name: '\u200b',
+                    value: '\u200b'
+                },
+                {
                     name: 'Servers',
                     value: this.client.guilds.cache.array().length,
                     inline: true
@@ -34,41 +48,31 @@ class Stats extends Command{
                     name: 'Users',
                     value: this.client.users.cache.array().length,
                     inline: true
-                },
-                {
-                    name: '\u200b',
-                    value: '\u200b'
-                },
-                {
-                    name: 'OS',
-                    value: type,
-                    inline: true
-                },
-                {
-                    name: 'CPU Count',
-                    value: cpuCount,
-                    inline: true
-                },
-                {
-                    name: 'Arch',
-                    value: arch,
-                    inline: true
-                },
-                {
-                    name: 'Version',
-                    value: version,
-                    inline: true
-                },
-                {
-                    name: 'RAM',
-                    value: (totalmem - freemem) +' MB / ' + totalmem + ' MB',
-                    inline: true
-                },
+                }
             ])
             .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
         
         message.channel.send(embed);
         message.channel.stopTyping()
+    }
+    
+    getUptime(){
+        var date_in_ms = this.client.uptime;
+        
+        var delta = Math.abs(date_in_ms) / 1000;
+
+        var days = Math.floor(delta / 86400);
+        delta -= days * 86400;
+        
+        var hours = Math.floor(delta / 3600) % 24;
+        delta -= hours * 3600;
+        
+        var minutes = Math.floor(delta / 60) % 60;
+        delta -= minutes * 60;
+        
+        var seconds = Math.round(delta % 60);
+        
+        return (days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's')
     }
 }
 
