@@ -13,6 +13,11 @@ class AnimeChannel extends Command{
     
     execute(message, commandArgs){
         message.channel.startTyping()
+        if(message.member && !message.member.hasPermission('MANAGE_CHANNELS')){
+            message.channel.send({embed: {color: '#FF0000', description: 'You don\'t have permission to use this command.'}})
+            message.channel.stopTyping()
+            return
+        }
         
         const embed = new Discord.MessageEmbed()
             .setColor('#FF0000')
