@@ -7,17 +7,17 @@ class AnimeChannel extends Command{
             name: "anime-channel",
             description: "Add channel to release animes.",
             usage: "<add|remove>",
-            aliases: ['channel']
+            aliases: ['channel'],
+            permissions: ['MANAGE_CHANNELS']
         });
     }
     
     execute(message, commandArgs){
-        message.channel.startTyping()
-        if(message.member && !message.member.hasPermission('MANAGE_CHANNELS')){
-            message.channel.send({embed: {color: '#FF0000', description: 'You don\'t have permission to use this command.'}})
-            message.channel.stopTyping()
+        if(!this.hasRequirePermissions(message)){
             return
         }
+
+        message.channel.startTyping()
         
         const embed = new Discord.MessageEmbed()
             .setColor('#FF0000')

@@ -13,6 +13,11 @@ class CommandLoader{
     }
     
     execute(message){
+        if(message.guild == null){
+            message.channel.send('You must be in guild to use commands.')
+            return
+        }
+
         var commandName = message.content.split(' ')[0].split(this.prefix)[1]
         var command = this.getCommandByName(commandName)
         

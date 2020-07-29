@@ -15,8 +15,28 @@ class Command {
         this.description = options.description || '';
         this.usage = (options.usage == null) ? this.commandName : this.commandName +" "+ options.usage;
         this.aliases = options.aliases || [];
+        this.permissions = options.permissions || [];
         
         this.enable = options.enable || true;
+    }
+
+    hasRequirePermissions(message){
+        if(this.permissions.length){
+            var countPermission = 0;
+            this.permissions.forEach(permission => {
+                if(message.member.hasPermission(permission)){
+                    countPermission++;
+                }
+            });
+            if(this.permissions.length != countPermission){
+                message.channel.send({embed: {color: '#FF0000', description: 'You don\'t have required permissions to use this command.'}})
+
+                return false
+            } else {
+                return true
+            }
+        }
+        return true
     }
     
     sendUsage(message){

@@ -7,11 +7,16 @@ class TrackAnime extends Command{
             name: "track-anime",
             description: "Add anime to track in the channel.",
             usage: "<add|remove|list|clear> <anime id>",
-            aliases: ['track']
+            aliases: ['track'],
+            permissions: ['MANAGE_CHANNELS']
         });
     }
     
     execute(message, commandArgs){
+        if(!this.hasRequirePermissions(message)){
+            return
+        }
+        
         message.channel.startTyping()
         
         const embed = new Discord.MessageEmbed()
