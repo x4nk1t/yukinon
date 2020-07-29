@@ -13,10 +13,10 @@ class TrackAnime extends Command{
     }
     
     execute(message, commandArgs){
-        if(!this.hasRequirePermissions(message)){
+        if(!this.hasRequiredPermissions(message)){
             return
         }
-        
+
         message.channel.startTyping()
         
         const embed = new Discord.MessageEmbed()

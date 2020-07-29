@@ -20,7 +20,7 @@ class Command {
         this.enable = options.enable || true;
     }
 
-    hasRequirePermissions(message){
+    hasRequiredPermissions(message){
         if(this.permissions.length){
             var countPermission = 0;
             this.permissions.forEach(permission => {

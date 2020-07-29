@@ -13,7 +13,7 @@ class AnimeChannel extends Command{
     }
     
     execute(message, commandArgs){
-        if(!this.hasRequirePermissions(message)){
+        if(!this.hasRequiredPermissions(message)){
             return
         }
 
