@@ -8,7 +8,8 @@ class TrackAnime extends Command{
             description: "Add anime to track in the channel.",
             usage: "<add|remove|list|clear> <anime id>",
             aliases: ['track'],
-            permissions: ['MANAGE_CHANNELS']
+            permissions: ['MANAGE_CHANNELS'],
+            guildCommand: true
         });
     }
     

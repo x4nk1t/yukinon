@@ -8,7 +8,8 @@ class AnimeChannel extends Command{
             description: "Add channel to release animes.",
             usage: "<add|remove>",
             aliases: ['channel'],
-            permissions: ['MANAGE_CHANNELS']
+            permissions: ['MANAGE_CHANNELS'],
+            guildCommand: true
         });
     }
     

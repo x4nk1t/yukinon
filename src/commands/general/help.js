@@ -42,11 +42,12 @@ class Help extends Command{
     loadHelpContents(){
         var commands = this.commandLoader.commands;
         var page = 0;
+        var i = 0;
         
-        commands.array().sort((a, b) => (a.name < b.name)? -1 : ((a.name > b.name) ? 1 : 0)).forEach((command, i) => {
+        commands.sort((a, b) => (a.name < b.name)? -1 : ((a.name > b.name) ? 1 : 0)).forEach(command => {
             if(i != 0 && i % this.helpPerPage == 0) page++;
             if(this.helpContent[page] == null) this.helpContent[page] = '';
-            
+
             const commandName = command.commandName;
             const usage = command.usage;
             const commandDescription = command.description;
@@ -57,7 +58,9 @@ class Help extends Command{
             }
             
             this.helpContent[page] += '**'+ commandName + '**\n' + commandDescription + '\n Usage: ' + usage +'\n' + commandAliases;
+            i++;
         })
+        this.client.logger.info(this.commandLoader.commands.size +" commands loaded.")
     }
 }
 

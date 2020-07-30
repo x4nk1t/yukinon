@@ -13,13 +13,13 @@ class CommandLoader{
     }
     
     execute(message){
-        if(message.guild == null){
-            message.channel.send('You must be in guild to use commands.')
-            return
-        }
-
         var commandName = message.content.split(' ')[0].split(this.prefix)[1]
         var command = this.getCommandByName(commandName)
+
+        if(command.guildCommand){
+            message.channel.send('You must be in guild to use this command.')
+            return;
+        }
         
         if(command != null){
             var commandArgs = message.content.split(' ')
@@ -44,7 +44,6 @@ class CommandLoader{
             })
         })
         this.getCommandByName('help').loadHelpContents()
-        this.client.logger.info(this.commands.array().length +" commands loaded.")
     }
     
     getCommandByName(name){

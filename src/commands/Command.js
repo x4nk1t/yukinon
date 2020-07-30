@@ -16,6 +16,7 @@ class Command {
         this.usage = (options.usage == null) ? this.commandName : this.commandName +" "+ options.usage;
         this.aliases = options.aliases || [];
         this.permissions = options.permissions || [];
+        this.guildCommand = options.guildCommand || false; 
         
         this.enable = options.enable || true;
     }
