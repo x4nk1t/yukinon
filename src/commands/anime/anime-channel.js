@@ -5,7 +5,7 @@ class AnimeChannel extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: "anime-channel",
-            description: "Add channel to release animes.",
+            description: "Add channel to release animes. *(Admin only)*",
             usage: "<add|remove>",
             aliases: ['channel'],
             permissions: ['MANAGE_CHANNELS'],

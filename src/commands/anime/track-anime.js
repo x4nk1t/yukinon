@@ -5,7 +5,7 @@ class TrackAnime extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: "track-anime",
-            description: "Add anime to track in the channel.",
+            description: "Add anime to track in the channel. *(Admin only)*",
             usage: "<add|remove|list|clear> <anime id>",
             aliases: ['track'],
             permissions: ['MANAGE_CHANNELS'],
