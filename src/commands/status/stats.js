@@ -46,7 +46,7 @@ class Stats extends Command{
                 },
                 {
                     name: 'Channels',
-                    value: this.channels.cache.size,
+                    value: this.client.channels.cache.size,
                     inline: true
                 },
                 {
