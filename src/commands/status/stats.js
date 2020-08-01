@@ -34,19 +34,24 @@ class Stats extends Command{
                     name: 'Uptime',
                     value: this.getUptime(),
                     inline: true
+                },{ 
+                    name: 'Memory Usage',
+                    value: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + 'MB',
+                    inline: true
                 },
                 {
-                    name: '\u200b',
-                    value: '\u200b'
+                    name: 'Guilds',
+                    value: this.client.guilds.cache.size,
+                    inline: true
                 },
                 {
-                    name: 'Servers',
-                    value: this.client.guilds.cache.array().length,
+                    name: 'Channels',
+                    value: this.channels.cache.size,
                     inline: true
                 },
                 {
                     name: 'Users',
-                    value: this.client.users.cache.array().length,
+                    value: this.client.users.cache.size,
                     inline: true
                 }
             ])
