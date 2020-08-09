@@ -32,11 +32,12 @@ class Coinflip extends Command{
                 setTimeout(() => {
                     if(flip == ht){
                         embed.setColor('#00FF00')
-                            .setDescription('Its a **'+ flip +'**. You Won!')
-                            .setFooter('Coin flipped by '+ message.author.username)
+                        embed.setDescription('Its a **'+ flip +'**. You Won!')
+                        embed.setFooter('Coin flipped by '+ message.author.username)
                     } else {
                         embed.setColor('#FF0000')
                         embed.setDescription('Its a **'+ flip +'**. You Lost!')
+                        embed.setFooter('Coin flipped by '+ message.author.username)
                     }
                     sent.edit(embed)
                 }, 1300)
