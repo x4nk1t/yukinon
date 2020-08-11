@@ -14,13 +14,6 @@ class Stats extends Command{
     execute(message, commandArgs){
         message.channel.startTyping()
         
-        const type = os.type();
-        const cpuCount = os.cpus().length;
-        const arch = os.arch();
-        const freemem = Math.round(os.freemem() / 1024 / 1024); //IN MB
-        const totalmem = Math.round(os.totalmem() /1024 / 1024); //IN MB
-        const version = os.version();
-        
         var embed = new Discord.MessageEmbed()
             .setTitle('Stats')
             .setColor('RANDOM')
@@ -51,7 +44,7 @@ class Stats extends Command{
                 },
                 {
                     name: 'Users',
-                    value: this.client.users.cache.size,
+                    value: this.client.users.cache.size + ' ('+ this.client.users.cache.filter(user => user.bot).size +' bots)',
                     inline: true
                 }
             ])
