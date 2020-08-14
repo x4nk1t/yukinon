@@ -33,7 +33,7 @@ class Ban extends Command{
             const banRole = message.guild.roles.cache.find(role => role.name == "BANNED");
             const banLog = message.guild.channels.cache.find(channel => channel.name == "ban-log")
             
-            member.roles.remove(user.roles.cache).then(() => {
+            member.roles.remove(member.roles.cache).then(() => {
                 member.roles.add(banRole).then(() => {
                     embed.setTitle('Ban Log')
                         .setThumbnail(member.user.avatarURL())
