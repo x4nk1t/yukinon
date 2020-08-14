@@ -17,7 +17,7 @@ class CommandLoader{
         var command = this.getCommandByName(commandName)
         
         if(command != null){
-            if(command.guildCommand){
+            if(command.guildCommand && !message.guild){
                 message.channel.send('You must be in guild to use this command.')
                 return;
             }
