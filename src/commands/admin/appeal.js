@@ -23,7 +23,7 @@ class Appeal extends Command{
             return
         }
         
-        if(commandArgs.length > 1){
+        if(commandArgs.length >= 1){
             const member = message.guild.member(message.author);
             const appealMessage = commandArgs.join(' ')
             
@@ -32,7 +32,10 @@ class Appeal extends Command{
                 message.channel.stopTyping()
                 return
             }
+            
             const banRole = member.roles.cache.find(role => role.name == "BANNED")
+            const banLog = message.guild.channels.cache.find(channel => channel.name == 'ban-log')
+            
             if(banRole){
                 member.roles.remove(banRole).then(() => {
                     embed.setTitle('Appeal Log')
@@ -41,8 +44,8 @@ class Appeal extends Command{
                         .addField('Message', appealMessage)
                         .setTimestamp()
                     
-                    const banLog = message.guild.channels.cache.find(channel => channel.name == 'ban-log')
                     banLog.send(embed)
+                    message.delete()
                     message.channel.stopTyping()
                 })
             } else {
