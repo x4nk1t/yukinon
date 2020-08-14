@@ -7,7 +7,7 @@ class Ban extends Command{
             name: "ban",
             description: "Bans a user. *(Admin only)*",
             usage: "<user> [reason]",
-            permissions: ['MANAGE_ROLES'],
+            permissions: ['MANAGE_ROLES', 'MANAGE_SERVER'],
             guildCommand: true
         });
     }
@@ -20,7 +20,7 @@ class Ban extends Command{
         message.channel.startTyping()
         
         const embed = new Discord.MessageEmbed()
-            .setColor('RANDOM')
+            .setColor('RED')
         
         if(commandArgs[0]){
             if(!message.mentions.users.first()){
@@ -46,9 +46,9 @@ class Ban extends Command{
                         .addField('User', member.user.tag)
                         .addField('Reason', reason)
                         .setFooter('Banned by '+ message.author.tag, message.author.avatarURL())
+                        .setTimestamp()
                     
                     banLog.send(embed)
-                    message.channel.send('Check ban log')
                     message.channel.stopTyping()
                 })
             })
