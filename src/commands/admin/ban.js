@@ -23,11 +23,17 @@ class Ban extends Command{
             .setColor('RANDOM')
         
         if(commandArgs[0]){
-            const member = message.guild.member(message.mentions.users.first() || message.guild.members.get(commandArgs[0]));
+            if(!message.mentions.users.first()){
+                message.channel.send('You must mention the user to ban.')
+                message.channel.stopTyping()
+                return
+            }
+            const member = message.guild.member(message.mentions.users.first());
             commandArgs.shift()
             const reason = commandArgs.join(' ') || "N/A"
             if(!member) {
                 message.reply('That user does not exist!')
+                message.channel.stopTyping()
                 return
             }
             const banRole = message.guild.roles.cache.find(role => role.name == "BANNED");
