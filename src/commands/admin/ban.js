@@ -26,7 +26,7 @@ class Ban extends Command{
             const member = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
             commandArgs.shift()
             const reason = commandArgs.join(' ') || "N/A"
-            if(!user) {
+            if(!member) {
                 message.reply('That user does not exist!')
                 return
             }
