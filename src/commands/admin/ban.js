@@ -42,6 +42,8 @@ class Ban extends Command{
                         .setFooter('Banned by '+ message.author.tag, message.author.avatarURL())
                     
                     banLog.send(embed)
+                    message.channel.send('Check ban log')
+                    message.channel.stopTyping()
                 })
             })
         } else {
