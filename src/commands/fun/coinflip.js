@@ -11,15 +11,15 @@ class Coinflip extends Command{
         });
     }
     
-    execute(message, commandArgs){
-        message.channel.startTyping()
-        
+    execute(message, commandArgs){        
         var embed = new Discord.MessageEmbed()
             .setTitle("CoinFlip")
             .setColor('RANDOM')
         
         if(commandArgs[0]){
             var ht = commandArgs[0].toLowerCase();
+            if(ht == 'h') ht = 'head';
+            if(ht == 't') ht = 'tail';
             
             if(ht != 'head' && ht != 'tail') {
                 this.sendUsage(message)
@@ -54,7 +54,6 @@ class Coinflip extends Command{
                 }, 1300)
             })
         }
-        message.channel.stopTyping()
     }
     
     flip(){

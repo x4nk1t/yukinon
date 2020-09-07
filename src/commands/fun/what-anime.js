@@ -7,7 +7,7 @@ class WhatAnime extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: "what-anime",
-            description: "Reverse search for anime with screenshots.",
+            description: "Search for anime with screenshots.",
             usage: "<link>",
             aliases: ['anime']
         });
@@ -16,9 +16,7 @@ class WhatAnime extends Command{
         this.animeInfo = new AnimeInfo(this.client)
     }
     
-    execute(message, commandArgs){
-        message.channel.startTyping()
-        
+    execute(message, commandArgs){        
         var embed = new Discord.MessageEmbed()
             .setTitle("Error")
             .setColor('#FF0000')
@@ -33,7 +31,6 @@ class WhatAnime extends Command{
                 embed.setDescription(json.message)
                 
                 message.channel.send(embed)
-                message.channel.stopTyping()
                 return
             }
             
@@ -48,10 +45,9 @@ class WhatAnime extends Command{
                         .setThumbnail(commandArgs[0])
                         .addField('English', title_english, true)
                         .addField('MAL Link', 'https://myanimelist.net/anime/'+ mal_id)
-                        .addField('\u200b', '*Note: Full data could not be loaded due to some error.*')
+                        .addField('\u200b', '*Note: Full data could not be fetched due to some error.*')
                 
                     message.channel.send(embed)
-                    message.channel.stopTyping()
                     return
                 }
                 
@@ -79,7 +75,6 @@ class WhatAnime extends Command{
                     .addField('\u200b', '*Note: This might not be accurate.*')
                 
                 message.channel.send(embed)
-                message.channel.stopTyping()
             })
         })
     }

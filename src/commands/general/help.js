@@ -15,7 +15,6 @@ class Help extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.startTyping()
         var embed = new Discord.MessageEmbed()
         
         var reqPage = 0;
@@ -26,7 +25,6 @@ class Help extends Command{
                     .setDescription('That page is not available. Total Available Page: '+ this.helpContent.length)
                     .setColor('#FF0000')
                 message.channel.send(embed)
-                message.channel.stopTyping()
                 return;
             }
         }
@@ -36,7 +34,6 @@ class Help extends Command{
             .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
             
         message.channel.send(embed)
-        message.channel.stopTyping()
     }
     
     loadHelpContents(){

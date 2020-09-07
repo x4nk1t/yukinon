@@ -17,8 +17,6 @@ class AnimeChannel extends Command{
         if(!this.hasRequiredPermissions(message)){
             return
         }
-
-        message.channel.startTyping()
         
         const embed = new Discord.MessageEmbed()
             .setColor('#FF0000')
@@ -31,7 +29,6 @@ class AnimeChannel extends Command{
                     }
                     embed.setDescription(data.message)
                     message.channel.send(embed)
-                    message.channel.stopTyping()
                 })
             } else if (commandArgs[0] == "remove"){
                 this.client.dbapi.removeReleaseChannel(message.channel, (error, data) => {
@@ -40,7 +37,6 @@ class AnimeChannel extends Command{
                     }
                     embed.setDescription(data.message)
                     message.channel.send(embed)
-                    message.channel.stopTyping()
                 })
             } else {
                 this.sendUsage(message)

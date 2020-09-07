@@ -6,14 +6,12 @@ class Stats extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: "stats",
-            description: "Shows the stats of the bot/server.",
+            description: "Shows the status of the bot.",
             aliases: ['status']
         });
     }
     
     execute(message, commandArgs){
-        message.channel.startTyping()
-        
         var embed = new Discord.MessageEmbed()
             .setTitle('Stats')
             .setColor('RANDOM')
@@ -51,7 +49,6 @@ class Stats extends Command{
             .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
         
         message.channel.send(embed);
-        message.channel.stopTyping()
     }
     
     getUptime(){

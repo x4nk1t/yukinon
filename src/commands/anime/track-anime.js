@@ -6,7 +6,7 @@ class TrackAnime extends Command{
         super(commandLoader, {
             name: "track-anime",
             description: "Add anime to track in the channel. *(Admin only)*",
-            usage: "<add|remove|list|clear> <anime id>",
+            usage: "[add|remove|clear] <anime id>",
             aliases: ['track'],
             permissions: ['MANAGE_CHANNELS'],
             guildCommand: true
@@ -17,8 +17,6 @@ class TrackAnime extends Command{
         if(!this.hasRequiredPermissions(message)){
             return
         }
-
-        message.channel.startTyping()
         
         const embed = new Discord.MessageEmbed()
             .setColor('#FF0000')
@@ -37,7 +35,6 @@ class TrackAnime extends Command{
                     }
                     embed.setDescription(data.message)
                     message.channel.send(embed)
-                    message.channel.stopTyping()
                 })
             } else if (commandArgs[0] == "remove"){
                 commandArgs.shift()
@@ -52,35 +49,7 @@ class TrackAnime extends Command{
                     }
                     embed.setDescription(data.message)
                     message.channel.send(embed)
-                    message.channel.stopTyping()
                 })
-            } else if(commandArgs[0] == "list") {
-                const channels = this.client.animeRelease.release_channels;
-                var found = false;
-                channels.forEach(chh => {
-                    if(chh.channel_id == message.channel.id){
-                        found = true;
-                        const trackings = chh.tracking.split(',').join(', ')
-                        
-                        if(chh.tracking != ''){
-                            embed.setColor('RANDOM')
-                            embed.setTitle('This channel is tracking:')
-                            embed.setDescription(trackings)
-                        } else {
-                            embed.setDescription('This channel isn\'t tracking any anime.')
-                        }
-                        
-                        message.channel.send(embed)
-                        message.channel.stopTyping()
-                        return;
-                    }
-                })
-                if(!found){
-                    embed.setDescription('This channel isn\'t anime release channel.')
-                    message.channel.send(embed)
-                    message.channel.stopTyping();
-                }
-                return;
             } else if(commandArgs[0] == "clear") {
                 this.client.dbapi.clearTrackingAnime(message.channel, (error, data) => {
                     if(!error){
@@ -88,14 +57,36 @@ class TrackAnime extends Command{
                     }
                     embed.setDescription(data.message)
                     message.channel.send(embed)
-                    message.channel.stopTyping()
                 })
                 return;
             } else {
                 this.sendUsage(message)
             }
         } else {
-            this.sendUsage(message)
+            const channels = this.client.animeRelease.release_channels;
+            var found = false;
+            channels.forEach(chh => {
+                if(chh.channel_id == message.channel.id){
+                    found = true;
+                    const trackings = '-'+ chh.tracking.split(',').join('\n -').slice(0, -1) //temp change
+                    
+                    if(chh.tracking != ''){
+                        embed.setColor('RANDOM')
+                        embed.setTitle('This channel is tracking:')
+                        embed.setDescription(trackings)
+                    } else {
+                        embed.setDescription('This channel isn\'t tracking any anime.')
+                    }
+                    
+                    message.channel.send(embed)
+                    return;
+                }
+            })
+            if(!found){
+                embed.setDescription('This channel isn\'t anime release channel.')
+                message.channel.send(embed)
+            }
+            return;
         }
     }
     
