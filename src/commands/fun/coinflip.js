@@ -37,7 +37,7 @@ class Coinflip extends Command{
                     } else {
                         embed.setColor('#FF0000')
                         embed.setDescription('Its a **'+ flip +'**. You Lost!')
-                        embed.setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL()
+                        embed.setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL())
                     }
                     sent.edit(embed)
                 }, 1300)
