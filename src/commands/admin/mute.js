@@ -37,18 +37,19 @@ class Mute extends Command{
             
             member.roles.remove(member.roles.cache).then(() => {
                 if(muteRole){
-					member.roles.add(muteRole).then(() => {
-						embed.setTitle('Mute Log')
-							.setThumbnail(member.user.avatarURL())
-							.addField('User', member.user.tag)
-							.addField('Reason', reason)
-							.setFooter('Muted by '+ message.author.tag, message.author.avatarURL())
-							.setTimestamp()
+                    member.roles.add(muteRole).then(() => {
+                        message.delete()
+                        embed.setTitle('Mute Log')
+                            .setThumbnail(member.user.avatarURL())
+                            .addField('User', member.user.tag)
+                            .addField('Reason', reason)
+                            .setFooter('Muted by '+ message.author.tag, message.author.avatarURL())
+                            .setTimestamp()
                         
                         if(modLog){
                             modLog.send(embed)
                         }
-					})
+                    })
                 }
             })
         } else {

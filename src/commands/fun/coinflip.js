@@ -33,11 +33,11 @@ class Coinflip extends Command{
                     if(flip == ht){
                         embed.setColor('#00FF00')
                         embed.setDescription('Its a **'+ flip +'**. You Won!')
-                        embed.setFooter('Coin flipped by '+ message.author.username)
+                        embed.setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL())
                     } else {
                         embed.setColor('#FF0000')
                         embed.setDescription('Its a **'+ flip +'**. You Lost!')
-                        embed.setFooter('Coin flipped by '+ message.author.username)
+                        embed.setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL()
                     }
                     sent.edit(embed)
                 }, 1300)
@@ -47,7 +47,7 @@ class Coinflip extends Command{
             message.channel.send(embed).then(sent => {
                 embed.setColor('RANDOM')
                     .setDescription('Its a **'+ this.flip() +'**.')
-                    .setFooter('Coin flipped by '+ message.author.username)
+                    .setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL())
                 
                 setTimeout(() => {
                     sent.edit(embed)

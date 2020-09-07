@@ -6,7 +6,7 @@ class AnimeLoader {
     constructor(client){
         this.client = client;
         
-        this.checkInMinutes = 2;
+        this.checkInMinutes = 5;
         this.baseUrl = 'https://www.gogoanime.movie';
         this.episodes = [];
         this.release_channels = [];
@@ -77,7 +77,6 @@ class AnimeLoader {
                 
                 var embed = new Discord.MessageEmbed()
                     .setTitle('New episode just got released.')
-                    .setColor('RANDOM')
                     .setThumbnail(episode.imageUrl)
                     .addFields(
                         {name: 'Name', value: episode.name, inline: true},
@@ -94,12 +93,14 @@ class AnimeLoader {
                     
                     if(trackings == ''){
                         if(discord_channel != undefined){
+                            embed.setColor('RANDOM')
                             discord_channel.send(embed)
                         }
                     } else {
                         tracking.forEach(track => {
                             if(this.filterName(track) == this.filterName(episode.name)){
                                 if(discord_channel != undefined){
+                                    embed.setColor('RANDOM')
                                     discord_channel.send(embed)
                                 }
                             }
