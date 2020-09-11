@@ -16,21 +16,25 @@ class RPGReminder {
         var now = new Date().getTime()
         var sc = args[0]
         
+        if(message.channel.name != "rpg"){
+            return;
+        }
+        
         if(sc == "hunt"){
-            if(!this.hunt.has(message.author.id)){
-                this.hunt.set(message.author.id, {time: now + 60000, message: message}) //1min
+            if(!this.hunt.has(message.author.id.toString())){
+                this.hunt.set(message.author.id.toString(), {time: now + 60000, message: message}) //1min
             }
         }
         
         if(sc == "adv" || sc == "adventure"){
-            if(!this.adventure.has(message.author.id)){
-                this.adventure.set(message.author.id, {time: now + 3600000, message: message}) //1hr
+            if(!this.adventure.has(message.author.id.toString())){
+                this.adventure.set(message.author.id.toString(), {time: now + 3600000, message: message}) //1hr
             }
         }
         
         if(sc == "training"){
-            if(!this.training.has(message.author.id)){
-                this.training.set(message.author.id, {time: now + 900000, message: message}) //15min
+            if(!this.training.has(message.author.id.toString())){
+                this.training.set(message.author.id.toString(), {time: now + 900000, message: message}) //15min
             }
         }
         
@@ -39,8 +43,8 @@ class RPGReminder {
            sc == "pickup" || sc == "ladder" ||
            sc == "mine" || sc == "bowsaw" ||
            sc == "boat" || sc == "pickaxe"){
-            if(!this.progress.has(message.author.id)){
-                this.progress.set(message.author.id, {time: now + 300000, message: message}) //5min
+            if(!this.progress.has(message.author.id.toString())){
+                this.progress.set(message.author.id.toString(), {time: now + 300000, message: message}) //5min
             }
         }
     }
@@ -50,44 +54,49 @@ class RPGReminder {
     }
     
     checkReminders(){
-        var huntArray = Array.from(this.hunt.values())
-        var adventureArray = Array.from(this.adventure.values())
-        var progressArray = Array.from(this.progress.values())
         var now = new Date().getTime()
         
-        huntArray.forEach((value, key) => {
-            var id = key;
+        this.hunt.forEach((value, key, map) => {
+            var id = parseInt(key);
             var time = value.time;
             var message = value.message;
             
             if((time - now) <= 0){
-                message.channel.send('Hunt Ready! <@'+id+'>').then(() => {
-                    this.hunt.delete(id)
-                })
+                message.channel.send('Hunt Ready! <@'+id+'>')
+                this.hunt.delete(id)
             }
         })
         
-        adventureArray.forEach((value, key) => {
-            var id = key;
+        this.adventure.forEach((value, key, map) => {
+            var id = parseInt(key);
             var time = value.time;
             var message = value.message;
             
             if((time - now) <= 0){
-                message.channel.send('Adventure Ready! <@'+id+'>').then(() => {
-                    this.adventure.delete(id)
-                })
+                message.channel.send('Adventure Ready! <@'+id+'>')
+                this.adventure.delete(id)
             }
         })
         
-        progressArray.forEach((value, key) => {
-            var id = key;
+        this.training.forEach((value, key, map) => {
+            var id = parseInt(key);
             var time = value.time;
             var message = value.message;
             
             if((time - now) <= 0){
-                message.channel.send('Progress Ready! <@'+id+'>').then(() => {
-                    this.progress.delete(id)
-                })
+                message.channel.send('Training Ready! <@'+id+'>')
+                this.training.delete(id)
+            }
+        })
+        
+        this.progress.forEach((value, key, map) => {
+            var id = parseInt(key);
+            var time = value.time;
+            var message = value.message;
+            
+            if((time - now) <= 0){
+                message.channel.send('Progress Ready! <@'+id+'>')
+                this.progress.delete(id)
             }
         })
     }
