@@ -57,7 +57,7 @@ class RPGReminder {
         var now = new Date().getTime()
         
         this.hunt.forEach((value, key, map) => {
-            var id = parseInt(key);
+            var id = key;
             console.log(key, id)
             var time = value.time;
             var message = value.message;
@@ -69,7 +69,7 @@ class RPGReminder {
         })
         
         this.adventure.forEach((value, key, map) => {
-            var id = parseInt(key);
+            var id = key;
             var time = value.time;
             var message = value.message;
             
@@ -80,7 +80,7 @@ class RPGReminder {
         })
         
         this.training.forEach((value, key, map) => {
-            var id = parseInt(key);
+            var id = key;
             var time = value.time;
             var message = value.message;
             
@@ -91,7 +91,7 @@ class RPGReminder {
         })
         
         this.progress.forEach((value, key, map) => {
-            var id = parseInt(key);
+            var id = key;
             var time = value.time;
             var message = value.message;
             
