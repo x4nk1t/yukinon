@@ -14,7 +14,7 @@ class RPGReminder {
         var args = message.content.split(' ')
         args.shift()
         var now = new Date().getTime()
-        var sc = args[0]
+        var sc = args[0].toLowerCase()
         
         if(message.channel.name != "rpg"){
             return;
