@@ -62,7 +62,7 @@ class RPGReminder {
             var message = value.message;
             
             if((time - now) <= 0){
-                message.channel.send('Hunt Ready! <@'+id+'>')
+                message.channel.send(message.author.username +', Hunt Ready! ')
                 this.hunt.delete(id)
             }
         })
@@ -73,7 +73,7 @@ class RPGReminder {
             var message = value.message;
             
             if((time - now) <= 0){
-                message.channel.send('Adventure Ready! <@'+id+'>')
+                message.channel.send(message.author.username +', Adventure Ready! ')
                 this.adventure.delete(id)
             }
         })
@@ -84,7 +84,7 @@ class RPGReminder {
             var message = value.message;
             
             if((time - now) <= 0){
-                message.channel.send('Training Ready! <@'+id+'>')
+                message.channel.send(message.author.username +', Training Ready! ')
                 this.training.delete(id)
             }
         })
@@ -95,7 +95,7 @@ class RPGReminder {
             var message = value.message;
             
             if((time - now) <= 0){
-                message.channel.send('Progress Ready! <@'+id+'>')
+                message.channel.send(message.author.username +', Progress Ready! ')
                 this.progress.delete(id)
             }
         })
