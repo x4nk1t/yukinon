@@ -10,45 +10,43 @@ class RPGReminder {
         this.training = new Discord.Collection();
     }
     
+    execute(message){
+        var args = message.content.split(' ')
+        args.shift()
+        var now = new Date().getTime()
+        var sc = args[0]
+        
+        if(sc == "hunt"){
+            if(!this.hunt.has(message.author.id)){
+                this.hunt.set(message.author.id, {time: now + 60000, message: message}) //1min
+            }
+        }
+        
+        if(sc == "adv" || sc == "adventure"){
+            if(!this.adventure.has(message.author.id)){
+                this.adventure.set(message.author.id, {time: now + 3600000, message: message}) //1hr
+            }
+        }
+        
+        if(sc == "training"){
+            if(!this.training.has(message.author.id)){
+                this.training.set(message.author.id, {time: now + 900000, message: message}) //15min
+            }
+        }
+        
+        if(sc == "chop" || sc == "fish" ||
+           sc == "axe" || sc == "net" ||
+           sc == "pickup" || sc == "ladder" ||
+           sc == "mine" || sc == "bowsaw" ||
+           sc == "boat" || sc == "pickaxe"){
+            if(!this.progress.has(message.author.id)){
+                this.progress.set(message.author.id, {time: now + 300000, message: message}) //5min
+            }
+        }
+    }
+    
     run(){
         setInterval(() => this.checkReminders, 1000)
-        this.client.on('message', message => {
-            if(message.author.bot) return;
-            if(message.content.startsWith('rpg')){
-                var args = message.content.split(' ')
-                args.shift()
-                var now = new Date().getTime()
-                var sc = args[0]
-                
-                if(sc == "hunt"){
-                    if(!this.hunt.has(message.author.id)){
-                        this.hunt.set(message.author.id, {time: now + 60000, message: message}) //1min
-                    }
-                }
-                
-                if(sc == "adv" || sc == "adventure"){
-                    if(!this.adventure.has(message.author.id)){
-                        this.adventure.set(message.author.id, {time: now + 3600000, message: message}) //1hr
-                    }
-                }
-                
-                if(sc == "training"){
-                    if(!this.training.has(message.author.id)){
-                        this.training.set(message.author.id, {time: now + 900000, message: message}) //15min
-                    }
-                }
-                
-                if(sc == "chop" || sc == "fish" ||
-                   sc == "axe" || sc == "net" ||
-                   sc == "pickup" || sc == "ladder" ||
-                   sc == "mine" || sc == "bowsaw" ||
-                   sc == "boat" || sc == "pickaxe"){
-                    if(!this.progress.has(message.author.id)){
-                        this.progress.set(message.author.id, {time: now + 300000, message: message}) //5min
-                    }
-                }
-            }
-        })
     }
     
     checkReminders(){

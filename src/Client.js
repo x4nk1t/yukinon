@@ -41,6 +41,10 @@ class Client extends discord.Client{
             if(message.content.startsWith(this.commandLoader.prefix)){
                 this.commandLoader.execute(message)
             }
+            
+            if(message.content.startsWith('rpg')){
+                this.rpgReminder.execute(message)
+            }
         })
         this.on('ready', () => {
             this.start()
