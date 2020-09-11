@@ -5,6 +5,7 @@ const CommandLoader = require('./commands/CommandLoader.js');
 const DBApi = require('./network/database/DBApi.js');
 const Logger = require('./utils/Logger.js');
 const AnimeRelease = require('./network/anime/AnimeRelease.js');
+const RPGReminder = require('./utils/RPGReminder.js')
 
 const url = process.env.DB_URL;
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -18,6 +19,7 @@ class Client extends discord.Client{
         this.dbapi = new DBApi(this)
         this.animeRelease = new AnimeRelease(this)
         this.db = mongoose.connection;
+        this.rpgReminder = new RPGReminder(this)
         
         this.registerEvents()
         
@@ -27,6 +29,7 @@ class Client extends discord.Client{
     
     start(){
         this.animeRelease.run()
+        this.rpgReminder.run()
         
         this.logger.info('Bot running as: '+ this.user.tag)
     }
