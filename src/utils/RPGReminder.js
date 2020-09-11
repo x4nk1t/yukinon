@@ -58,7 +58,6 @@ class RPGReminder {
         
         this.hunt.forEach((value, key, map) => {
             var id = key;
-            console.log(key, id)
             var time = value.time;
             var message = value.message;
             
