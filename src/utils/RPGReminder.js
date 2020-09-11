@@ -77,7 +77,7 @@ class RPGReminder {
             
             if((time - now) <= 0){
                 var role = message.guild.roles.cache.find(r => r.name.toLowerCase() == "role play");
-                var wtd = (new Date().getDay()) < 5 : "Upgrade" ? "Raid"; 
+                var wtd = (new Date().getDay()) < 5 ? "Upgrade" : "Raid"; 
                 
                 message.channel.send(role +' Guild '+ wtd +' (Preferred)!')
                 this.guild.delete(id)
