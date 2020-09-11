@@ -24,7 +24,6 @@ class RPGReminder {
             if(!this.hunt.has(message.author.id)){
                 this.hunt.set(message.author.id, {time: now + 60000, message: message}) //1min
             }
-            console.log(this.hunt)
         }
         
         if(sc == "adv" || sc == "adventure"){

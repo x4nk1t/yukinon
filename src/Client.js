@@ -42,7 +42,7 @@ class Client extends discord.Client{
                 this.commandLoader.execute(message)
             }
             
-            if(message.content.startsWith('rpg')){
+            if(message.content.toLowerCase().startsWith('rpg')){
                 this.rpgReminder.execute(message)
             }
         })
