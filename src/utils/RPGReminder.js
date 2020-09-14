@@ -65,7 +65,7 @@ class RPGReminder {
                sc == "boat" || sc == "pickaxe"){
                 if(!this.progress.has(id)){
                     this.client.dbapi.addTimer(id, "progress", now + 300000, channelId)
-                    this.progress.set(id, {time: now + 300000, channel: channel) //5min
+                    this.progress.set(id, {time: now + 300000, channel: channel}) //5min
                 }
             }
         }
