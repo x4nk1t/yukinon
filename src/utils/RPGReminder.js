@@ -72,9 +72,9 @@ class RPGReminder {
     run(){
         var now = new Date().getTime()
         
-        this.client.dbapi.getAllTimers((err, d) => {
+        this.client.dbapi.getAllTimers((err, data) => {
             if(err){
-                this.client.logger.error(d.message)
+                this.client.logger.error(data.message)
                 return
             }
             for(var i = 0; i < data.length; i++){
