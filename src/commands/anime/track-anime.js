@@ -68,7 +68,7 @@ class TrackAnime extends Command{
             channels.forEach(chh => {
                 if(chh.channel_id == message.channel.id){
                     found = true;
-                    const trackings = '-'+ chh.tracking.split(',').join('\n -').slice(0, -1) //temp change
+                    const trackings = '-'+ chh.tracking.split('|').join('\n -').slice(0, -1) //temp change
                     
                     if(chh.tracking != ''){
                         embed.setColor('RANDOM')

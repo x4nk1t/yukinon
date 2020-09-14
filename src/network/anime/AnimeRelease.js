@@ -7,7 +7,7 @@ class AnimeLoader {
         this.client = client;
         
         this.checkInMinutes = 5;
-        this.baseUrl = 'https://www.gogoanime.movie';
+        this.baseUrl = 'https://www.gogoanime.so';
         this.episodes = [];
         this.release_channels = [];
     }
@@ -88,7 +88,7 @@ class AnimeLoader {
                 this.release_channels.forEach(channel => {
                     var id = channel.channel_id
                     var trackings = channel.tracking;
-                    var tracking = trackings.split(',');
+                    var tracking = trackings.split('|');
                     var discord_channel = this.client.channels.cache.get(id)
                     
                     if(trackings == ''){
