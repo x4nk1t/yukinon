@@ -43,7 +43,7 @@ class DBApi {
         
         channels.forEach(chh => {
             if(chh.channel_id == channel.id){
-                var split = chh.tracking.split(',')
+                var split = chh.tracking.split('|')
                 found = true
                 
                 split.forEach((s, i) => {
@@ -56,7 +56,7 @@ class DBApi {
                 })
                 if(!alreadyAdded){
                     split.push(name)
-                    chh.tracking = split.join(',') + ',';
+                    chh.tracking = split.join('|') + '|';
                     Channels.collection.updateOne({channel_id: channel.id}, { $set: {tracking: chh.tracking}}, (err, docs) => {
                         if(err){
                             callback(true, {message: 'Failed to update the tracking list.'})
@@ -76,7 +76,7 @@ class DBApi {
         
         channels.forEach(chh => {
             if(chh.channel_id == channel.id){
-                var split = chh.tracking.split(',')
+                var split = chh.tracking.split('|')
                 found = true
                 
                 split.forEach((s, i) => {
@@ -86,7 +86,7 @@ class DBApi {
                     }
                 })
                 
-                chh.tracking = split.join(',') +',';
+                chh.tracking = split.join('|') +'|';
                 Channels.collection.updateOne({channel_id: channel.id}, { $set: {tracking: chh.tracking}}, (err, docs) => {
                     if(err){
                         callback(true, {message: 'Failed to update the tracking list.'})
