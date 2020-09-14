@@ -39,7 +39,6 @@ class RPGReminder {
 
             if(sc == "hunt"){
                 if(!this.hunt.has(id)){
-                    this.client.dbapi.addTimer(id, "hunt", now + 3600000, channelId)
                     this.hunt.set(id, {time: now + 60000, channel: channel}) //1min
                 }
             }
@@ -64,7 +63,6 @@ class RPGReminder {
                sc == "mine" || sc == "bowsaw" ||
                sc == "boat" || sc == "pickaxe"){
                 if(!this.progress.has(id)){
-                    this.client.dbapi.addTimer(id, "progress", now + 300000, channelId)
                     this.progress.set(id, {time: now + 300000, channel: channel}) //5min
                 }
             }
@@ -87,19 +85,14 @@ class RPGReminder {
                 
                 if((time - now) < 0){
                     data.splice(i, 1)
+                    this.client.dbapi.removeTimer(userId, type)
                 } else {
                     var channel = this.client.channels.cache.get(channelId)
-                    if(type == "hunt"){
-                        this.hunt.set(userId, {time: time, channel: channel})
-                    }
                     if(type == "guild"){
                         this.guild.set(userId, {time: time, channel: channel})
                     }
                     if(type == "adventure"){
                         this.adventure.set(userId, {time: time, channel: channel})
-                    }
-                    if(type == "progress"){
-                        this.progress.set(userId, {time: time, channel: channel})
                     }
                     if(type == "training"){
                         this.training.set(userId, {time: time, channel: channel})
@@ -136,7 +129,6 @@ class RPGReminder {
                 var user = this.client.users.cache.get(id)
                 channel.send(user.username +', Hunt Ready! ')
                 this.hunt.delete(id)
-                this.client.dpapi.removeTimer(id, 'hunt')
             }
         })
         
@@ -175,7 +167,6 @@ class RPGReminder {
                 var user = this.client.users.cache.get(id)
                 channel.send(user.username +', Progress Ready! ')
                 this.progress.delete(id)
-                this.client.dpapi.removeTimer(id, 'progress')
             }
         })
     }
