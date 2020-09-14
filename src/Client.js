@@ -38,7 +38,7 @@ class Client extends discord.Client{
         this.on('message', message => {
             if(message.author.bot) return;
             
-            if(message.content.startsWith(this.commandLoader.prefix)){
+            if(message.content.toLowerCase().startsWith(this.commandLoader.prefix)){
                 this.commandLoader.execute(message)
             }
             

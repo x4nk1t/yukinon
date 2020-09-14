@@ -1,9 +1,48 @@
 const Channels = require('./models/channel.js')
 const Releases = require('./models/release.js')
+const Timer = require('./models/timer.js')
 
 class DBApi {
     constructor(client){
         this.client = client;
+    }
+    
+    /*
+    * Epic RPG
+    */
+    
+    addTimer(userId, type, time, channelId, callback = () => {}){
+        Timer.collection.insertOne({user_id: userId, type: type, time: time, channel_id: channelId}, err => {
+            if(err){
+                this.client.logger.error(err)
+                callback(true, {message: 'Failed to add new timer.'})
+                return
+            }
+            callback(false, {message: 'Successfully added to database.'})
+        })
+    }
+    
+    removeTimer(userId, type, callback = () => {}){
+        Timer.collection.removeOne({user_id: userId, type: type}, err => {
+            if(err){
+                this.client.logger.error(err)
+                callback(true, {message: 'Failed to remove timer.'})
+                return
+            }
+            callback(false, {message: 'Successfully added to database.'})
+        })
+    }
+    
+    getAllTimers(callback){
+        Timer.collection.find({}, async (err, timers) => {
+            if(err){
+                this.client.logger.error(err)
+                callback(true, {message: 'Failed to fetch from database.'})
+                return
+            }
+            const array = await timers.toArray()
+            callback(false, array)
+        })
     }
     
     /*
