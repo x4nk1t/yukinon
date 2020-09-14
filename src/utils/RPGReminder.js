@@ -72,9 +72,9 @@ class RPGReminder {
     run(){
         var now = new Date().getTime()
         
-        this.client.dbapi.getAllTimers((err, data) => {
+        this.client.dbapi.getAllTimers((err, d) => {
             if(err){
-                this.client.logger.error(data.message)
+                this.client.logger.error(d.message)
                 return
             }
             for(var i = 0; i < data.length; i++){
@@ -126,8 +126,8 @@ class RPGReminder {
             var channel = value.channel;
             
             if((time - now) <= 0){
-                var user = this.client.users.cache.get(id)
-                channel.send(user.username +', Hunt Ready! ')
+                //var user = this.client.users.cache.get(id)
+                channel.send('<@'+id+'>, Hunt Ready! ')
                 this.hunt.delete(id)
             }
         })
