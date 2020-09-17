@@ -56,7 +56,7 @@ class RPGReminder {
                sc == "pickup" || sc == "ladder" ||
                sc == "mine" || sc == "bowsaw" ||
                sc == "boat" || sc == "pickaxe" ||
-               sc == "tractor" || sc == "chainsaw"
+               sc == "tractor" || sc == "chainsaw" ||
                sc == "bigboat"){
                 if(!this.progress.has(message.author.id)){
                     this.progress.set(message.author.id, {time: now + 300000, message: message}) //5min
