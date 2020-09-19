@@ -26,7 +26,7 @@ class RPGReminder {
             }
             
             if(sc == "buy"){
-                if(args[1] && args[2])
+                if(args[1] && args[2]){
                     if(args[2] == "lootbox"){
                         if(!this.lootbox.has(message.author.id) || force){
                             this.lootbox.set(message.author.id, {time: now + 10800000, message: message}) //3hr
