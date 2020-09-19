@@ -91,7 +91,7 @@ class RPGReminder {
             
             if((time - now) <= 0){
                 message.channel.send(message.author.toString() +', Lootbox ready! ')
-                this.hunt.delete(id)
+                this.lootbox.delete(id)
             }
         })
         
