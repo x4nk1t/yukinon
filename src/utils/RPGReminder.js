@@ -222,7 +222,7 @@ class RPGReminder {
     */
     
     addTimer(userId, type, time, channelId, callback = () => {}){
-        Timer.collection.findOneAndUpdate({user_id: userId, type: type, channel_id: channelId}, {time: time}, {upsert: true}, err => {
+        Timer.collection.findOneAndUpdate({user_id: userId, type: type, channel_id: channelId}, {$set: {time: time}}, {upsert: true}, err => {
             if(err){
                 this.client.logger.error(err)
                 callback(true, {message: 'Failed to add new timer.'})
