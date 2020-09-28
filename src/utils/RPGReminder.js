@@ -29,7 +29,8 @@ class RPGReminder {
             var sc = args[0].toLowerCase()
             var force = (args[args.length - 1] == "-f") ? true : false;
             var userId = message.author.id;
-            var channel_id = message.channel.id;
+            var channel = message.channel;
+            var channel_id = channel.id;
 
             if(message.channel.name != "rpg"){
                 return;
@@ -40,7 +41,7 @@ class RPGReminder {
                     if(args[2] == "lootbox"){
                         if(!this.lootbox.has(userId) || force){
                             this.addTimer(userId, "lootbox", now + LOOTBOX, channel_id)
-                            this.lootbox.set(userId, {time: now + LOOTBOX, message: message})
+                            this.lootbox.set(userId, {time: now + LOOTBOX, channel: channel})
                         }
                     }
                 }
@@ -51,7 +52,7 @@ class RPGReminder {
                     if(args[1] == "raid" || args[1] == "upgrade"){
                         if(!this.guild.has(message.guild.id) || force){
                             this.addTimer(message.guild.id, "guild", now + GUILD, channel_id)
-                            this.guild.set(message.guild.id, {time: now + GUILD, message: message})
+                            this.guild.set(message.guild.id, {time: now + GUILD, channel: channel})
                         }
                     }
                 }
@@ -60,21 +61,21 @@ class RPGReminder {
             if(sc == "hunt"){
                 if(!this.hunt.has(message.author.id) || force){
                     this.addTimer(userId, "hunt", now + HUNT, channel_id)
-                    this.hunt.set(message.author.id, {time: now + HUNT, message: message})
+                    this.hunt.set(message.author.id, {time: now + HUNT, channel: channel})
                 }
             }
 
             if(sc == "adv" || sc == "adventure"){
                 if(!this.adventure.has(message.author.id) || force){
                     this.addTimer(userId, "adventure", now + ADVENTURE, channel_id)
-                    this.adventure.set(message.author.id, {time: now + ADVENTURE, message: message})
+                    this.adventure.set(message.author.id, {time: now + ADVENTURE, channel: channel})
                 }
             }
 
             if(sc == "training"){
                 if(!this.training.has(message.author.id) || force){
                     this.addTimer(userId, "training", now + TRAINING, channel_id)
-                    this.training.set(message.author.id, {time: now + TRAINING, message: message})
+                    this.training.set(message.author.id, {time: now + TRAINING, channel: channel})
                 }
             }
 
@@ -87,7 +88,7 @@ class RPGReminder {
                sc == "bigboat"){
                 if(!this.progress.has(message.author.id) || force){
                     this.addTimer(userId, "progress", now + PROGRESS, channel_id)
-                    this.progress.set(message.author.id, {time: now + PROGRESS, message: message})
+                    this.progress.set(message.author.id, {time: now + PROGRESS, channel: channel})
                 }
             }
         }
