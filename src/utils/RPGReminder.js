@@ -210,7 +210,7 @@ class RPGReminder {
             
             if((time - now) <= 0){
                 var user = this.client.users.cache.get(id)
-                channel.send(user.author.username +', Progress Ready!')
+                channel.send(user.username +', Progress Ready!')
                 this.progress.delete(id)
                 this.removeTimer(id, "progress")
             }
