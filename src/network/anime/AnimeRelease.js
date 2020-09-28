@@ -34,7 +34,6 @@ class AnimeLoader {
     }
     
     checkTask(){
-        this.client.logger.info('Checking for new animes...')
         axios.get(this.baseUrl)
             .then(response => {
                 const data = response.data
@@ -70,8 +69,6 @@ class AnimeLoader {
         const newEpisodes = this.checkNewEpisodes(details)
         
         if(newEpisodes.length){
-            const s = (newEpisodes.length) > 1 ? 's' : '';
-            this.client.logger.info(newEpisodes.length +' episode'+ s +' found.')
             newEpisodes.forEach(episode => {
                 this.episodes.push(episode)
                 
