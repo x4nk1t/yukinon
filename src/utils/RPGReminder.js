@@ -155,7 +155,7 @@ class RPGReminder {
             var channel = value.channel;
             
             if((time - now) <= 0){
-                var role = message.guild.roles.cache.find(r => r.name.toLowerCase() == "rpg");
+                var role = channel.guild.roles.cache.find(r => r.name.toLowerCase() == "rpg");
                 var wtd = (new Date().getDay()) < 5 ? "Upgrade" : "Raid"; 
                 
                 channel.send(role.toString() +' Guild '+ wtd +' (Preferred)!')
