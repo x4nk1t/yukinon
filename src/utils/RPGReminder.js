@@ -85,7 +85,7 @@ class RPGReminder {
                sc == "mine" || sc == "bowsaw" ||
                sc == "boat" || sc == "pickaxe" ||
                sc == "tractor" || sc == "chainsaw" ||
-               sc == "bigboat"){
+               sc == "bigboat" || sc == "drill"){
                 if(!this.progress.has(message.author.id) || force){
                     this.addTimer(userId, "progress", now + PROGRESS, channel_id)
                     this.progress.set(message.author.id, {time: now + PROGRESS, channel: channel})
