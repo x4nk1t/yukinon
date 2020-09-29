@@ -72,31 +72,37 @@ class DBApi {
     
     removeTrackingAnime(channel, name, callback){
         var channels = this.client.animeRelease.release_channels;
-        var found = false;
+        var channelFound = false;
+        var animeFound = false;
         
         channels.forEach(chh => {
             if(chh.channel_id == channel.id){
                 var split = chh.tracking.split('|')
-                found = true
+                channelFound = true
                 
                 split.forEach((s, i) => {
                     if(s == '') split.splice(i, 1)
                     if(this.filterName(s) == this.filterName(name)){
+                        animeFound = true;
                         split.splice(i, 1)
                     }
                 })
                 
-                chh.tracking = split.join('|') +'|';
-                Channels.collection.updateOne({channel_id: channel.id}, { $set: {tracking: chh.tracking}}, (err, docs) => {
-                    if(err){
-                        callback(true, {message: 'Failed to update the tracking list.'})
-                        return
-                    }
-                    callback(false, {message: 'Successfully removed from tracking list'})
-                })
+                if(animeFound){
+                    chh.tracking = split.join('|') +'|';
+                    Channels.collection.updateOne({channel_id: channel.id}, { $set: {tracking: chh.tracking}}, (err, docs) => {
+                        if(err){
+                            callback(true, {message: 'Failed to update the tracking list.'})
+                            return
+                        }
+                        callback(false, {message: 'Successfully removed from tracking list'})
+                    })
+                } else {
+                    callback(true, {message: 'That anime was not found on this channel\'s list.'})
+                }
             }
         })
-        if(!found) callback(true, {message: 'This channel is not a anime release channel.'})
+        if(!channelFound) callback(true, {message: 'This channel is not a anime release channel.'})
     }
     
     clearTrackingAnime(channel, callback){

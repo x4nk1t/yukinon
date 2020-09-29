@@ -13,8 +13,7 @@ class Stats extends Command{
     
     execute(message, commandArgs){
         var embed = new Discord.MessageEmbed()
-            .setTitle('Stats')
-            .setColor('RANDOM')
+            .setColor('GREEN')
             .addFields([
                 {
                     name: 'Ping',
@@ -29,25 +28,8 @@ class Stats extends Command{
                     name: 'Memory Usage',
                     value: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + 'MB',
                     inline: true
-                },
-                {
-                    name: 'Guilds',
-                    value: this.client.guilds.cache.size,
-                    inline: true
-                },
-                {
-                    name: 'Channels',
-                    value: this.client.channels.cache.size,
-                    inline: true
-                },
-                {
-                    name: 'Users',
-                    value: this.client.users.cache.size + ' ('+ this.client.users.cache.filter(user => user.bot).size +' bots)',
-                    inline: true
                 }
             ])
-            .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
-        
         message.channel.send(embed);
     }
     

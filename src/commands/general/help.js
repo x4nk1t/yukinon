@@ -22,15 +22,15 @@ class Help extends Command{
             reqPage = commandArgs[0] - 1;
             if(commandArgs[0] > this.helpContent.length){
                 embed.setTitle('ERROR')
-                    .setDescription('That page is not available. Total Available Page: '+ this.helpContent.length)
-                    .setColor('#FF0000')
+                    .setDescription('That page is not available. Total Page: '+ this.helpContent.length)
+                    .setColor('RED')
                 message.channel.send(embed)
                 return;
             }
         }
         embed.setTitle('Help (Page '+ (reqPage + 1)+'/'+this.helpContent.length+')')
             .setDescription(this.helpContent[reqPage])
-            .setColor('RANDOM')
+            .setColor('BLUE')
             .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
             
         message.channel.send(embed)

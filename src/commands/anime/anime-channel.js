@@ -25,7 +25,7 @@ class AnimeChannel extends Command{
             if(commandArgs[0] == "add"){
                 this.client.dbapi.addReleaseChannel(message.channel, (error, data) => {
                     if(!error){
-                        embed.setColor('RANDOM')
+                        embed.setColor('GREEN')
                     }
                     embed.setDescription(data.message)
                     message.channel.send(embed)
@@ -33,7 +33,7 @@ class AnimeChannel extends Command{
             } else if (commandArgs[0] == "remove"){
                 this.client.dbapi.removeReleaseChannel(message.channel, (error, data) => {
                     if(!error){
-                        embed.setColor('RANDOM')
+                        embed.setColor('GREEN')
                     }
                     embed.setDescription(data.message)
                     message.channel.send(embed)

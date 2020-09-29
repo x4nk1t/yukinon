@@ -14,7 +14,7 @@ class Coinflip extends Command{
     execute(message, commandArgs){        
         var embed = new Discord.MessageEmbed()
             .setTitle("CoinFlip")
-            .setColor('RANDOM')
+            .setColor('BLUE')
         
         if(commandArgs[0]){
             var ht = commandArgs[0].toLowerCase();
@@ -31,11 +31,11 @@ class Coinflip extends Command{
             message.channel.send(embed).then(sent => {
                 setTimeout(() => {
                     if(flip == ht){
-                        embed.setColor('#00FF00')
+                        embed.setColor('GREEN')
                         embed.setDescription('Its a **'+ flip +'**. You Won!')
                         embed.setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL())
                     } else {
-                        embed.setColor('#FF0000')
+                        embed.setColor('RED')
                         embed.setDescription('Its a **'+ flip +'**. You Lost!')
                         embed.setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL())
                     }
@@ -45,7 +45,7 @@ class Coinflip extends Command{
         } else {
             embed.setDescription('Flipping coin....');
             message.channel.send(embed).then(sent => {
-                embed.setColor('RANDOM')
+                embed.setColor('BLUE')
                     .setDescription('Its a **'+ this.flip() +'**.')
                     .setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL())
                 

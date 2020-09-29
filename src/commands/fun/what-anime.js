@@ -19,7 +19,7 @@ class WhatAnime extends Command{
     execute(message, commandArgs){        
         var embed = new Discord.MessageEmbed()
             .setTitle("Error")
-            .setColor('#FF0000')
+            .setColor('RED')
             
         if(!commandArgs[0]){
             this.sendUsage(message)
@@ -41,7 +41,7 @@ class WhatAnime extends Command{
             this.animeInfo.getDetails(mal_id, data => {
                 if(data == null){
                     embed.setTitle(title_romaji)
-                        .setColor('RANDOM')
+                        .setColor('BLUE')
                         .setThumbnail(commandArgs[0])
                         .addField('English', title_english, true)
                         .addField('MAL Link', 'https://myanimelist.net/anime/'+ mal_id)
@@ -62,7 +62,7 @@ class WhatAnime extends Command{
                 const mal_url = data.url
                 
                 embed.setTitle(title)
-                    .setColor('RANDOM')
+                    .setColor('BLUE')
                     .setThumbnail(imageUrl)
                     .addField('English', title_english, true)
                     .addField('Score', score, true)

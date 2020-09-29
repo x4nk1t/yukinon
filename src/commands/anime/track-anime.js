@@ -6,7 +6,7 @@ class TrackAnime extends Command{
         super(commandLoader, {
             name: "track-anime",
             description: "Add anime to track in the channel. *(Admin only)*",
-            usage: "[add|remove|clear] <anime id>",
+            usage: "[add|remove|clear] <anime name>",
             aliases: ['track'],
             permissions: ['MANAGE_CHANNELS'],
             guildCommand: true
@@ -31,7 +31,7 @@ class TrackAnime extends Command{
                 }
                 this.client.dbapi.addTrackingAnime(message.channel, anime,(error, data) => {
                     if(!error){
-                        embed.setColor('RANDOM')
+                        embed.setColor('GREEN')
                     }
                     embed.setDescription(data.message)
                     message.channel.send(embed)
@@ -45,7 +45,7 @@ class TrackAnime extends Command{
                 }
                 this.client.dbapi.removeTrackingAnime(message.channel, anime, (error, data) => {
                     if(!error){
-                        embed.setColor('RANDOM')
+                        embed.setColor('GREEN')
                     }
                     embed.setDescription(data.message)
                     message.channel.send(embed)
@@ -71,7 +71,7 @@ class TrackAnime extends Command{
                     const trackings = '-'+ chh.tracking.split('|').join('\n -').slice(0, -1) //temp change
                     
                     if(chh.tracking != ''){
-                        embed.setColor('RANDOM')
+                        embed.setColor('BLUE')
                         embed.setTitle('This channel is tracking:')
                         embed.setDescription(trackings)
                     } else {
