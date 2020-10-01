@@ -7,6 +7,9 @@ const HUNT = 60000; //1min
 const ADVENTURE = 3600000; //1hr
 const TRAINING = 900000; //15min
 const PROGRESS = 300000; //5min
+const MINIBOSS = 43200000; //12hr
+const HORSE = 86400000; //1d
+const ARENA = 86400000; //1d
 
 class RPGReminder {
     constructor(client){
@@ -18,6 +21,9 @@ class RPGReminder {
         this.training = new Discord.Collection();
         this.guild = new Discord.Collection();
         this.lootbox = new Discord.Collection();
+        this.miniboss = new Discord.Collection();
+        this.horse = new Discord.Collection();
+        this.arena = new Discord.Collection();
     }
     
     execute(message){
@@ -46,6 +52,23 @@ class RPGReminder {
                     }
                 }
             }
+            
+            if(sc == "horse"){
+                if(args[1]){
+                    if(args[1] == "breeding" || args[1] == "race"){
+                        var member = message.guild.member(message.mentions.users.first())
+                        
+                        if(!this.horse.has(userId) || force){
+                            this.addTimer(userId, "horse", now + HORSE, channel_id)
+                            this.horse.set(userId, {time: now + HORSE, channel: channel})
+                            if(member){
+                                this.addTimer(member.user.id, "horse", now + HORSE, channel_id)
+                                this.horse.set(member.user.id, {time: now + HORSE, channel: channel})
+                            }
+                        }
+                    }
+                }
+            }
 
             if(sc == "guild"){
                 if(args[1]){
@@ -59,23 +82,37 @@ class RPGReminder {
             }
 
             if(sc == "hunt"){
-                if(!this.hunt.has(message.author.id) || force){
+                if(!this.hunt.has(userId) || force){
                     this.addTimer(userId, "hunt", now + HUNT, channel_id)
-                    this.hunt.set(message.author.id, {time: now + HUNT, channel: channel})
+                    this.hunt.set(userId, {time: now + HUNT, channel: channel})
                 }
             }
 
             if(sc == "adv" || sc == "adventure"){
-                if(!this.adventure.has(message.author.id) || force){
+                if(!this.adventure.has(userId) || force){
                     this.addTimer(userId, "adventure", now + ADVENTURE, channel_id)
-                    this.adventure.set(message.author.id, {time: now + ADVENTURE, channel: channel})
+                    this.adventure.set(userId, {time: now + ADVENTURE, channel: channel})
                 }
             }
 
             if(sc == "training"){
-                if(!this.training.has(message.author.id) || force){
+                if(!this.training.has(userId) || force){
                     this.addTimer(userId, "training", now + TRAINING, channel_id)
-                    this.training.set(message.author.id, {time: now + TRAINING, channel: channel})
+                    this.training.set(userId, {time: now + TRAINING, channel: channel})
+                }
+            }
+            
+            if(sc == "miniboss"){
+                if(!this.miniboss.has(userId) || force){
+                    this.addTimer(userId, "miniboss", now + MINIBOSS, channel_id)
+                    this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel})
+                }
+            }
+            
+            if(sc == "arena"){
+                if(!this.arena.has(userId) || force){
+                    this.addTimer(userId, "arena", now + ARENA, channel_id)
+                    this.arena.set(userId, {time: now + ARENA, channel: channel})
                 }
             }
 
@@ -86,9 +123,9 @@ class RPGReminder {
                sc == "boat" || sc == "pickaxe" ||
                sc == "tractor" || sc == "chainsaw" ||
                sc == "bigboat" || sc == "drill"){
-                if(!this.progress.has(message.author.id) || force){
+                if(!this.progress.has(userId) || force){
                     this.addTimer(userId, "progress", now + PROGRESS, channel_id)
-                    this.progress.set(message.author.id, {time: now + PROGRESS, channel: channel})
+                    this.progress.set(userId, {time: now + PROGRESS, channel: channel})
                 }
             }
         }
@@ -123,6 +160,15 @@ class RPGReminder {
                     }
                     if(type == "lootbox"){
                         this.lootbox.set(userId, {time: time, channel: channel})
+                    }
+                    if(type == "miniboss"){
+                        this.miniboss.set(userId, {time: time, channel: channel})
+                    }
+                    if(type == "horse"){
+                        this.horse.set(userId, {time: time, channel: channel})
+                    }
+                    if(type == "arena"){
+                        this.arena.set(userId, {time: time, channel: channel})
                     }
                 } else {
                     removeList.push(data._id)
@@ -213,6 +259,45 @@ class RPGReminder {
                 channel.send(user.username +', Progress Ready!')
                 this.progress.delete(id)
                 this.removeTimer(id, "progress")
+            }
+        })
+        
+        this.miniboss.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            
+            if((time - now) <= 0){
+                var user = this.client.users.cache.get(id)
+                channel.send(user.toString() +', Miniboss Ready!')
+                this.miniboss.delete(id)
+                this.removeTimer(id, "miniboss")
+            }
+        })
+        
+        this.horse.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            
+            if((time - now) <= 0){
+                var user = this.client.users.cache.get(id)
+                channel.send(user.toString() +', Horse Breed/Race Ready!')
+                this.horse.delete(id)
+                this.removeTimer(id, "horse")
+            }
+        })
+        
+        this.arena.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            
+            if((time - now) <= 0){
+                var user = this.client.users.cache.get(id)
+                channel.send(user.toString() +', Arena Ready!')
+                this.arena.delete(id)
+                this.removeTimer(id, "arena")
             }
         })
     }
