@@ -55,16 +55,26 @@ class RPGReminder {
             
             if(sc == "horse"){
                 if(args[1]){
-                    if(args[1] == "breeding" || args[1] == "race"){
+                    if(args[1] == "breeding"){
                         var member = message.guild.member(message.mentions.users.first())
                         
+                        if(member){
+                            if(!this.horse.has(userId) || force){
+                                this.addTimer(userId, "horse", now + HORSE, channel_id)
+                                this.horse.set(userId, {time: now + HORSE, channel: channel})
+                                
+                                if(!this.horse.has(member.user.id) || force){
+                                    this.addTimer(member.user.id, "horse", now + HORSE, channel_id)
+                                    this.horse.set(member.user.id, {time: now + HORSE, channel: channel})
+                                }
+                            }
+                        }
+                    }
+                    
+                    if(args[1] == "race"){
                         if(!this.horse.has(userId) || force){
                             this.addTimer(userId, "horse", now + HORSE, channel_id)
                             this.horse.set(userId, {time: now + HORSE, channel: channel})
-                            if(member){
-                                this.addTimer(member.user.id, "horse", now + HORSE, channel_id)
-                                this.horse.set(member.user.id, {time: now + HORSE, channel: channel})
-                            }
                         }
                     }
                 }
@@ -103,16 +113,30 @@ class RPGReminder {
             }
             
             if(sc == "miniboss"){
+                var member = message.guild.member(message.mentions.users.first())
+            
                 if(!this.miniboss.has(userId) || force){
                     this.addTimer(userId, "miniboss", now + MINIBOSS, channel_id)
                     this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel})
+                    
+                    if(member){
+                        this.addTimer(userId, "miniboss", now + MINIBOSS, channel_id)
+                        this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel})
+                    }
                 }
             }
             
             if(sc == "arena"){
+                var member = message.guild.member(message.mentions.users.first())
+                
                 if(!this.arena.has(userId) || force){
                     this.addTimer(userId, "arena", now + ARENA, channel_id)
                     this.arena.set(userId, {time: now + ARENA, channel: channel})
+                    
+                    if(member){
+                        this.addTimer(member.user.id, "arena", now + ARENA, channel_id)
+                        this.arena.set(member.user.id, {time: now + ARENA, channel: channel})
+                    }
                 }
             }
 
@@ -217,7 +241,7 @@ class RPGReminder {
             
             if((time - now) <= 0){
                 var user = this.client.users.cache.get(id)
-                channel.send(user.username +', Hunt Ready!')
+                channel.send('**'+ user.username +'**, Hunt Ready!')
                 this.hunt.delete(id)
                 this.removeTimer(id, "hunt")
             }
@@ -230,7 +254,7 @@ class RPGReminder {
             
             if((time - now) <= 0){
                 var user = this.client.users.cache.get(id)
-                channel.send(user.username +', Adventure Ready!')
+                channel.send('**'+ user.username +'**, Adventure Ready!')
                 this.adventure.delete(id)
                 this.removeTimer(id, "adventure")
             }
@@ -243,7 +267,7 @@ class RPGReminder {
             
             if((time - now) <= 0){
                 var user = this.client.users.cache.get(id)
-                channel.send(user.username +', Training Ready!')
+                channel.send('**'+ user.username +'**, Training Ready!')
                 this.training.delete(id)
                 this.removeTimer(id, "training")
             }
@@ -256,7 +280,7 @@ class RPGReminder {
             
             if((time - now) <= 0){
                 var user = this.client.users.cache.get(id)
-                channel.send(user.username +', Progress Ready!')
+                channel.send('**'+ user.username +'**, Progress Ready!')
                 this.progress.delete(id)
                 this.removeTimer(id, "progress")
             }
