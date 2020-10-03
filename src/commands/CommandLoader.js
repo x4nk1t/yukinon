@@ -5,7 +5,7 @@ const Command = require('./Command.js');
 class CommandLoader{
     constructor(client){
         this.client = client;
-        this.prefix = 'y!';
+        this.prefix = client.devMode ? '!' : 'y!';
         this.commands = new Discord.Collection();
         this.aliases = new Discord.Collection();
         
@@ -39,7 +39,7 @@ class CommandLoader{
                 if(commandClass instanceof Command && commandClass.enable){
                     this.loadCommand(commandClass)
                 } else {
-                    this.client.logger.error(`Couldn't load ${f}. Either it is not enabled or is not command.`)
+                    this.client.logger.error(`Couldn't load ${f}. Either it is disabled or it is not a command.`)
                 }
             })
         })

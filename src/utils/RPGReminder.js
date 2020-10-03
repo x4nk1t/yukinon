@@ -38,7 +38,7 @@ class RPGReminder {
             var channel = message.channel;
             var channel_id = channel.id;
 
-            if(message.channel.name != "rpg"){
+            if(message.channel.name != "rpg" || this.client.devMode){
                 return;
             }
             

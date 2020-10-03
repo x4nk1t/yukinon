@@ -14,6 +14,8 @@ class Client extends discord.Client{
     constructor(options = {}){
         super(options)
         
+        this.devMode = process.env.DEVMODE;
+        
         this.logger = new Logger(this)
         this.commandLoader = new CommandLoader(this)
         this.dbapi = new DBApi(this)
@@ -28,8 +30,12 @@ class Client extends discord.Client{
     }
     
     start(){
-        this.animeRelease.run()
-        this.rpgReminder.run()
+        if(!this.devMode){
+            this.animeRelease.run()
+            this.rpgReminder.run()
+        } else {
+            this.logger.info('Bot is running on development mode. Some features are disabled.')
+        }
         
         this.logger.info('Bot running as: '+ this.user.tag)
     }
