@@ -5,13 +5,13 @@ class RemindersCommand extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: "reminders",
-            description: "Shows the all reminders",
+            description: "Shows all rpg reminders",
             usage: "[user]",
             aliases: ['r'],
             guildCommand: true
         });
     }
-    //TODO
+    
     execute(message, commandArgs){
         const embed = new Discord.MessageEmbed()
         const reminder = this.client.rpgReminder;

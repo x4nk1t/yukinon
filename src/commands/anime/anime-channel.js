@@ -19,7 +19,7 @@ class AnimeChannel extends Command{
         }
         
         const embed = new Discord.MessageEmbed()
-            .setColor('#FF0000')
+            .setColor('RED')
         
         if(commandArgs[0]){
             if(commandArgs[0] == "add"){
@@ -28,7 +28,10 @@ class AnimeChannel extends Command{
                         embed.setColor('GREEN')
                     }
                     embed.setDescription(data.message)
-                    message.channel.send(embed)
+                    message.channel.send(embed).then(sent => {
+                        message.delete({timeout: 3000})
+                        sent.delete({timeout: 3000})
+                    })
                 })
             } else if (commandArgs[0] == "remove"){
                 this.client.dbapi.removeReleaseChannel(message.channel, (error, data) => {
@@ -36,7 +39,10 @@ class AnimeChannel extends Command{
                         embed.setColor('GREEN')
                     }
                     embed.setDescription(data.message)
-                    message.channel.send(embed)
+                    message.channel.send(embed).then(sent => {
+                        message.delete({timeout: 3000})
+                        sent.delete({timeout: 3000})
+                    })
                 })
             } else {
                 this.sendUsage(message)
@@ -44,6 +50,13 @@ class AnimeChannel extends Command{
         } else {
             this.sendUsage(message)
         }
+    }
+    
+    sendUsage(message){
+        message.channel.send({embed: {description: '**Usage:** '+ this.usage, color: '#FF0000'}}).then(sent => {
+            message.delete({timeout: 3000})
+            sent.delete({timeout: 3000})
+        })
     }
 }
 

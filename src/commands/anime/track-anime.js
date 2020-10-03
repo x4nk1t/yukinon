@@ -19,7 +19,7 @@ class TrackAnime extends Command{
         }
         
         const embed = new Discord.MessageEmbed()
-            .setColor('#FF0000')
+            .setColor('RED')
         
         if(commandArgs[0]){
             if(commandArgs[0] == "add"){
@@ -34,7 +34,10 @@ class TrackAnime extends Command{
                         embed.setColor('GREEN')
                     }
                     embed.setDescription(data.message)
-                    message.channel.send(embed)
+                    message.channel.send(embed).then(sent => {
+                        message.delete({timeout: 3000})
+                        sent.delete({timeout: 3000})
+                    })
                 })
             } else if (commandArgs[0] == "remove"){
                 commandArgs.shift()
@@ -48,15 +51,21 @@ class TrackAnime extends Command{
                         embed.setColor('GREEN')
                     }
                     embed.setDescription(data.message)
-                    message.channel.send(embed)
+                    message.channel.send(embed).then(sent => {
+                        message.delete({timeout: 3000})
+                        sent.delete({timeout: 3000})
+                    })
                 })
             } else if(commandArgs[0] == "clear") {
                 this.client.dbapi.clearTrackingAnime(message.channel, (error, data) => {
                     if(!error){
-                        embed.setColor('RANDOM')
+                        embed.setColor('BLUE')
                     }
                     embed.setDescription(data.message)
-                    message.channel.send(embed)
+                    message.channel.send(embed).then(sent => {
+                        message.delete({timeout: 3000})
+                        sent.delete({timeout: 3000})
+                    })
                 })
                 return;
             } else {
@@ -92,6 +101,13 @@ class TrackAnime extends Command{
     
     filterName(string){
         return string.toLowerCase().replace(' ', '').replace('\t', '')
+    }
+    
+    sendUsage(message){
+        message.channel.send({embed: {description: '**Usage:** '+ this.usage, color: '#FF0000'}}).then(sent => {
+            message.delete({timeout: 3000})
+            sent.delete({timeout: 3000})
+        })
     }
 }
 

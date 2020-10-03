@@ -67,7 +67,7 @@ class DBApi {
                 }
             }
         })
-        if(!found) callback(true, {message: 'This channel is not a anime release channel.'})
+        if(!found) callback(true, {message: 'This channel is not an anime release channel.'})
     }
     
     removeTrackingAnime(channel, name, callback){
@@ -102,7 +102,7 @@ class DBApi {
                 }
             }
         })
-        if(!channelFound) callback(true, {message: 'This channel is not a anime release channel.'})
+        if(!channelFound) callback(true, {message: 'This channel is not an anime release channel.'})
     }
     
     clearTrackingAnime(channel, callback){
@@ -122,7 +122,7 @@ class DBApi {
                 })
             }
         })
-        if(!found) callback(true, {message: 'This channel is not a anime release channel.'})
+        if(!found) callback(true, {message: 'This channel is not an anime release channel.'})
     }
     
     filterName(string){
@@ -152,11 +152,11 @@ class DBApi {
         releaseChannels.forEach(rel => {
             if(rel.channel_id == id){
                 found = true;
-                callback(true, {message: 'This channel is already a anime release channel.'})
             }
         })
         
         if(found){
+            callback(true, {message: 'This channel is already an anime release channel.'})
             return;
         }
         
