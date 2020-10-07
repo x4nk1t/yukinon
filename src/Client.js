@@ -49,7 +49,9 @@ class Client extends discord.Client{
             }
             
             if(message.content.toLowerCase().startsWith('rpg')){
-                this.rpgReminder.execute(message)
+                if(!this.devMode){
+                    this.rpgReminder.execute(message)
+                }
             }
         })
         this.on('ready', () => {
