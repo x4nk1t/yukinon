@@ -33,7 +33,7 @@ class UserInfo extends Command{
                 },
                 {
                     name: 'Nickname',
-                    value: member.nick,
+                    value: member.nick || 'N/A',
                     inline: true
                 },
                 {
