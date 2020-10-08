@@ -33,6 +33,9 @@ class Client extends Eris.CommandClient{
         this.embedRedColor = 16711680;
         this.embedGreenColor = 65280;
         
+        this.db.on('error', err => this.logger.error(err))
+        this.db.once('open', () => this.logger.info('Connected to database'))
+        
         this.registerEvents()
     }
     
