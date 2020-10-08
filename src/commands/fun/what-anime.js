@@ -1,4 +1,3 @@
-const Discord = require('discord.js')
 const Command = require('../Command.js');
 const AnimeInfo = require('../../network/anime/AnimeInfo.js');
 const WhatAnimeGrabber = require('../../network/anime/WhatAnimeGrabber.js');
@@ -8,7 +7,7 @@ class WhatAnime extends Command{
         super(commandLoader, {
             name: "what-anime",
             description: "Search for anime with screenshots.",
-            usage: "<link>",
+            usage: "<image link>",
             aliases: ['anime']
         });
         
@@ -17,9 +16,10 @@ class WhatAnime extends Command{
     }
     
     execute(message, commandArgs){        
-        var embed = new Discord.MessageEmbed()
-            .setTitle("Error")
-            .setColor('RED')
+        var embed = {
+            title: 'Error',
+            color: this.client.embedRedColor
+        }
             
         if(!commandArgs[0]){
             this.sendUsage(message)
@@ -28,9 +28,9 @@ class WhatAnime extends Command{
         
         this.whatAnime.getDetails(commandArgs[0], (error, json) => {
             if(error){
-                embed.setDescription(json.message)
+                embed.description = json.message
                 
-                message.channel.send(embed)
+                message.channel.createMessage({embed: embed})
                 return
             }
             
@@ -40,14 +40,17 @@ class WhatAnime extends Command{
             
             this.animeInfo.getDetails(mal_id, data => {
                 if(data == null){
-                    embed.setTitle(title_romaji)
-                        .setColor('BLUE')
-                        .setThumbnail(commandArgs[0])
-                        .addField('English', title_english, true)
-                        .addField('MAL Link', 'https://myanimelist.net/anime/'+ mal_id)
-                        .addField('\u200b', '*Note: Full data could not be fetched due to some error.*')
-                
-                    message.channel.send(embed)
+                    embed.title = title_romaji
+                    embed.color = this.client.embedColor
+                    embed.url = 'https://myanimelist.net/anime/'+ mal_id
+                    embed.thumbnail = {url: commandArgs[0]}
+                    embed.fields = [
+                        {name: 'English', value: title_english, inline: true},
+                        {name: 'MAL Link', value: 'https://myanimelist.net/anime/'+ mal_id},
+                        {name: '\u200b', value: '*Note: Full data could not be fetched due to some error.*'}
+                    ]
+                    embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.avatarURL}
+                    message.channel.createMessage({embed: embed})
                     return
                 }
                 
@@ -61,20 +64,22 @@ class WhatAnime extends Command{
                 const aired = data.aired.string
                 const mal_url = data.url
                 
-                embed.setTitle(title)
-                    .setColor('BLUE')
-                    .setThumbnail(imageUrl)
-                    .addField('English', title_english, true)
-                    .addField('Score', score, true)
-                    .addField('Type', type, true)
-                    .addField('Source', source, true)
-                    .addField('Episodes', episodes, true)
-                    .addField('Airing', airing, true)
-                    .addField('Aired', aired, true)
-                    .addField('MAL Link', mal_url, true)
-                    .addField('\u200b', '*Note: This might not be accurate.*')
-                
-                message.channel.send(embed)
+                embed.title = title
+                embed.color = this.client.embedColor
+                embed.url = mal_url
+                embed.thumbnail = {url: imageUrl}
+                embed.fields = [
+                    {name: 'English', value: title_english, inline: true},
+                    {name: 'Score', value: score.toString(), inline: true},
+                    {name: 'Type', value: type, inline: true},
+                    {name: 'Source', value: source, inline: true},
+                    {name: 'Episodes', value: episodes, inline: true},
+                    {name: 'Airing', value: airing, inline: true},
+                    {name: 'Aired', value: aired, inline: true},
+                    {name: '\u200b', value: '*Note: This might not be accurate.*'}
+                ]
+                embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.avatarURL}
+                message.channel.createMessage({embed: embed})
             })
         })
     }

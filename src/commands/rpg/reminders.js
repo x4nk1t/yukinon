@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class RemindersCommand extends Command{
@@ -8,18 +7,17 @@ class RemindersCommand extends Command{
             description: "Shows all rpg reminders",
             usage: "[user]",
             aliases: ['r'],
-            guildCommand: true
         });
     }
     
     execute(message, commandArgs){
-        const embed = new Discord.MessageEmbed()
+        const embed = {}
         const reminder = this.client.rpgReminder;
         var userId = message.author.id;
         var username = message.author.username;
         
-        if(message.mentions.users.first()){
-            var member = message.guild.member(message.mentions.users.first())
+        if(message.mentions[0]){
+            var member = message.channel.guild.members.get(message.mentions[0].id)
             
             if(member) {
                 userId = member.user.id;
@@ -67,12 +65,12 @@ class RemindersCommand extends Command{
             description = "N/A";
         }
         
-        embed.setTitle(username +'\'s reminders')
-        embed.setColor('BLUE')
-        embed.setDescription(description)
-        embed.setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
+        embed.title = username +'\'s reminders'
+        embed.color = this.client.embedColor
+        embed.description = description
+        embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.avatarURL}
         
-        message.channel.send(embed)
+        message.channel.createMessage({embed: embed})
     }
     
     formatTime(time_in_ms){

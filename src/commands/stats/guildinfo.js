@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class GuildInfo extends Command{
@@ -11,26 +10,21 @@ class GuildInfo extends Command{
     }
     
     execute(message, commandArgs){
-        var guild = message.guild;
-        
-        var embed = new Discord.MessageEmbed()
-            .setTitle('Guild Info')
-            .setColor('BLUE')
-            .setThumbnail(message.guild.iconURL())
-            .addFields([
+        var guild = message.channel.guild;
+        var owner = this.client.users.get(guild.ownerID)
+        var embed = {
+            title: guild.name,
+            color: this.client.embedColor,
+            thumbnail: {url: message.channel.guild.iconURL},
+            fields: [
                 {
                     name: 'ID',
                     value: guild.id,
                     inline: true
                 },
-        		{
-                    name: 'Name',
-                    value: guild.name,
-                    inline: true
-		        },
                 {
                     name: 'Owner',
-                    value: guild.owner.user.tag,
+                    value: owner.username +'#'+ owner.discriminator,
                     inline: true
                 },
                 {
@@ -40,12 +34,12 @@ class GuildInfo extends Command{
                 },
                 { 
                     name: 'Role Count',
-                    value: guild.roles.cache.array().length,
+                    value: guild.roles.size,
                     inline: true
                 },
                 {
                     name: 'Channels',
-                    value: guild.channels.cache.array().length,
+                    value: guild.channels.size,
                     inline: true
                 },
                 {
@@ -55,11 +49,12 @@ class GuildInfo extends Command{
                 }, 
                 {
                     name: 'Created At',
-                    value: guild.createdAt,
+                    value: new Date(guild.createdAt).toDateString(),
                 }, 
-            ])
-            .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
-        message.channel.send(embed);
+            ],
+            footer: {text: 'Requested by '+ message.author.username, icon_url: message.author.avatarURL}
+        }
+        message.channel.createMessage({embed: embed});
     }
 }
 

@@ -8,40 +8,31 @@ class Command {
         }
         this.commandLoader = commandLoader;
         this.client = commandLoader.client;
-        this.prefix = commandLoader.prefix;
         
-        this.name = options.name;
-        this.commandName = this.prefix + this.name;
-        this.description = options.description || '';
-        this.usage = (options.usage == null) ? this.commandName : this.commandName +" "+ options.usage;
-        this.aliases = options.aliases || [];
-        this.permissions = options.permissions || [];
-        this.guildCommand = options.guildCommand || false; 
-        
-        this.enable = options.enable || true;
-    }
-
-    hasRequiredPermissions(message){
-        if(this.permissions.length){
-            var countPermission = 0;
-            this.permissions.forEach(permission => {
-                if(message.member.hasPermission(permission)){
-                    countPermission++;
-                }
-            });
-            if(this.permissions.length != countPermission){
-                message.channel.send({embed: {color: '#FF0000', description: 'You don\'t have required permissions to use this command.'}})
-
-                return false
-            } else {
-                return true
-            }
+        this.options = {
+            name: options.name || '',
+            description: options.description || '',
+            aliases: options.aliases || [],
+            guildOnly: options.guildOnly || true,
+            usage: options.usage || '',
+            enabled: options.enabled || true,
+            permissionMessage: 'You don\'t have permission to use this command.',
+            requirements: {
+                permissions: options.permissions || {},
+            },
+            invalidUsageMessage: message => { return 'Usage: '+ message.prefix + options.name +' '+ options.usage}
         }
-        return true
     }
     
-    sendUsage(message){
-        message.channel.send({embed: {description: '**Usage:** '+ this.usage, color: '#FF0000'}})
+    sendUsage(message, deleteMsg = false){
+        message.channel.createMessage('**Usage:** '+ message.prefix + this.options.name + ' '+ this.options.usage).then(m => {
+            if(deleteMsg) {
+                setTimeout(() => {
+                    message.delete()
+                    m.delete()
+                }, 4000)
+            }
+        })
     }
 }
 module.exports = Command;

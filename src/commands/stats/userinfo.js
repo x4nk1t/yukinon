@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class UserInfo extends Command{
@@ -12,42 +11,43 @@ class UserInfo extends Command{
     }
     
     execute(message, commandArgs){
-        if(!message.mentions.users.first()){
-            message.channel.send("You must mention a user.")
+        if(!message.mentions[0]){
+            message.channel.createMessage("You must mention a user.")
             return
         }
-        var member = message.guild.member(message.mentions.users.first());        
-        var embed = new Discord.MessageEmbed()
-            .setTitle('User Info')
-            .setColor('BLUE')
-            .setThumbnail(member.user.displayAvatarURL())
-            .addFields([
+        var member = message.channel.guild.members.get(message.mentions[0].id);        
+        var embed = {
+            title: member.user.username,
+            color: this.client.embedColor,
+            thumbnail: {url:member.user.avatarURL},
+            fields: [
                 {
-                    name: 'User Id',
+                    name: 'ID',
                     value: member.user.id,
                     inline: true
                 },
                 {
                     name: 'Tag',
-                    value: member.user.tag,
+                    value: member.user.username +'#'+ member.user.discriminator,
                     inline: true
                 },
                 {
-                    name: 'Display Name',
-                    value: member.displayName,
+                    name: 'Nickname',
+                    value: member.nick,
                     inline: true
                 },
                 {
                     name: 'Joined At',
-                    value: member.joinedAt,
+                    value: new Date(member.joinedAt).toDateString(),
                 },
                 { 
                     name: 'Roles',
-                    value: member.roles.cache.array().map(role => role.toString()),
+                    value: member.roles.map(role => message.channel.guild.roles.get(role).mention).toString(),
                 }
-            ])
-            .setFooter('Requested by '+ message.author.username, message.author.displayAvatarURL())
-        message.channel.send(embed);
+            ],
+            footer: {text: 'Requested by '+ message.author.username, icon_url: message.author.avatarURL}
+        }
+        message.channel.createMessage({embed: embed});
     }
 }
 

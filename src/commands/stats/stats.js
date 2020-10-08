@@ -1,5 +1,4 @@
 const os = require('os')
-const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class Stats extends Command{
@@ -12,25 +11,27 @@ class Stats extends Command{
     }
     
     execute(message, commandArgs){
-        var embed = new Discord.MessageEmbed()
-            .setColor('GREEN')
-            .addFields([
+        var embed = {
+            color: this.client.embedGreenColor,
+            fields: [
                 {
                     name: 'Ping',
-                    value: (new Date().getTime() - message.createdTimestamp) +'ms',
+                    value: (new Date().getTime() - message.timestamp) +'ms',
                     inline: true
                 },
                 {
                     name: 'Uptime',
                     value: this.getUptime(),
                     inline: true
-                },{ 
+                },
+                { 
                     name: 'Memory Usage',
                     value: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + 'MB',
                     inline: true
                 }
-            ])
-        message.channel.send(embed);
+            ]
+        }
+        message.channel.createMessage({embed: embed});
     }
     
     getUptime(){

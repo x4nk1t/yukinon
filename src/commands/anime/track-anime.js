@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class TrackAnime extends Command{
@@ -8,68 +7,70 @@ class TrackAnime extends Command{
             description: "Add anime to track in the channel. *(Admin only)*",
             usage: "[add|remove|clear] <anime name>",
             aliases: ['track'],
-            permissions: ['MANAGE_CHANNELS'],
-            guildCommand: true
+            permissions: {administrator: true},
         });
     }
     
     execute(message, commandArgs){
-        if(!this.hasRequiredPermissions(message)){
-            return
+        var embed = {
+            color: this.client.embedRedColor
         }
-        
-        const embed = new Discord.MessageEmbed()
-            .setColor('RED')
         
         if(commandArgs[0]){
             if(commandArgs[0] == "add"){
                 commandArgs.shift()
                 const anime = commandArgs.join(' ')
                 if(anime == ''){
-                    this.sendUsage(message)
+                    this.sendUsage(message, true)
                     return;
                 }
                 this.client.dbapi.addTrackingAnime(message.channel, anime,(error, data) => {
                     if(!error){
-                        embed.setColor('GREEN')
+                        embed.color = this.client.embedGreenColor
                     }
-                    embed.setDescription(data.message)
-                    message.channel.send(embed).then(sent => {
-                        message.delete({timeout: 3000})
-                        sent.delete({timeout: 3000})
+                    embed.description = data.message
+                    message.channel.createMessage({embed: embed}).then(sent => {
+                        setTimeout(() => {
+                            message.delete()
+                            sent.delete()
+                        }, 3000)
                     })
                 })
             } else if (commandArgs[0] == "remove"){
                 commandArgs.shift()
                 const anime = commandArgs.join(' ')
                 if(anime == ''){
-                    this.sendUsage(message)
+                    this.sendUsage(message, true)
                     return;
                 }
                 this.client.dbapi.removeTrackingAnime(message.channel, anime, (error, data) => {
                     if(!error){
-                        embed.setColor('GREEN')
+                        embed.color = this.client.embedGreenColor
                     }
-                    embed.setDescription(data.message)
-                    message.channel.send(embed).then(sent => {
-                        message.delete({timeout: 3000})
-                        sent.delete({timeout: 3000})
+                    embed.description = data.message
+                    message.channel.createMessage({embed: embed}).then(sent => {
+                        setTimeout(() => {
+                            message.delete()
+                            sent.delete()
+                        }, 3000)
                     })
                 })
             } else if(commandArgs[0] == "clear") {
                 this.client.dbapi.clearTrackingAnime(message.channel, (error, data) => {
                     if(!error){
-                        embed.setColor('BLUE')
+                        embed.color = this.client.embedColor
                     }
-                    embed.setDescription(data.message)
-                    message.channel.send(embed).then(sent => {
-                        message.delete({timeout: 3000})
-                        sent.delete({timeout: 3000})
+                    embed.description = data.message
+                    message.channel.createMessage({embed: embed}).then(sent => {
+                        setTimeout(() => {
+                            message.delete()
+                            sent.delete()
+                        }, 3000)
                     })
                 })
                 return;
             } else {
-                this.sendUsage(message)
+                this.sendUsage(message, true)
             }
         } else {
             const channels = this.client.animeRelease.release_channels;
@@ -80,20 +81,20 @@ class TrackAnime extends Command{
                     const trackings = '-'+ chh.tracking.split('|').join('\n -').slice(0, -1) //temp change
                     
                     if(chh.tracking != ''){
-                        embed.setColor('BLUE')
-                        embed.setTitle('This channel is tracking:')
-                        embed.setDescription(trackings)
+                        embed.color = this.embedColor
+                        embed.title = 'This channel is tracking:'
+                        embed.description = trackings
                     } else {
-                        embed.setDescription('This channel isn\'t tracking any anime.')
+                        embed.description = 'This channel is not tracking any anime.'
                     }
                     
-                    message.channel.send(embed)
+                    message.channel.createMessage({embed: embed})
                     return;
                 }
             })
             if(!found){
-                embed.setDescription('This channel isn\'t anime release channel.')
-                message.channel.send(embed)
+                embed.description = 'This is not an anime release channel.'
+                message.channel.createMessage({embed: embed})
             }
             return;
         }
@@ -101,13 +102,6 @@ class TrackAnime extends Command{
     
     filterName(string){
         return string.toLowerCase().replace(' ', '').replace('\t', '')
-    }
-    
-    sendUsage(message){
-        message.channel.send({embed: {description: '**Usage:** '+ this.usage, color: '#FF0000'}}).then(sent => {
-            message.delete({timeout: 3000})
-            sent.delete({timeout: 3000})
-        })
     }
 }
 
