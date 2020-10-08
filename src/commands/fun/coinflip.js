@@ -1,20 +1,20 @@
-const Discord = require('discord.js')
 const Command = require('../Command.js');
 
 class Coinflip extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: "coinflip",
-            description: "Flips the coin and shows head/tail.",
+            description: "Flips the coin.",
             usage: "[head|tail]",
             aliases: ['coin', 'cf']
         });
     }
     
     execute(message, commandArgs){        
-        var embed = new Discord.MessageEmbed()
-            .setTitle("CoinFlip")
-            .setColor('BLUE')
+        var embed = {
+            title: 'Coin flip',
+            color: this.client.embedColor
+        }
         
         if(commandArgs[0]){
             var ht = commandArgs[0].toLowerCase();
@@ -27,30 +27,30 @@ class Coinflip extends Command{
             }
             
             var flip = this.flip()
-            embed.setDescription('Flipping coin....');
-            message.channel.send(embed).then(sent => {
+            embed.description = 'Flipping coin....';
+            message.channel.createMessage({embed: embed}).then(sent => {
                 setTimeout(() => {
                     if(flip == ht){
-                        embed.setColor('GREEN')
-                        embed.setDescription('Its a **'+ flip +'**. You Won!')
-                        embed.setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL())
+                        embed.color = this.client.embedGreenColor
+                        embed.description = 'Its a **'+ flip +'**. You Won!'
+                        embed.footer = {text: 'Coin flipped by '+ message.author.username}
                     } else {
-                        embed.setColor('RED')
-                        embed.setDescription('Its a **'+ flip +'**. You Lost!')
-                        embed.setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL())
+                        embed.color = this.client.embedRedColor
+                        embed.description = 'Its a **'+ flip +'**. You Lost!'
+                        embed.footer = {text: 'Coin flipped by '+ message.author.username}
                     }
-                    sent.edit(embed)
+                    sent.edit({embed: embed})
                 }, 1300)
             })
         } else {
-            embed.setDescription('Flipping coin....');
-            message.channel.send(embed).then(sent => {
-                embed.setColor('BLUE')
-                    .setDescription('Its a **'+ this.flip() +'**.')
-                    .setFooter('Coin flipped by '+ message.author.username, message.author.avatarURL())
+            embed.description = 'Flipping coin....';
+            message.channel.createMessage({embed: embed}).then(sent => {
+                embed.color = this.client.embedColor
+                embed.description = 'Its a **'+ this.flip() +'**.'
+                embed.footer = {text: 'Coin flipped by '+ message.author.username}
                 
                 setTimeout(() => {
-                    sent.edit(embed)
+                    sent.edit({embed: embed})
                 }, 1300)
             })
         }

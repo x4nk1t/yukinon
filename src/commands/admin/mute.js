@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class Mute extends Command{
@@ -7,53 +6,52 @@ class Mute extends Command{
             name: "mute",
             description: "Mutes a user. *(Admin only)*",
             usage: "<user> [reason]",
-            permissions: ['MANAGE_ROLES', 'MANAGE_SERVER'],
-            guildCommand: true
+            permissions: {administrator: true},
+            argsRequired: true
         });
     }
     
     execute(message, commandArgs){
-        if(!this.hasRequiredPermissions(message)){
-            return
+        var embed = {
+            color: this.embedRedColor 
         }
         
-        const embed = new Discord.MessageEmbed()
-            .setColor('RED')
-        
         if(commandArgs[0]){
-            if(!message.mentions.users.first()){
-                message.channel.send('You must mention the user to mute.')
+            if(!message.mentions[0]){
+                message.channel.createMessage('You must mention a user to mute.')
                 return
             }
-            const member = message.guild.member(message.mentions.users.first());
+            const member = message.channel.guild.members.get(message.mentions[0].id);
             commandArgs.shift()
             const reason = commandArgs.join(' ') || "N/A"
+
             if(!member) {
-                message.reply('That user does not exist!')
+                message.channel.createMessage('That user does not exist!')
                 return
             }
-            const muteRole = message.guild.roles.cache.find(role => role.name == "MUTED");
-            const modLog = message.guild.channels.cache.find(channel => channel.name == "mod-logs")
+            const muteRole = message.channel.guild.roles.find(role => role.name.toLowerCase() == "muted");
+            const modLog = message.channel.guild.channels.find(channel => channel.name == "mod-logs")
             
-            member.roles.remove(member.roles.cache).then(() => {
-                if(muteRole){
-                    member.roles.add(muteRole).then(() => {
+            member.edit({roles: [muteRole.id]}).then(() => {
+                modLog.createMessage({embed: {
+                    title: 'Mute Log',
+                    color: this.client.embedRedColor,
+                    fields: [
+                        {name: 'User', value: member.user.username +'#'+ member.user.discriminator},
+                        {name: 'Reason', value: reason ? reason : 'N/A'}
+                    ],
+                    footer: {
+                        text: 'Muted by '+ message.author.username
+                    },
+                    timestamp: new Date()
+                }})
+                message.channel.createMessage('Successfully muted!!').then(m => {
+                    setTimeout(() => {
+                        m.delete()
                         message.delete()
-                        embed.setTitle('Mute Log')
-                            .setThumbnail(member.user.avatarURL())
-                            .addField('User', member.user.tag)
-                            .addField('Reason', reason)
-                            .setFooter('Muted by '+ message.author.tag, message.author.avatarURL())
-                            .setTimestamp()
-                        
-                        if(modLog){
-                            modLog.send(embed)
-                        }
-                    })
-                }
+                    }, 2000)
+                })
             })
-        } else {
-            this.sendUsage(message)
         }
     }
 }

@@ -1,4 +1,3 @@
-const Discord = require('discord.js')
 const axios = require('axios')
 const cheerio = require('cheerio')
 
@@ -72,32 +71,33 @@ class AnimeLoader {
             newEpisodes.forEach(episode => {
                 this.episodes.push(episode)
                 
-                var embed = new Discord.MessageEmbed()
-                    .setTitle('New episode just got released.')
-                    .setColor('BLUE')
-                    .setThumbnail(episode.imageUrl)
-                    .addFields(
+                var embed = {
+                    title: 'New episode just got released.',
+                    color: this.client.embedColor,
+                    thumbnail: {url: episode.imageUrl},
+                    fields: [
                         {name: 'Name', value: episode.name, inline: true},
                         {name: 'Episode', value: episode.episode, inline: true},
                         {name: 'Link', value: episode.link}
-                    )
-                    .setTimestamp()
+                    ],
+                    timestamp: new Date()
+                }
                 
                 this.release_channels.forEach(channel => {
                     var id = channel.channel_id
                     var trackings = channel.tracking;
                     var tracking = trackings.split('|');
-                    var discord_channel = this.client.channels.cache.get(id)
+                    var discord_channel = this.client.getChannel(id)
                     
                     if(trackings == ''){
                         if(discord_channel != undefined){
-                            discord_channel.send(embed)
+                            discord_channel.createMessage({embed: embed})
                         }
                     } else {
                         tracking.forEach(track => {
                             if(this.filterName(track) == this.filterName(episode.name)){
                                 if(discord_channel != undefined){
-                                    discord_channel.send(embed)
+                                    discord_channel.createMessage({embed: embed})
                                 }
                             }
                         })

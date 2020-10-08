@@ -1,4 +1,4 @@
-const discord = require('discord.js')
+const Eris = require('eris')
 const mongoose = require('mongoose')
 
 const CommandLoader = require('./commands/CommandLoader.js');
@@ -10,9 +10,15 @@ const RPGReminder = require('./utils/RPGReminder.js')
 const url = process.env.DB_URL;
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
 
-class Client extends discord.Client{
-    constructor(options = {}){
-        super(options)
+class Client extends Eris.CommandClient{
+    constructor(token, options = {}){
+        var commandOptions = {
+            prefix: ['@mention'],
+            description: 'A custom made bot'
+        }
+        
+        if(process.env.DEVMODE) commandOptions.prefix.push('!!'); else commandOptions.prefix.push('!');
+        super(token, options, commandOptions)
         
         this.devMode = process.env.DEVMODE;
         
@@ -23,10 +29,11 @@ class Client extends discord.Client{
         this.db = mongoose.connection;
         this.rpgReminder = new RPGReminder(this)
         
-        this.registerEvents()
+        this.embedColor = 3583967;
+        this.embedRedColor = 16711680;
+        this.embedGreenColor = 65280;
         
-        this.db.on('error', err => this.logger.error(err))
-        this.db.once('open', () => this.logger.info('Connected to database'))
+        this.registerEvents()
     }
     
     start(){
@@ -37,16 +44,12 @@ class Client extends discord.Client{
             this.logger.info('Bot is running on development mode. Some features are disabled.')
         }
         
-        this.logger.info('Bot running as: '+ this.user.tag)
+        this.logger.info('Bot running as: '+ this.user.username +'#'+ this.user.discriminator)
     }
     
     registerEvents(){
-        this.on('message', message => {
+        this.on('messageCreate', message => {
             if(message.author.bot) return;
-            
-            if(message.content.toLowerCase().startsWith(this.commandLoader.prefix)){
-                this.commandLoader.execute(message)
-            }
             
             if(message.content.toLowerCase().startsWith('rpg')){
                 if(!this.devMode){
@@ -58,8 +61,9 @@ class Client extends discord.Client{
             this.start()
         })
         this.on('channelDelete', channel => {
-            this.dbapi.removeReleaseChannel(channel, () => {})
+            if(!this.devMode) this.dbapi.removeReleaseChannel(channel, () => {})
         })
+        this.on('error', console.log)
     }
 }
 

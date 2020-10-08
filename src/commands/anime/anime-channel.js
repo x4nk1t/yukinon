@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const Command = require('../Command.js');
 
 class AnimeChannel extends Command{
@@ -8,40 +7,40 @@ class AnimeChannel extends Command{
             description: "Add channel to release animes. *(Admin only)*",
             usage: "<add|remove>",
             aliases: ['channel'],
-            permissions: ['MANAGE_CHANNELS'],
-            guildCommand: true
+            permissions: {administrator: true},
         });
     }
     
     execute(message, commandArgs){
-        if(!this.hasRequiredPermissions(message)){
-            return
+        var embed = {
+            color: this.client.embedRedColor
         }
-        
-        const embed = new Discord.MessageEmbed()
-            .setColor('RED')
         
         if(commandArgs[0]){
             if(commandArgs[0] == "add"){
                 this.client.dbapi.addReleaseChannel(message.channel, (error, data) => {
                     if(!error){
-                        embed.setColor('GREEN')
+                        embed.color = this.client.embedGreenColor
                     }
-                    embed.setDescription(data.message)
-                    message.channel.send(embed).then(sent => {
-                        message.delete({timeout: 3000})
-                        sent.delete({timeout: 3000})
+                    embed.description = data.message
+                    message.channel.createMessage({embed: embed}).then(sent => {
+                        setTimeout(() => {
+                            message.delete()
+                            sent.delete()
+                        }, 3000)
                     })
                 })
             } else if (commandArgs[0] == "remove"){
                 this.client.dbapi.removeReleaseChannel(message.channel, (error, data) => {
                     if(!error){
-                        embed.setColor('GREEN')
+                        embed.color = this.client.embedGreenColor
                     }
-                    embed.setDescription(data.message)
-                    message.channel.send(embed).then(sent => {
-                        message.delete({timeout: 3000})
-                        sent.delete({timeout: 3000})
+                    embed.description = data.message
+                    message.channel.createMessage({embed: embed}).then(sent => {
+                        setTimeout(() => {
+                            message.delete()
+                            sent.delete()
+                        }, 3000)
                     })
                 })
             } else {
@@ -53,7 +52,7 @@ class AnimeChannel extends Command{
     }
     
     sendUsage(message){
-        message.channel.send({embed: {description: '**Usage:** '+ this.usage, color: '#FF0000'}}).then(sent => {
+        message.channel.createMessage(this.options.name + ' '+ this.options.usage).then(sent => {
             message.delete({timeout: 3000})
             sent.delete({timeout: 3000})
         })
