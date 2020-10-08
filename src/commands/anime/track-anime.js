@@ -21,7 +21,7 @@ class TrackAnime extends Command{
                 commandArgs.shift()
                 const anime = commandArgs.join(' ')
                 if(anime == ''){
-                    this.sendUsage(message)
+                    this.sendUsage(message, true)
                     return;
                 }
                 this.client.dbapi.addTrackingAnime(message.channel, anime,(error, data) => {
@@ -40,7 +40,7 @@ class TrackAnime extends Command{
                 commandArgs.shift()
                 const anime = commandArgs.join(' ')
                 if(anime == ''){
-                    this.sendUsage(message)
+                    this.sendUsage(message, true)
                     return;
                 }
                 this.client.dbapi.removeTrackingAnime(message.channel, anime, (error, data) => {
@@ -70,7 +70,7 @@ class TrackAnime extends Command{
                 })
                 return;
             } else {
-                this.sendUsage(message)
+                this.sendUsage(message, true)
             }
         } else {
             const channels = this.client.animeRelease.release_channels;
@@ -102,13 +102,6 @@ class TrackAnime extends Command{
     
     filterName(string){
         return string.toLowerCase().replace(' ', '').replace('\t', '')
-    }
-    
-    sendUsage(message){
-        message.channel.createMessage(this.options.name + ' '+ this.options.usage).then(sent => {
-            message.delete({timeout: 3000})
-            sent.delete({timeout: 3000})
-        })
     }
 }
 

@@ -4,7 +4,7 @@ class Coinflip extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: "coinflip",
-            description: "Flips the coin.",
+            description: "Flip a coin.",
             usage: "[head|tail]",
             aliases: ['coin', 'cf']
         });

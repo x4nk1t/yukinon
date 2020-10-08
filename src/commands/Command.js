@@ -24,8 +24,15 @@ class Command {
         }
     }
     
-    sendUsage(message){
-        message.channel.createMessage('Usage: '+ message.prefix + this.options.name + ' '+ this.options.usage)
+    sendUsage(message, deleteMsg = false){
+        message.channel.createMessage('**Usage:** '+ message.prefix + this.options.name + ' '+ this.options.usage).then(m => {
+            if(deleteMsg) {
+                setTimeout(() => {
+                    message.delete()
+                    m.delete()
+                }, 4000)
+            }
+        })
     }
 }
 module.exports = Command;

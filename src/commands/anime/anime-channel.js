@@ -27,7 +27,7 @@ class AnimeChannel extends Command{
                         setTimeout(() => {
                             message.delete()
                             sent.delete()
-                        }, 3000)
+                        }, 4000)
                     })
                 })
             } else if (commandArgs[0] == "remove"){
@@ -40,7 +40,7 @@ class AnimeChannel extends Command{
                         setTimeout(() => {
                             message.delete()
                             sent.delete()
-                        }, 3000)
+                        }, 4000)
                     })
                 })
             } else {
@@ -49,13 +49,6 @@ class AnimeChannel extends Command{
         } else {
             this.sendUsage(message)
         }
-    }
-    
-    sendUsage(message){
-        message.channel.createMessage(this.options.name + ' '+ this.options.usage).then(sent => {
-            message.delete({timeout: 3000})
-            sent.delete({timeout: 3000})
-        })
     }
 }
 
