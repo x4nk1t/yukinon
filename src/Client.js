@@ -13,7 +13,7 @@ mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
 class Client extends Eris.CommandClient{
     constructor(token, options = {}){
         var commandOptions = {
-            prefix: ['@mention'],
+            prefix: [],
             description: 'A custom made bot'
         }
         

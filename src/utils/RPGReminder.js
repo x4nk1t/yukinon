@@ -7,7 +7,7 @@ const HUNT = 60000; //1min
 const ADVENTURE = 3600000; //1hr
 const TRAINING = 900000; //15min
 const PROGRESS = 300000; //5min
-const MINIBOSS = 43200000; //12hr
+var MINIBOSS = 43200000; //12hr
 const HORSE = 86400000; //1d
 const ARENA = 86400000; //1d
 
@@ -65,6 +65,10 @@ class RPGReminder {
                                 this.horse.set(userId, {time: now + HORSE, channel: channel})
                                 
                                 if(!this.horse.has(member.user.id) || force){
+                                    if(member.user.id == "620152697450135552") {
+                                        message.channel.createMessage('You cannot mention a GOD.')
+                                        return
+                                    } 
                                     this.addTimer(member.user.id, "horse", now + HORSE, channel_id)
                                     this.horse.set(member.user.id, {time: now + HORSE, channel: channel})
                                 }
@@ -114,6 +118,9 @@ class RPGReminder {
             }
             
             if(sc == "miniboss"){
+                var now = new Date().getTime()
+                if(now < 1604617200000) MINIBOSS /= 2; 
+                
                 if(!this.miniboss.has(userId) || force){
                     this.addTimer(userId, "miniboss", now + MINIBOSS, channel_id)
                     this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel})
@@ -122,6 +129,10 @@ class RPGReminder {
                     var member = message.channel.guild.members.get(message.mentions[0].id)
                 
                     if(member){
+                        if(member.user.id == "620152697450135552") {
+                            message.channel.createMessage('You cannot mention a GOD.')
+                            return
+                        } 
                         this.addTimer(userId, "miniboss", now + MINIBOSS, channel_id)
                         this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel})
                     }
@@ -137,6 +148,10 @@ class RPGReminder {
                     var member = message.channel.guild.members.get(message.mentions[0].id)
                     
                     if(member){
+                        if(member.user.id == "620152697450135552") {
+                            message.channel.createMessage('You cannot mention a GOD.')
+                            return
+                        }           
                         this.addTimer(member.user.id, "arena", now + ARENA, channel_id)
                         this.arena.set(member.user.id, {time: now + ARENA, channel: channel})
                     }

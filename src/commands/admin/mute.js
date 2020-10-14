@@ -13,7 +13,7 @@ class Mute extends Command{
     
     execute(message, commandArgs){
         var embed = {
-            color: this.embedRedColor 
+            color: this.client.embedRedColor 
         }
         
         if(commandArgs[0]){
