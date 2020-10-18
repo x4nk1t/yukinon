@@ -15,7 +15,7 @@ class Command {
             aliases: options.aliases || [],
             guildOnly: options.guildOnly || true,
             usage: options.usage || '',
-            enabled: options.enabled || true,
+            enabled: (options.enabled == undefined || options.enabled == true) ? true : false,
             permissionMessage: 'You don\'t have permission to use this command.',
             requirements: {
                 permissions: options.permissions || {},

@@ -19,7 +19,7 @@ class CommandLoader{
                 if(commandClass instanceof Command && commandClass.options.enabled){
                     this.loadCommand(commandClass)
                 } else {
-                    this.client.logger.error(`Couldn't load ${f}. Either it is disabled or it is not a command.`)
+                    this.client.logger.error(`Couldn't load ${f}. Either it is disabled or not a command.`)
                 }
             })
         })
