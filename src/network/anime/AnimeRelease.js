@@ -1,148 +1,137 @@
-const axios = require('axios')
-const cheerio = require('cheerio')
+const fetch = require('node-fetch')
+const Eris = require('eris')
 
 class AnimeLoader {
     constructor(client){
         this.client = client;
         
-        this.checkInMinutes = 5;
-        this.baseUrl = 'https://www.gogoanime.so';
+        this.apiUrl = 'https://graphql.anilist.co';
         this.episodes = [];
-        this.release_channels = [];
+        this.channels = [];
+        
+        this.status = 0; //0 = Idle & 1 = Need to check new & 2 = checking new anime
     }
     
-    run(){
-        this.client.dbapi.getAnimeRelease((error, data) => {
-            if(error){
-                this.client.logger.error('Error occured while loading anime released: '+ data.message)
-                return;
-            }
-            this.episodes = data;
+    async run(){
+        this.client.guilds.forEach((value, key) => {
+            var release_chan = value.channels.find((channel) => channel.name.toLowerCase() == "releases-all")
             
-            this.client.dbapi.getReleaseChannels((error2, data2) => {
-                if(error2){
-                    this.client.logger.error('Error occured while loading release channels: '+ data2.message)
-                    return
+            if(release_chan instanceof Eris.TextChannel){
+                if(!this.channels.some(el => el.id == release_chan.id)){
+                    this.channels.push(release_chan)
                 }
-                this.release_channels = data2;
-                
-                this.checkTask()
-                setInterval(() => this.checkTask(), 1000 * 60 * this.checkInMinutes)
-            })
+            }
         })
+            
+        this.getNewReleases().then(data => {
+            this.episodes = data;
+            this.status = 0;
+            
+            setInterval(() => this.checkTask(), 1000)
+        }).catch(console.log)
     }
     
     checkTask(){
-        axios.get(this.baseUrl)
-            .then(response => {
-                const data = response.data
-                const $ = cheerio.load(data)
-                
-                var img = $('.last_episodes .items li .img')
-                var episode = $('.last_episodes .items li .episode')
-                var details = [];
-                var j = 0;
-                
-                for(var i = (img.length - 1); i >= 0; i--){
-                    var imgUrl = img[i].children[1].children[1].attribs.src;
-                    var name = img[i].children[1].children[1].attribs.alt;
-                    var episodeNum = episode[i].children[0].data;
-                    var link = img[i].children[1].attribs.href;
+        if(this.status == 0){
+            if(this.episodes.length <= 6) this.status = 1;
+            if(this.episodes.length){
+                var now = new Date().getTime()
+                for(var i = 0; i < 1; i++){
+                    var episode = this.episodes[i];
+                    var title = episode.title;
+                    var url = episode.url;
+                    var cover = episode.cover;
+                    var airingAt = episode.airingAt;
+                    var diff = airingAt - now;
                     
-                    details[j] = {};
-                    details[j].imageUrl = imgUrl;
-                    details[j].name = name;
-                    details[j].episode = episodeNum.split(' ')[1];
-                    details[j].link = this.baseUrl + link;
-                    
-                    j++;
-                }
-                this.sendReleases(details)
-            })
-            .catch(error => {
-                this.client.logger.error(error)
-            })
-    }
-    
-    sendReleases(details){
-        const newEpisodes = this.checkNewEpisodes(details)
-        
-        if(newEpisodes.length){
-            newEpisodes.forEach(episode => {
-                this.episodes.push(episode)
-                
-                var embed = {
-                    title: 'New episode just got released.',
-                    color: this.client.embedColor,
-                    thumbnail: {url: episode.imageUrl},
-                    fields: [
-                        {name: 'Name', value: episode.name, inline: true},
-                        {name: 'Episode', value: episode.episode, inline: true},
-                        {name: 'Link', value: episode.link}
-                    ],
-                    timestamp: new Date()
-                }
-                
-                this.release_channels.forEach(channel => {
-                    var id = channel.channel_id
-                    var trackings = channel.tracking;
-                    var tracking = trackings.split('|');
-                    var discord_channel = this.client.getChannel(id)
-                    
-                    if(trackings == ''){
-                        if(discord_channel != undefined){
-                            discord_channel.createMessage({embed: embed})
-                        }
-                    } else {
-                        tracking.forEach(track => {
-                            if(this.filterName(track) == this.filterName(episode.name)){
-                                if(discord_channel != undefined){
-                                    discord_channel.createMessage({embed: embed})
-                                }
+                    if(diff <= 0){
+                        this.episodes.splice(i, 1)
+                        var embed = {
+                            title: 'New episode released!',
+                            url: url,
+                            color: this.client.embedColor,
+                            thumbnail: {url: cover},
+                            fields: [
+                                {name: 'Title', value: title},
+                                {name: 'Episode', value: episode}
+                            ],
+                            timestamp: new Date(airingAt),
+                            footer: {
+                                text: 'Might take time to appear on streaming sites.'
                             }
+                        }
+                        this.channels.forEach(ch => {
+                            ch.createMessage({embed: embed})
                         })
                     }
-                })
-            })
-            
-            this.client.dbapi.addAnimeRelease(this.buildObj(newEpisodes), (error, data) => {
-                if(!error){
-                    this.client.logger.info(data.message)
-                } else {
-                    this.client.logger.error('Error while posting anime: '+ data.message)
-                }
-            })
-        }
-    }
-    
-    buildObj(episodes){
-        var array = [];
-        episodes.forEach(episode => {
-            var obj = {};
-            obj.name = episode.name;
-            obj.episode = episode.episode;
-            
-            array.push(obj)
-        })
-        
-        return array
-    }
-    
-    filterName(string){
-        return string.toLowerCase().replace(' ', '').replace('\t', '')
-    }
-    
-    checkNewEpisodes(details){
-        var newEpisodes = [...details]
-        for(var i = this.episodes.length - 1; i >= 0; i--){
-            for(var j = 0; j < newEpisodes.length; j++){
-                if(this.episodes[i].name == newEpisodes[j].name && this.episodes[i].episode == newEpisodes[j].episode){
-                    newEpisodes.splice(j, 1)
                 }
             }
+        } else if(this.status == 1){
+            this.status = 2;
+            
+            this.getNewReleases().then(data => {
+                this.episodes = data;
+                this.status = 0;
+            }).catch(console.log)
+        }
+    }
+    
+    getNewReleases(){
+        return new Promise((resolve, reject) => {
+            var query = `{Page{airingSchedules(notYetAired: true){media{id,title {userPreferred}, coverImage{large}, siteUrl},episode,airingAt}}}`;
+            var options = this.optionBuilder({query: query})
+            this.sendRequest(options, (err, data) => {
+                if(err){
+                    reject(data)
+                    return
+                }
+                const {airingSchedules} = data.data.Page;
+                var array = []
+                
+                for(var i = 0; i < airingSchedules.length; i++){
+                    const schedule = airingSchedules[i];
+                    const media = schedule.media;
+                    const id = media.id;
+                    const title = media.title.userPreffered;
+                    const url = media.siteUrl;
+                    const cover = media.coverImage.large;
+                    const episode = schedule.episode;
+                    const airingAt = schedule.airingAt;
+                    
+                    array.push({
+                        id: id,
+                        title: title,
+                        episode: episode,
+                        url: url,
+                        cover: cover,
+                        airingAt: (airingAt * 1000)
+                    })
+                }
+                resolve(array)
+            })
+        })
+    }
+    
+    sendRequest(options, callback = () => {}){
+        fetch(this.apiUrl, options).then(response => response.json()).then(data => {
+            callback(false, data)
+        }).catch(err => {
+            console.log(err)
+            callback(true, err)
+        })
+    }
+    
+    optionBuilder(object){
+        var options = {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(object)
         }
         
-        return newEpisodes
+        return options;
     }
 }
 

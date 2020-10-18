@@ -8,7 +8,6 @@ const AnimeRelease = require('./network/anime/AnimeRelease.js');
 const RPGReminder = require('./utils/RPGReminder.js')
 
 const url = process.env.DB_URL;
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
 
 class Client extends Eris.CommandClient{
     constructor(token, options = {}){
@@ -24,25 +23,25 @@ class Client extends Eris.CommandClient{
         
         this.logger = new Logger(this)
         this.commandLoader = new CommandLoader(this)
-        this.dbapi = new DBApi(this)
+        //this.dbapi = new DBApi(this)
         this.animeRelease = new AnimeRelease(this)
-        this.db = mongoose.connection;
-        this.rpgReminder = new RPGReminder(this)
+        //this.db = mongoose.connection;
+        //this.rpgReminder = new RPGReminder(this)
         
         this.embedColor = 3583967;
         this.embedRedColor = 16711680;
         this.embedGreenColor = 65280;
         
-        this.db.on('error', err => this.logger.error(err))
-        this.db.once('open', () => this.logger.info('Connected to database'))
+        //this.db.on('error', err => this.logger.error(err))
+        //this.db.once('open', () => this.logger.info('Connected to database'))
         
         this.registerEvents()
     }
     
     start(){
-        if(!this.devMode){
+        if(!this.devMode){            
             this.animeRelease.run()
-            this.rpgReminder.run()
+            //this.rpgReminder.run()
         } else {
             this.logger.info('Bot is running on development mode. Some features are disabled.')
         }
@@ -51,7 +50,7 @@ class Client extends Eris.CommandClient{
     }
     
     registerEvents(){
-        this.on('messageCreate', message => {
+        /*this.on('messageCreate', message => {
             if(message.author.bot) return;
             
             if(message.content.toLowerCase().startsWith('rpg')){
@@ -59,13 +58,13 @@ class Client extends Eris.CommandClient{
                     this.rpgReminder.execute(message)
                 }
             }
-        })
+        })*/
         this.on('ready', () => {
             this.start()
         })
-        this.on('channelDelete', channel => {
+        /*this.on('channelDelete', channel => {
             if(!this.devMode) this.dbapi.removeReleaseChannel(channel, () => {})
-        })
+        })*/
         this.on('error', console.log)
     }
 }
