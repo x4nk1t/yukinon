@@ -90,7 +90,7 @@ class AnimeLoader {
                     const schedule = airingSchedules[i];
                     const media = schedule.media;
                     const id = media.id;
-                    const title = media.title.userPreffered;
+                    const title = media.title.userPreferred;
                     const url = media.siteUrl;
                     const cover = media.coverImage.large;
                     const countryOfOrigin = media.countryOfOrigin;
