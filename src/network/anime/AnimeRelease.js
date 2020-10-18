@@ -52,9 +52,9 @@ class AnimeLoader {
                             color: this.client.embedColor,
                             thumbnail: {url: cover},
                             fields: [
-                                {name: 'Title', value: title},
-                                {name: 'Episode', value: episode_num},
-                                {name: 'AniList Link', value: url}
+                                {name: 'Title', value: title, inline: true},
+                                {name: 'Episode', value: episode_num, inline: true},
+                                {name: 'AniList', value: url}
                             ],
                             timestamp: new Date(),
                         }
