@@ -39,7 +39,7 @@ class Client extends Eris.CommandClient{
     }
     
     start(){
-        if(!this.devMode){            
+        if(!this.devMode){
             this.animeRelease.run()
             //this.rpgReminder.run()
         } else {

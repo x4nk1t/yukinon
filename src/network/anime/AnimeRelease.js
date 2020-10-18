@@ -33,13 +33,14 @@ class AnimeLoader {
     
     checkTask(){
         if(this.status == 0){
-            if(this.episodes.length <= 6) this.status = 1;
+            if(this.episodes.length == 0) this.status = 1;
             if(this.episodes.length){
                 var now = new Date().getTime()
-                for(var i = 0; i < 1; i++){
+                for(var i = 0; i < this.episodes.length; i++){
                     var episode = this.episodes[i];
                     var title = episode.title;
                     var url = episode.url;
+                    var episode_num = episode.episode;
                     var cover = episode.cover;
                     var airingAt = episode.airingAt;
                     var diff = airingAt - now;
@@ -47,21 +48,18 @@ class AnimeLoader {
                     if(diff <= 0){
                         this.episodes.splice(i, 1)
                         var embed = {
-                            title: 'New episode released!',
-                            url: url,
+                            title: 'New episode got released!',
                             color: this.client.embedColor,
                             thumbnail: {url: cover},
                             fields: [
                                 {name: 'Title', value: title},
-                                {name: 'Episode', value: episode}
+                                {name: 'Episode', value: episode_num},
+                                {name: 'AniList Link', value: url}
                             ],
-                            timestamp: new Date(airingAt),
-                            footer: {
-                                text: 'Might take time to appear on streaming sites.'
-                            }
+                            timestamp: new Date(),
                         }
                         this.channels.forEach(ch => {
-                            ch.createMessage({embed: embed})
+                            ch.createMessage({embed: embed}).catch(console.log)
                         })
                     }
                 }
@@ -78,7 +76,7 @@ class AnimeLoader {
     
     getNewReleases(){
         return new Promise((resolve, reject) => {
-            var query = `{Page{airingSchedules(notYetAired: true){media{id,title {userPreferred}, coverImage{large}, siteUrl},episode,airingAt}}}`;
+            var query = `{Page{airingSchedules(notYetAired: true){media{id,title {userPreferred}, coverImage{large}, countryOfOrigin, siteUrl},episode,airingAt}}}`;
             var options = this.optionBuilder({query: query})
             this.sendRequest(options, (err, data) => {
                 if(err){
@@ -95,17 +93,20 @@ class AnimeLoader {
                     const title = media.title.userPreffered;
                     const url = media.siteUrl;
                     const cover = media.coverImage.large;
+                    const countryOfOrigin = media.countryOfOrigin;
                     const episode = schedule.episode;
                     const airingAt = schedule.airingAt;
                     
-                    array.push({
-                        id: id,
-                        title: title,
-                        episode: episode,
-                        url: url,
-                        cover: cover,
-                        airingAt: (airingAt * 1000)
-                    })
+                    if(countryOfOrigin == "JP"){
+                        array.push({
+                            id: id,
+                            title: title,
+                            episode: episode,
+                            url: url,
+                            cover: cover,
+                            airingAt: (airingAt * 1000)
+                        })
+                    }
                 }
                 resolve(array)
             })
