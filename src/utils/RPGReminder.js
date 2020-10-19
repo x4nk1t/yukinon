@@ -110,7 +110,7 @@ class RPGReminder {
                 }
             }
 
-            if(sc == "training"){
+            if(sc == "training" || sc == "tr"){
                 if(!this.training.has(userId) || force){
                     this.addTimer(userId, "training", now + TRAINING, channel_id)
                     this.training.set(userId, {time: now + TRAINING, channel: channel})
