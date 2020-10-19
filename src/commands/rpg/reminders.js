@@ -6,8 +6,7 @@ class RemindersCommand extends Command{
             name: "reminders",
             description: "Shows all rpg reminders",
             usage: "[user]",
-            aliases: ['r'],
-            enabled: false
+            aliases: ['r']
         });
     }
     

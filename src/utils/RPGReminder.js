@@ -174,6 +174,8 @@ class RPGReminder {
     }
     
     run(){
+        setInterval(() => this.checkReminders(), 1000)
+        return
         this.getAllTimers((err, timers) => {
             var now = new Date().getTime();
             var removeList = [];
@@ -349,6 +351,7 @@ class RPGReminder {
     */
     
     addTimer(userId, type, time, channelId, callback = () => {}){
+        return
         Timer.collection.findOneAndUpdate({user_id: userId, type: type, channel_id: channelId}, {$set: {time: time}}, {upsert: true}, err => {
             if(err){
                 this.client.logger.error(err)
@@ -360,6 +363,7 @@ class RPGReminder {
     }
     
     removeMany(options, callback = () => {}){
+        return
         Timer.collection.removeMany({
             _id: {
                 $in: options
@@ -375,6 +379,7 @@ class RPGReminder {
     }
     
     removeTimer(userId, type, callback = () => {}){
+        return
         Timer.collection.removeOne({user_id: userId, type: type}, err => {
             if(err){
                 this.client.logger.error(err)
@@ -386,6 +391,7 @@ class RPGReminder {
     }
     
     getAllTimers(callback){
+        return
         Timer.collection.find({}, async (err, timers) => {
             if(err){
                 this.client.logger.error(err)

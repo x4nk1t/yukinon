@@ -26,7 +26,7 @@ class Client extends Eris.CommandClient{
         //this.dbapi = new DBApi(this)
         this.animeRelease = new AnimeRelease(this)
         //this.db = mongoose.connection;
-        //this.rpgReminder = new RPGReminder(this)
+        this.rpgReminder = new RPGReminder(this)
         
         this.embedColor = 3583967;
         this.embedRedColor = 16711680;
@@ -41,7 +41,7 @@ class Client extends Eris.CommandClient{
     start(){
         if(!this.devMode){
             this.animeRelease.run()
-            //this.rpgReminder.run()
+            this.rpgReminder.run()
         } else {
             this.logger.info('Bot is running on development mode. Some features are disabled.')
         }
@@ -50,7 +50,7 @@ class Client extends Eris.CommandClient{
     }
     
     registerEvents(){
-        /*this.on('messageCreate', message => {
+        this.on('messageCreate', message => {
             if(message.author.bot) return;
             
             if(message.content.toLowerCase().startsWith('rpg')){
@@ -58,7 +58,7 @@ class Client extends Eris.CommandClient{
                     this.rpgReminder.execute(message)
                 }
             }
-        })*/
+        })
         this.on('ready', () => {
             this.start()
         })
