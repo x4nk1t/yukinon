@@ -7,22 +7,11 @@ class AnimeLoader {
         
         this.apiUrl = 'https://graphql.anilist.co';
         this.episodes = [];
-        this.channels = [];
         
         this.status = 0; //0 = Idle & 1 = Need to check new & 2 = checking new anime
     }
     
     async run(){
-        this.client.guilds.forEach((value, key) => {
-            var release_chan = value.channels.find((channel) => channel.name.toLowerCase() == "releases-all")
-            
-            if(release_chan instanceof Eris.TextChannel){
-                if(!this.channels.some(el => el.id == release_chan.id)){
-                    this.channels.push(release_chan)
-                }
-            }
-        })
-            
         this.getNewReleases().then(data => {
             this.episodes = data;
             this.status = 0;
@@ -58,8 +47,12 @@ class AnimeLoader {
                             ],
                             timestamp: new Date(),
                         }
-                        this.channels.forEach(ch => {
-                            ch.createMessage({embed: embed}).catch(console.log)
+                        this.client.guilds.forEach((value, key) => {
+                            var channel = value.channels.find((ch) => ch.name.toLowerCase() == "releases-all")
+                            
+                            if(channel instanceof Eris.TextChannel){
+                                channel.createMessage({embed: embed}).catch(console.log)
+                            }
                         })
                     }
                 }
