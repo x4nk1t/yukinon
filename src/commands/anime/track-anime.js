@@ -8,6 +8,7 @@ class TrackAnime extends Command{
             usage: "[add|remove|clear] <anime name>",
             aliases: ['track'],
             permissions: {administrator: true},
+            enabled: false
         });
     }
     

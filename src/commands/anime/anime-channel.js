@@ -8,6 +8,7 @@ class AnimeChannel extends Command{
             usage: "<add|remove>",
             aliases: ['channel'],
             permissions: {administrator: true},
+            enabled: false
         });
     }
     

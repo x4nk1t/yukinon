@@ -7,32 +7,6 @@ class DBApi {
     }
     
     /*
-    * Anime Release
-    */
-    
-    addAnimeRelease(options, callback = () => {}){
-        Releases.collection.insertMany(options, err => {
-            if(err){
-                this.client.logger.error(err)
-                callback(true, {message: 'Failed to add new anime.'})
-                return
-            }
-            callback(false, {message: 'Successfully added to database.'})
-        })
-    }
-    
-    getAnimeRelease(callback){
-        Releases.collection.find({}, async (err, releases) => {
-            if(err){
-                callback(true, {message: 'Failed to fetch from database.'})
-                return;
-            }
-            const array = await releases.toArray()
-            callback(false, array)
-        })
-    }
-    
-    /*
     * Tracking Anime
     */
     

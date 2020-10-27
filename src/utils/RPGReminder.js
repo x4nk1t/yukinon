@@ -98,7 +98,6 @@ class RPGReminder {
 
             if(sc == "hunt"){
                 if(!this.hunt.has(userId) || force){
-                    this.addTimer(userId, "hunt", now + HUNT, channel_id)
                     this.hunt.set(userId, {time: now + HUNT, channel: channel})
                 }
             }
@@ -187,9 +186,6 @@ class RPGReminder {
                 var channel = this.client.getChannel(data.channel_id)
                 
                 if((time - now) >= 0){
-                    if(type == "hunt"){
-                        this.hunt.set(userId, {time: time, channel: channel})
-                    }
                     if(type == "adventure"){
                         this.adventure.set(userId, {time: time, channel: channel})
                     }
@@ -263,7 +259,6 @@ class RPGReminder {
                 var user = this.client.users.get(id)
                 channel.createMessage('**'+ user.username +'**, Hunt Ready!')
                 this.hunt.delete(id)
-                this.removeTimer(id, "hunt")
             }
         })
         
@@ -351,7 +346,6 @@ class RPGReminder {
     */
     
     addTimer(userId, type, time, channelId, callback = () => {}){
-        return
         Timer.collection.findOneAndUpdate({user_id: userId, type: type, channel_id: channelId}, {$set: {time: time}}, {upsert: true}, err => {
             if(err){
                 this.client.logger.error(err)
@@ -363,7 +357,6 @@ class RPGReminder {
     }
     
     removeMany(options, callback = () => {}){
-        return
         Timer.collection.removeMany({
             _id: {
                 $in: options
@@ -379,7 +372,6 @@ class RPGReminder {
     }
     
     removeTimer(userId, type, callback = () => {}){
-        return
         Timer.collection.removeOne({user_id: userId, type: type}, err => {
             if(err){
                 this.client.logger.error(err)
@@ -391,7 +383,6 @@ class RPGReminder {
     }
     
     getAllTimers(callback){
-        return
         Timer.collection.find({}, async (err, timers) => {
             if(err){
                 this.client.logger.error(err)
