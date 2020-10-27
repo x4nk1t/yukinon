@@ -173,8 +173,6 @@ class RPGReminder {
     }
     
     run(){
-        setInterval(() => this.checkReminders(), 1000)
-        return
         this.getAllTimers((err, timers) => {
             var now = new Date().getTime();
             var removeList = [];
