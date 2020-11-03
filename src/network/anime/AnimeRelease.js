@@ -1,70 +1,57 @@
 const fetch = require('node-fetch')
 const Eris = require('eris')
 
-class AnimeLoader {
+class AnimeRelease {
     constructor(client){
         this.client = client;
         
         this.apiUrl = 'https://graphql.anilist.co';
         this.episodes = [];
-        
-        this.status = 0; //0 = Idle & 1 = Need to check new & 2 = checking new anime
     }
     
     async run(){
-        this.getNewReleases().then(data => {
-            this.episodes = data;
-            this.status = 0;
-            
-            setInterval(() => this.checkTask(), 1000)
-        }).catch(console.log)
-    }
-    
-    checkTask(){
-        if(this.status == 0){
-            if(this.episodes.length == 0) this.status = 1;
-            if(this.episodes.length){
-                var now = new Date().getTime()
-                for(var i = 0; i < this.episodes.length; i++){
-                    var episode = this.episodes[i];
-                    var title = episode.title;
-                    var url = episode.url;
-                    var episode_num = episode.episode;
-                    var cover = episode.cover;
-                    var airingAt = episode.airingAt;
-                    var diff = airingAt - now;
-                    
-                    if(diff <= 0){
-                        this.episodes.splice(i, 1)
-                        var embed = {
-                            title: 'New episode got released!',
-                            color: this.client.embedColor,
-                            thumbnail: {url: cover},
-                            fields: [
-                                {name: 'Title', value: title, inline: true},
-                                {name: 'Episode', value: episode_num, inline: true},
-                                {name: 'AniList', value: url}
-                            ],
-                            timestamp: new Date(),
-                        }
-                        this.client.guilds.forEach((value, key) => {
-                            var channel = value.channels.find((ch) => ch.name.toLowerCase() == "releases-all")
-                            
-                            if(channel instanceof Eris.TextChannel){
-                                channel.createMessage({embed: embed}).catch(console.log)
-                            }
-                        })
-                    }
-                }
-            }
-        } else if(this.status == 1){
-            this.status = 2;
-            
-            this.getNewReleases().then(data => {
-                this.episodes = data;
-                this.status = 0;
-            }).catch(console.log)
+        await this.getNewReleases().then(data => { this.episodes = data; }).catch(console.log)
+        
+        if(this.episodes.length) {
+            this.setTimeouts()
+        } else {
+            setTimeout(() => this.run(), 300000) //5min
         }
+}
+    
+    setTimeouts(){
+        this.episodes.forEach(episode => {
+            var now = new Date().getTime()
+            var title = episode.title;
+            var url = episode.url;
+            var episode_num = episode.episode;
+            var cover = episode.cover;
+            var airingAt = episode.airingAt;
+            var difference = airingAt - now;
+            
+            if(difference > 0){
+                setTimeout(() => {
+                    var embed = {
+                        title: 'New episode got released!',
+                        color: this.client.embedColor,
+                        thumbnail: {url: cover},
+                        fields: [
+                            {name: 'Title', value: title, inline: true},
+                            {name: 'Episode', value: episode_num, inline: true},
+                            {name: 'AniList', value: url}
+                        ],
+                        timestamp: new Date(),
+                    }
+                    this.client.guilds.forEach((value, key) => {
+                        var channel = value.channels.find((ch) => ch.name.toLowerCase() == "releases-all")
+                        
+                        if(channel instanceof Eris.TextChannel){
+                            channel.createMessage({embed: embed}).catch(console.log)
+                        }
+                    })
+                }, difference)
+            }
+        })
     }
     
     getNewReleases(){
@@ -129,4 +116,4 @@ class AnimeLoader {
     }
 }
 
-module.exports = AnimeLoader
+module.exports = AnimeRelease
