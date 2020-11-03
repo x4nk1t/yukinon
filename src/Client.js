@@ -6,6 +6,7 @@ const DBApi = require('./network/database/DBApi.js');
 const Logger = require('./utils/Logger.js');
 const AnimeRelease = require('./network/anime/AnimeRelease.js');
 const RPGReminder = require('./utils/RPGReminder.js')
+const EmojiSender = require('./utils/EmojiSender.js')
 
 const url = process.env.DB_URL;
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -28,6 +29,7 @@ class Client extends Eris.CommandClient{
         this.animeRelease = new AnimeRelease(this)
         this.db = mongoose.connection;
         this.rpgReminder = new RPGReminder(this)
+        this.emojiSender = new EmojiSender(this)
         
         this.embedColor = 3583967;
         this.embedRedColor = 16711680;
@@ -40,6 +42,7 @@ class Client extends Eris.CommandClient{
     }
     
     start(){
+        this.emojiSender.run()
         if(!this.devMode){
             this.animeRelease.run()
             this.rpgReminder.run()
