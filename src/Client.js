@@ -64,7 +64,12 @@ class Client extends Eris.CommandClient{
             }
         })
         this.on('ready', () => {
-            this.start()
+            if(!this.alreadyReady){
+                this.start()
+                this.alreadyReady = true;
+            } else {
+                console.log('Ready triggered!!')
+            }
         })
         /*this.on('channelDelete', channel => {
             if(!this.devMode) this.dbapi.removeReleaseChannel(channel, () => {})
