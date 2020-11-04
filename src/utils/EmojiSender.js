@@ -5,6 +5,8 @@ class EmojiSender {
     
     run(){
         this.client.on('messageCreate', message => {
+            if(message.author.bot) return
+            
             var content = message.content;
             var emojis = message.channel.guild.emojis;
             emojis.some(emoji => {

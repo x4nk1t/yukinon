@@ -45,7 +45,7 @@ class Client extends Eris.CommandClient{
         this.emojiSender.run()
         if(!this.devMode){
             this.animeRelease.run()
-            this.rpgReminder.run()
+            //this.rpgReminder.run()
         } else {
             this.logger.info('Bot is running on development mode. Some features are disabled.')
         }
@@ -54,15 +54,6 @@ class Client extends Eris.CommandClient{
     }
     
     registerEvents(){
-        this.on('messageCreate', message => {
-            if(message.author.bot) return;
-            
-            if(message.content.toLowerCase().startsWith('rpg')){
-                if(!this.devMode){
-                    this.rpgReminder.execute(message)
-                }
-            }
-        })
         this.on('ready', () => {
             if(!this.alreadyReady){
                 this.start()

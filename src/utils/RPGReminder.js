@@ -173,6 +173,16 @@ class RPGReminder {
     }
     
     run(){
+        this.client.on('messageCreate', message => {
+            if(message.author.bot) return;
+            
+            if(message.content.toLowerCase().startsWith('rpg')){
+                if(!this.client.devMode){
+                    this.execute(message)
+                }
+            }
+        })
+        
         this.getAllTimers((err, timers) => {
             var now = new Date().getTime();
             var removeList = [];
