@@ -44,8 +44,8 @@ class Client extends Eris.CommandClient{
     start(){
         this.emojiSender.run()
         if(!this.devMode){
-            this.animeRelease.run()
-            //this.rpgReminder.run()
+            //this.animeRelease.run()
+            this.rpgReminder.run()
         } else {
             this.logger.info('Bot is running on development mode. Some features are disabled.')
         }
