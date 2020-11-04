@@ -45,7 +45,7 @@ class Client extends Eris.CommandClient{
         this.emojiSender.run()
         if(!this.devMode){
             //this.animeRelease.run()
-            this.rpgReminder.run()
+            //this.rpgReminder.run()
         } else {
             this.logger.info('Bot is running on development mode. Some features are disabled.')
         }
@@ -66,6 +66,7 @@ class Client extends Eris.CommandClient{
             if(!this.devMode) this.dbapi.removeReleaseChannel(channel, () => {})
         })*/
         this.on('error', console.log)
+        this.on('debug', console.log)
     }
 }
 
