@@ -90,7 +90,7 @@ class RPGReminder {
                 if(args[1]){
                     if(args[1] == "raid" || args[1] == "upgrade"){
                         if(!this.guild.has(message.channel.guild.id) || force){
-                            this.addTimer(message.channel.guild.id, "guild", now + GUILD, channel_id)
+                            this.addTimer(message.channel.guild.id, "guild", now + GUILD, channel_id, user)
                             this.guild.set(message.channel.guild.id, {time: now + GUILD, channel: channel})
                         }
                     }
