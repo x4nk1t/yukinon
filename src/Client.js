@@ -42,8 +42,8 @@ class Client extends Eris.CommandClient{
     }
     
     start(){
-        this.emojiSender.run()
         if(!this.devMode){
+            this.emojiSender.run()
             this.animeRelease.run()
             this.rpgReminder.run()
         } else {
@@ -65,7 +65,7 @@ class Client extends Eris.CommandClient{
         /*this.on('channelDelete', channel => {
             if(!this.devMode) this.dbapi.removeReleaseChannel(channel, () => {})
         })*/
-        this.on('error', this.logger.error)
+        this.on('error', err => this.logger.error(err))
     }
 }
 

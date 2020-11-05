@@ -37,6 +37,7 @@ class RPGReminder {
             var userId = message.author.id;
             var channel = message.channel;
             var channel_id = channel.id;
+            var user = message.author;
 
             if(message.channel.name != "rpg"){
                 return;
@@ -46,8 +47,8 @@ class RPGReminder {
                 if(args[1] && args[2]){
                     if(args[2] == "lootbox"){
                         if(!this.lootbox.has(userId) || force){
-                            this.addTimer(userId, "lootbox", now + LOOTBOX, channel_id)
-                            this.lootbox.set(userId, {time: now + LOOTBOX, channel: channel})
+                            this.addTimer(userId, "lootbox", now + LOOTBOX, channel_id, user)
+                            this.lootbox.set(userId, {time: now + LOOTBOX, channel: channel, user: {mention: user.mention, username: user.username}})
                         }
                     }
                 }
@@ -61,16 +62,16 @@ class RPGReminder {
                         
                         if(member){
                             if(!this.horse.has(userId) || force){
-                                this.addTimer(userId, "horse", now + HORSE, channel_id)
-                                this.horse.set(userId, {time: now + HORSE, channel: channel})
+                                this.addTimer(userId, "horse", now + HORSE, channel_id, user)
+                                this.horse.set(userId, {time: now + HORSE, channel: channel, user: {mention: user.mention, username: user.username}})
                                 
                                 if(!this.horse.has(member.user.id) || force){
                                     if(member.user.id == "620152697450135552") {
                                         message.channel.createMessage('You cannot mention a GOD.')
                                         return
                                     } 
-                                    this.addTimer(member.user.id, "horse", now + HORSE, channel_id)
-                                    this.horse.set(member.user.id, {time: now + HORSE, channel: channel})
+                                    this.addTimer(member.user.id, "horse", now + HORSE, channel_id, member.user)
+                                    this.horse.set(member.user.id, {time: now + HORSE, channel: channel, user: {mention: member.user.mention, username: member.user.username}})
                                 }
                             }
                         }
@@ -78,8 +79,8 @@ class RPGReminder {
                     
                     if(args[1] == "race"){
                         if(!this.horse.has(userId) || force){
-                            this.addTimer(userId, "horse", now + HORSE, channel_id)
-                            this.horse.set(userId, {time: now + HORSE, channel: channel})
+                            this.addTimer(userId, "horse", now + HORSE, channel_id, user)
+                            this.horse.set(userId, {time: now + HORSE, channel: channel, user: {mention: user.mention, username: user.username}})
                         }
                     }
                 }
@@ -98,21 +99,21 @@ class RPGReminder {
 
             if(sc == "hunt"){
                 if(!this.hunt.has(userId) || force){
-                    this.hunt.set(userId, {time: now + HUNT, channel: channel})
+                    this.hunt.set(userId, {time: now + HUNT, channel: channel, user: {mention: user.mention, username: user.username}})
                 }
             }
 
             if(sc == "adv" || sc == "adventure"){
                 if(!this.adventure.has(userId) || force){
-                    this.addTimer(userId, "adventure", now + ADVENTURE, channel_id)
-                    this.adventure.set(userId, {time: now + ADVENTURE, channel: channel})
+                    this.addTimer(userId, "adventure", now + ADVENTURE, channel_id, user)
+                    this.adventure.set(userId, {time: now + ADVENTURE, channel: channel, user: {mention: user.mention, username: user.username}})
                 }
             }
 
             if(sc == "training" || sc == "tr"){
                 if(!this.training.has(userId) || force){
-                    this.addTimer(userId, "training", now + TRAINING, channel_id)
-                    this.training.set(userId, {time: now + TRAINING, channel: channel})
+                    this.addTimer(userId, "training", now + TRAINING, channel_id, user)
+                    this.training.set(userId, {time: now + TRAINING, channel: channel, user: {mention: user.mention, username: user.username}})
                 }
             }
             
@@ -121,8 +122,8 @@ class RPGReminder {
                 if(now < 1604617200000) MINIBOSS /= 2; 
                 
                 if(!this.miniboss.has(userId) || force){
-                    this.addTimer(userId, "miniboss", now + MINIBOSS, channel_id)
-                    this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel})
+                    this.addTimer(userId, "miniboss", now + MINIBOSS, channel_id, user)
+                    this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel, user: {mention: user.mention, username: user.username}})
                     
                     if(!message.mentions[0]) return
                     var member = message.channel.guild.members.get(message.mentions[0].id)
@@ -132,16 +133,16 @@ class RPGReminder {
                             message.channel.createMessage('You cannot mention a GOD.')
                             return
                         } 
-                        this.addTimer(userId, "miniboss", now + MINIBOSS, channel_id)
-                        this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel})
+                        this.addTimer(member.user.id, "miniboss", now + MINIBOSS, channel_id, member.user)
+                        this.miniboss.set(member.user.id, {time: now + MINIBOSS, channel: channel, user: {mention: member.user.mention, username: member.user.username}})
                     }
                 }
             }
             
             if(sc == "arena"){
                 if(!this.arena.has(userId) || force){
-                    this.addTimer(userId, "arena", now + ARENA, channel_id)
-                    this.arena.set(userId, {time: now + ARENA, channel: channel})
+                    this.addTimer(userId, "arena", now + ARENA, channel_id, user)
+                    this.arena.set(userId, {time: now + ARENA, channel: channel, user: {mention: user.mention, username: user.username}})
                     
                     if(!message.mentions[0]) return
                     var member = message.channel.guild.members.get(message.mentions[0].id)
@@ -150,9 +151,9 @@ class RPGReminder {
                         if(member.user.id == "620152697450135552") {
                             message.channel.createMessage('You cannot mention a GOD.')
                             return
-                        }           
-                        this.addTimer(member.user.id, "arena", now + ARENA, channel_id)
-                        this.arena.set(member.user.id, {time: now + ARENA, channel: channel})
+                        }
+                        this.addTimer(member.user.id, "arena", now + ARENA, channel_id, member.user)
+                        this.arena.set(member.user.id, {time: now + ARENA, channel: channel, user: {mention: member.user.mention, username: member.user.username}})
                     }
                 }
             }
@@ -165,8 +166,8 @@ class RPGReminder {
                sc == "tractor" || sc == "chainsaw" ||
                sc == "bigboat" || sc == "drill"){
                 if(!this.progress.has(userId) || force){
-                    this.addTimer(userId, "progress", now + PROGRESS, channel_id)
-                    this.progress.set(userId, {time: now + PROGRESS, channel: channel})
+                    this.addTimer(userId, "progress", now + PROGRESS, channel_id, user)
+                    this.progress.set(userId, {time: now + PROGRESS, channel: channel, user: {mention: user.mention, username: user.username}})
                 }
             }
         }
@@ -192,31 +193,32 @@ class RPGReminder {
                 var type = data.type;
                 var time = data.time;
                 var channel = this.client.getChannel(data.channel_id)
+                var user = {mention: data.mention, username: data.username}
                 
                 if((time - now) >= 0){
                     if(type == "adventure"){
-                        this.adventure.set(userId, {time: time, channel: channel})
+                        this.adventure.set(userId, {time: time, channel: channel, user: user})
                     }
                     if(type == "training"){
-                        this.training.set(userId, {time: time, channel: channel})
+                        this.training.set(userId, {time: time, channel: channel, user: user})
                     }
                     if(type == "progress"){
-                        this.progress.set(userId, {time: time, channel: channel})
+                        this.progress.set(userId, {time: time, channel: channel, user: user})
                     }
                     if(type == "guild"){
-                        this.guild.set(userId, {time: time, channel: channel})
+                        this.guild.set(userId, {time: time, channel: channel, user: user})
                     }
                     if(type == "lootbox"){
-                        this.lootbox.set(userId, {time: time, channel: channel})
+                        this.lootbox.set(userId, {time: time, channel: channel, user: user})
                     }
                     if(type == "miniboss"){
-                        this.miniboss.set(userId, {time: time, channel: channel})
+                        this.miniboss.set(userId, {time: time, channel: channel, user: user})
                     }
                     if(type == "horse"){
-                        this.horse.set(userId, {time: time, channel: channel})
+                        this.horse.set(userId, {time: time, channel: channel, user: user})
                     }
                     if(type == "arena"){
-                        this.arena.set(userId, {time: time, channel: channel})
+                        this.arena.set(userId, {time: time, channel: channel, user: user})
                     }
                 } else {
                     removeList.push(data._id)
@@ -234,9 +236,9 @@ class RPGReminder {
             var id = key;
             var time = value.time;
             var channel = value.channel;
+            var user = value.user;
             
             if((time - now) <= 0){
-                var user = this.client.users.get(id)
                 channel.createMessage(user.mention +', Lootbox ready!')
                 this.lootbox.delete(id)
                 this.removeTimer(id, "lootbox")
@@ -250,9 +252,8 @@ class RPGReminder {
             
             if((time - now) <= 0){
                 var role = channel.guild.roles.find(r => r.name.toLowerCase() == "rpg");
-                var wtd = (new Date().getDay()) < 5 ? "Upgrade" : "Raid"; 
                 
-                channel.createMessage(role.mention +' Guild '+ wtd +' (Preferred)!')
+                channel.createMessage(role.mention +', Guild Raid/Upgrade')
                 this.guild.delete(id)
                 this.removeTimer(id, "guild")
             }
@@ -262,9 +263,9 @@ class RPGReminder {
             var id = key;
             var time = value.time;
             var channel = value.channel;
+            var user = value.user;
             
             if((time - now) <= 0){
-                var user = this.client.users.get(id)
                 channel.createMessage('**'+ user.username +'**, Hunt Ready!')
                 this.hunt.delete(id)
             }
@@ -274,10 +275,10 @@ class RPGReminder {
             var id = key;
             var time = value.time;
             var channel = value.channel;
+            var user = value.user;
             
             if((time - now) <= 0){
-                var user = this.client.users.get(id)
-                channel.createMessage('**'+ user.username +'**, Adventure Ready!')
+                channel.createMessage('**'+ user.mention +'**, Adventure Ready!')
                 this.adventure.delete(id)
                 this.removeTimer(id, "adventure")
             }
@@ -287,9 +288,9 @@ class RPGReminder {
             var id = key;
             var time = value.time;
             var channel = value.channel;
+            var user = value.user;
             
             if((time - now) <= 0){
-                var user = this.client.users.get(id)
                 channel.createMessage('**'+ user.username +'**, Training Ready!')
                 this.training.delete(id)
                 this.removeTimer(id, "training")
@@ -300,9 +301,9 @@ class RPGReminder {
             var id = key;
             var time = value.time;
             var channel = value.channel;
+            var user = value.user;
             
             if((time - now) <= 0){
-                var user = this.client.users.get(id)
                 channel.createMessage('**'+ user.username +'**, Progress Ready!')
                 this.progress.delete(id)
                 this.removeTimer(id, "progress")
@@ -313,9 +314,9 @@ class RPGReminder {
             var id = key;
             var time = value.time;
             var channel = value.channel;
+            var user = value.user;
             
             if((time - now) <= 0){
-                var user = this.client.users.get(id)
                 channel.createMessage(user.mention +', Miniboss Ready!')
                 this.miniboss.delete(id)
                 this.removeTimer(id, "miniboss")
@@ -326,9 +327,9 @@ class RPGReminder {
             var id = key;
             var time = value.time;
             var channel = value.channel;
+            var user = value.user;
             
             if((time - now) <= 0){
-                var user = this.client.users.get(id)
                 channel.createMessage(user.mention +', Horse Breed/Race Ready!')
                 this.horse.delete(id)
                 this.removeTimer(id, "horse")
@@ -339,9 +340,9 @@ class RPGReminder {
             var id = key;
             var time = value.time;
             var channel = value.channel;
+            var user = value.user;
             
             if((time - now) <= 0){
-                var user = this.client.users.get(id)
                 channel.createMessage(user.mention +', Arena Ready!')
                 this.arena.delete(id)
                 this.removeTimer(id, "arena")
