@@ -9,7 +9,7 @@ const RPGReminder = require('./utils/RPGReminder.js')
 const EmojiSender = require('./utils/EmojiSender.js')
 
 const url = process.env.DB_URL;
-//mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
 
 class Client extends Discord.Client{
     constructor(options = {}){
