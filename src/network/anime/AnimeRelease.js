@@ -17,7 +17,7 @@ class AnimeRelease {
         } else {
             setTimeout(() => this.run(), 300000) //5min
         }
-}
+    }
     
     setTimeouts(){
         this.episodes.forEach(episode => {
@@ -33,7 +33,7 @@ class AnimeRelease {
                 setTimeout(() => {
                     var embed = {
                         title: 'New episode got released!',
-                        color: this.client.embedColor,
+                        color: 'BLUE',
                         thumbnail: {url: cover},
                         fields: [
                             {name: 'Title', value: title, inline: true},
@@ -42,11 +42,10 @@ class AnimeRelease {
                         ],
                         timestamp: new Date(),
                     }
-                    this.client.guilds.forEach((value, key) => {
-                        var channel = value.channels.find((ch) => ch.name.toLowerCase() == "releases-all")
-                        
-                        if(channel instanceof Eris.TextChannel){
-                            channel.createMessage({embed: embed}).catch(console.log)
+                    
+                    this.client.channels.cache.filter(channel => channel.name == 'releases-all').each((channel, key) => {
+                        if(channel.type == 'text'){
+                            channel.send({embed: embed}).catch(console.log)
                         }
                     })
                 }, difference)

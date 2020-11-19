@@ -16,8 +16,8 @@ class RemindersCommand extends Command{
         var userId = message.author.id;
         var username = message.author.username;
         
-        if(message.mentions[0]){
-            var member = message.channel.guild.members.get(message.mentions[0].id)
+        if(message.mentions.users.first()){
+            var member = message.guild.member(message.mentions.users.first())
             
             if(member) {
                 userId = member.user.id;
@@ -66,11 +66,11 @@ class RemindersCommand extends Command{
         }
         
         embed.title = username +'\'s reminders'
-        embed.color = this.client.embedColor
+        embed.color = 'BLUE'
         embed.description = description
-        embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.avatarURL}
+        embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.displayAvatarURL()}
         
-        message.channel.createMessage({embed: embed})
+        message.channel.send({embed: embed})
     }
     
     formatTime(time_in_ms){

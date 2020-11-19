@@ -1,4 +1,4 @@
 const Client = require("./src/Client.js");
-const client = new Client(process.env.BOT_TOKEN)
+const client = new Client()
 
-client.connect()
+client.login(process.env.BOT_TOKEN)

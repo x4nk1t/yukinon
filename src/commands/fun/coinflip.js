@@ -13,7 +13,7 @@ class Coinflip extends Command{
     execute(message, commandArgs){        
         var embed = {
             title: 'Coin flip',
-            color: this.client.embedColor
+            color: 'BLUE'
         }
         
         if(commandArgs[0]){
@@ -28,14 +28,14 @@ class Coinflip extends Command{
             
             var flip = this.flip()
             embed.description = 'Flipping coin....';
-            message.channel.createMessage({embed: embed}).then(sent => {
+            message.channel.send({embed: embed}).then(sent => {
                 setTimeout(() => {
                     if(flip == ht){
-                        embed.color = this.client.embedGreenColor
+                        embed.color = 'GREEN'
                         embed.description = 'Its a **'+ flip +'**. You Won!'
                         embed.footer = {text: 'Coin flipped by '+ message.author.username}
                     } else {
-                        embed.color = this.client.embedRedColor
+                        embed.color = 'RED'
                         embed.description = 'Its a **'+ flip +'**. You Lost!'
                         embed.footer = {text: 'Coin flipped by '+ message.author.username}
                     }
@@ -44,8 +44,8 @@ class Coinflip extends Command{
             })
         } else {
             embed.description = 'Flipping coin....';
-            message.channel.createMessage({embed: embed}).then(sent => {
-                embed.color = this.client.embedColor
+            message.channel.send({embed: embed}).then(sent => {
+                embed.color = 'BLUE'
                 embed.description = 'Its a **'+ this.flip() +'**.'
                 embed.footer = {text: 'Coin flipped by '+ message.author.username}
                 

@@ -16,16 +16,11 @@ class Command {
             guildOnly: options.guildOnly || true,
             usage: options.usage || '',
             enabled: (options.enabled == undefined || options.enabled == true) ? true : false,
-            permissionMessage: 'You don\'t have permission to use this command.',
-            requirements: {
-                permissions: options.permissions || {},
-            },
-            invalidUsageMessage: message => { return 'Usage: '+ message.prefix + options.name +' '+ options.usage}
         }
     }
     
     sendUsage(message, deleteMsg = false){
-        message.channel.createMessage('**Usage:** '+ message.prefix + this.options.name + ' '+ this.options.usage).then(m => {
+        message.channel.send('**Usage:** '+ this.commandLoader.prefix + this.options.name + ' '+ this.options.usage).then(m => {
             if(deleteMsg) {
                 setTimeout(() => {
                     message.delete()

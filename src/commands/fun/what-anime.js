@@ -18,7 +18,7 @@ class WhatAnime extends Command{
     execute(message, commandArgs){        
         var embed = {
             title: 'Error',
-            color: this.client.embedRedColor
+            color: 'RED'
         }
             
         if(!commandArgs[0]){
@@ -30,27 +30,29 @@ class WhatAnime extends Command{
             if(error){
                 embed.description = json.message
                 
-                message.channel.createMessage({embed: embed})
+                message.channel.send({embed: embed})
                 return
             }
             
             const mal_id = json.docs[0].mal_id;
+            const anilist_id = json.docs[0].anilist_id;
             const title_english = json.docs[0].title_english || 'N/A';
             const title_romaji = json.docs[0].title_romaji || 'N/A';
             
             this.animeInfo.getDetails(mal_id, data => {
                 if(data == null){
                     embed.title = title_romaji
-                    embed.color = this.client.embedColor
+                    embed.color = 'BLUE'
                     embed.url = 'https://myanimelist.net/anime/'+ mal_id
                     embed.thumbnail = {url: commandArgs[0]}
                     embed.fields = [
                         {name: 'English', value: title_english, inline: true},
-                        {name: 'MAL Link', value: 'https://myanimelist.net/anime/'+ mal_id},
-                        {name: '\u200b', value: '*Note: Full data could not be fetched due to some error.*'}
+                        {name: 'MAL', value: 'https://myanimelist.net/anime/'+ mal_id},
+                        {name: 'AniList', value: 'https://anilist.co/anime/'+ anilist_id},
+                        {name: '\u200b', value: '*Note: Could not load full data due to some error.*'}
                     ]
-                    embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.avatarURL}
-                    message.channel.createMessage({embed: embed})
+                    embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.displayAvatarURL()}
+                    message.channel.send({embed: embed})
                     return
                 }
                 
@@ -65,7 +67,7 @@ class WhatAnime extends Command{
                 const mal_url = data.url
                 
                 embed.title = title
-                embed.color = this.client.embedColor
+                embed.color = 'BLUE'
                 embed.url = mal_url
                 embed.thumbnail = {url: imageUrl}
                 embed.fields = [
@@ -76,10 +78,11 @@ class WhatAnime extends Command{
                     {name: 'Episodes', value: episodes, inline: true},
                     {name: 'Airing', value: airing, inline: true},
                     {name: 'Aired', value: aired, inline: true},
-                    {name: '\u200b', value: '*Note: This might not be accurate.*'}
+                    {name: 'AniList', value: 'https://anilist.co/anime/'+ anilist_id},
+                    {name: '\u200b', value: '*Note: Results might not be accurate.*'}
                 ]
-                embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.avatarURL}
-                message.channel.createMessage({embed: embed})
+                embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.displayAvatarURL()}
+                message.channel.send({embed: embed})
             })
         })
     }

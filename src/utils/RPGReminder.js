@@ -7,7 +7,7 @@ const HUNT = 60000; //1min
 const ADVENTURE = 3600000; //1hr
 const TRAINING = 900000; //15min
 const PROGRESS = 300000; //5min
-var MINIBOSS = 43200000; //12hr
+const MINIBOSS = 43200000; //12hr
 const HORSE = 86400000; //1d
 const ARENA = 86400000; //1d
 
@@ -31,17 +31,15 @@ class RPGReminder {
         args.shift()
         var now = new Date().getTime()
         
+        if(message.channel.name != "rpg") return
+         
         if(args[0]){
             var sc = args[0].toLowerCase()
             var force = (args[args.length - 1] == "-f") ? true : false;
-            var userId = message.author.id;
             var channel = message.channel;
             var channel_id = channel.id;
             var user = message.author;
-
-            if(message.channel.name != "rpg"){
-                return;
-            }
+            var userId = user.id;
             
             if(sc == "buy"){
                 if(args[1] && args[2]){
@@ -57,8 +55,8 @@ class RPGReminder {
             if(sc == "horse"){
                 if(args[1]){
                     if(args[1] == "breeding"){
-                        if(!message.mentions[0]) return
-                        var member = message.channel.guild.members.get(message.mentions[0].id)
+                        if(!message.mentions.users.first()) return
+                        var member = message.guild.member(message.mentions.users.first())
                         
                         if(member){
                             if(!this.horse.has(userId) || force){
@@ -118,15 +116,12 @@ class RPGReminder {
             }
             
             if(sc == "miniboss"){
-                var now = new Date().getTime()
-                if(now < 1604617200000) MINIBOSS /= 2; 
-                
                 if(!this.miniboss.has(userId) || force){
                     this.addTimer(userId, "miniboss", now + MINIBOSS, channel_id, user)
                     this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel, user: {mention: user.mention, username: user.username}})
                     
-                    if(!message.mentions[0]) return
-                    var member = message.channel.guild.members.get(message.mentions[0].id)
+                    if(!message.mentions.users.first()) return
+                    var member = message.guild.member(message.mentions.users.first())
                 
                     if(member){
                         if(member.user.id == "620152697450135552") {
@@ -144,8 +139,8 @@ class RPGReminder {
                     this.addTimer(userId, "arena", now + ARENA, channel_id, user)
                     this.arena.set(userId, {time: now + ARENA, channel: channel, user: {mention: user.mention, username: user.username}})
                     
-                    if(!message.mentions[0]) return
-                    var member = message.channel.guild.members.get(message.mentions[0].id)
+                    if(!message.mentions.users.first()) return
+                    var member = message.channel.guild.members.get(message.mentions.users.first().id)
                     
                     if(member){
                         if(member.user.id == "620152697450135552") {
@@ -174,7 +169,7 @@ class RPGReminder {
     }
     
     run(){
-        this.client.on('messageCreate', message => {
+        this.client.on('message', message => {
             if(message.author.bot) return;
             
             if(message.content.toLowerCase().startsWith('rpg')){
@@ -192,7 +187,7 @@ class RPGReminder {
                 var userId = data.user_id;
                 var type = data.type;
                 var time = data.time;
-                var channel = this.client.getChannel(data.channel_id)
+                var channel = this.client.channels.cache.get(data.channel_id)
                 var user = {mention: data.mention, username: data.username}
                 
                 if((time - now) >= 0){
@@ -239,7 +234,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.createMessage(user.mention +', Lootbox ready!')
+                channel.send(user.mention +', Lootbox ready!')
                 this.lootbox.delete(id)
                 this.removeTimer(id, "lootbox")
             }
@@ -251,9 +246,9 @@ class RPGReminder {
             var channel = value.channel;
             
             if((time - now) <= 0){
-                var role = channel.guild.roles.find(r => r.name.toLowerCase() == "rpg");
+                var role = channel.guild.roles.cache.find(r => r.name.toLowerCase() == "rpg");
                 
-                channel.createMessage(role.mention +', Guild Raid/Upgrade')
+                channel.send(role.mention +', Guild Raid/Upgrade')
                 this.guild.delete(id)
                 this.removeTimer(id, "guild")
             }
@@ -266,7 +261,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.createMessage('**'+ user.username +'**, Hunt Ready!')
+                channel.send('**'+ user.username +'**, Hunt Ready!')
                 this.hunt.delete(id)
             }
         })
@@ -278,7 +273,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.createMessage('**'+ user.mention +'**, Adventure Ready!')
+                channel.send('**'+ user.mention +'**, Adventure Ready!')
                 this.adventure.delete(id)
                 this.removeTimer(id, "adventure")
             }
@@ -291,7 +286,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.createMessage('**'+ user.username +'**, Training Ready!')
+                channel.send('**'+ user.username +'**, Training Ready!')
                 this.training.delete(id)
                 this.removeTimer(id, "training")
             }
@@ -304,7 +299,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.createMessage('**'+ user.username +'**, Progress Ready!')
+                channel.send('**'+ user.username +'**, Progress Ready!')
                 this.progress.delete(id)
                 this.removeTimer(id, "progress")
             }
@@ -317,7 +312,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.createMessage(user.mention +', Miniboss Ready!')
+                channel.send(user.mention +', Miniboss Ready!')
                 this.miniboss.delete(id)
                 this.removeTimer(id, "miniboss")
             }
@@ -330,7 +325,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.createMessage(user.mention +', Horse Breed/Race Ready!')
+                channel.send(user.mention +', Horse Breed/Race Ready!')
                 this.horse.delete(id)
                 this.removeTimer(id, "horse")
             }
@@ -343,7 +338,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.createMessage(user.mention +', Arena Ready!')
+                channel.send(user.mention +', Arena Ready!')
                 this.arena.delete(id)
                 this.removeTimer(id, "arena")
             }
@@ -355,6 +350,7 @@ class RPGReminder {
     */
     
     addTimer(userId, type, time, channelId, user, callback = () => {}){
+    return
         Timer.collection.findOneAndUpdate({user_id: userId, type: type, channel_id: channelId, username: user.username, mention: user.mention}, {$set: {time: time}}, {upsert: true}, err => {
             if(err){
                 this.client.logger.error(err)
@@ -366,6 +362,7 @@ class RPGReminder {
     }
     
     removeMany(options, callback = () => {}){
+    return
         Timer.collection.removeMany({
             _id: {
                 $in: options
@@ -381,6 +378,7 @@ class RPGReminder {
     }
     
     removeTimer(userId, type, callback = () => {}){
+    return
         Timer.collection.removeOne({user_id: userId, type: type}, err => {
             if(err){
                 this.client.logger.error(err)
@@ -392,6 +390,7 @@ class RPGReminder {
     }
     
     getAllTimers(callback){
+        callback(false, [])
         Timer.collection.find({}, async (err, timers) => {
             if(err){
                 this.client.logger.error(err)

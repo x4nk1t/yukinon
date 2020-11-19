@@ -12,26 +12,14 @@ class Stats extends Command{
     
     execute(message, commandArgs){
         var embed = {
-            color: this.client.embedGreenColor,
+            color: 'GREEN',
             fields: [
-                {
-                    name: 'Ping',
-                    value: (new Date().getTime() - message.timestamp) +'ms',
-                    inline: true
-                },
-                {
-                    name: 'Uptime',
-                    value: this.getUptime(),
-                    inline: true
-                },
-                { 
-                    name: 'Memory Usage',
-                    value: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + 'MB',
-                    inline: true
-                }
+                { name: 'Ping', value: (new Date().getTime() - message.createdTimestamp) +'ms', inline: true },
+                { name: 'Uptime', value: this.getUptime(), inline: true },
+                { name: 'Memory Usage', value: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + 'MB', inline: true }
             ]
         }
-        message.channel.createMessage({embed: embed});
+        message.channel.send({embed: embed});
     }
     
     getUptime(){
