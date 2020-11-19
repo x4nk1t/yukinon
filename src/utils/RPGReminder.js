@@ -350,7 +350,6 @@ class RPGReminder {
     */
     
     addTimer(userId, type, time, channelId, user, callback = () => {}){
-    return
         Timer.collection.findOneAndUpdate({user_id: userId, type: type, channel_id: channelId, username: user.username, mention: user.mention}, {$set: {time: time}}, {upsert: true}, err => {
             if(err){
                 this.client.logger.error(err)
@@ -362,7 +361,6 @@ class RPGReminder {
     }
     
     removeMany(options, callback = () => {}){
-    return
         Timer.collection.removeMany({
             _id: {
                 $in: options
@@ -378,7 +376,6 @@ class RPGReminder {
     }
     
     removeTimer(userId, type, callback = () => {}){
-    return
         Timer.collection.removeOne({user_id: userId, type: type}, err => {
             if(err){
                 this.client.logger.error(err)
@@ -390,7 +387,6 @@ class RPGReminder {
     }
     
     getAllTimers(callback){
-        callback(false, [])
         Timer.collection.find({}, async (err, timers) => {
             if(err){
                 this.client.logger.error(err)
