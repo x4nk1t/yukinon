@@ -46,7 +46,7 @@ class RPGReminder {
                     if(args[2] == "lootbox"){
                         if(!this.lootbox.has(userId) || force){
                             this.addTimer(userId, "lootbox", now + LOOTBOX, channel_id, user)
-                            this.lootbox.set(userId, {time: now + LOOTBOX, channel: channel, user: {mention: user.mention, username: user.username}})
+                            this.lootbox.set(userId, {time: now + LOOTBOX, channel: channel, user: {mention: user.toString(), username: user.username}})
                         }
                     }
                 }
@@ -61,7 +61,7 @@ class RPGReminder {
                         if(member){
                             if(!this.horse.has(userId) || force){
                                 this.addTimer(userId, "horse", now + HORSE, channel_id, user)
-                                this.horse.set(userId, {time: now + HORSE, channel: channel, user: {mention: user.mention, username: user.username}})
+                                this.horse.set(userId, {time: now + HORSE, channel: channel, user: {mention: user.toString(), username: user.username}})
                                 
                                 if(!this.horse.has(member.user.id) || force){
                                     if(member.user.id == "620152697450135552") {
@@ -69,7 +69,7 @@ class RPGReminder {
                                         return
                                     } 
                                     this.addTimer(member.user.id, "horse", now + HORSE, channel_id, member.user)
-                                    this.horse.set(member.user.id, {time: now + HORSE, channel: channel, user: {mention: member.user.mention, username: member.user.username}})
+                                    this.horse.set(member.user.id, {time: now + HORSE, channel: channel, user: {mention: member.user.toString(), username: member.user.username}})
                                 }
                             }
                         }
@@ -78,7 +78,7 @@ class RPGReminder {
                     if(args[1] == "race"){
                         if(!this.horse.has(userId) || force){
                             this.addTimer(userId, "horse", now + HORSE, channel_id, user)
-                            this.horse.set(userId, {time: now + HORSE, channel: channel, user: {mention: user.mention, username: user.username}})
+                            this.horse.set(userId, {time: now + HORSE, channel: channel, user: {mention: user.toString(), username: user.username}})
                         }
                     }
                 }
@@ -97,28 +97,28 @@ class RPGReminder {
 
             if(sc == "hunt"){
                 if(!this.hunt.has(userId) || force){
-                    this.hunt.set(userId, {time: now + HUNT, channel: channel, user: {mention: user.mention, username: user.username}})
+                    this.hunt.set(userId, {time: now + HUNT, channel: channel, user: {mention: user.toString(), username: user.username}})
                 }
             }
 
             if(sc == "adv" || sc == "adventure"){
                 if(!this.adventure.has(userId) || force){
                     this.addTimer(userId, "adventure", now + ADVENTURE, channel_id, user)
-                    this.adventure.set(userId, {time: now + ADVENTURE, channel: channel, user: {mention: user.mention, username: user.username}})
+                    this.adventure.set(userId, {time: now + ADVENTURE, channel: channel, user: {mention: user.toString(), username: user.username}})
                 }
             }
 
             if(sc == "training" || sc == "tr"){
                 if(!this.training.has(userId) || force){
                     this.addTimer(userId, "training", now + TRAINING, channel_id, user)
-                    this.training.set(userId, {time: now + TRAINING, channel: channel, user: {mention: user.mention, username: user.username}})
+                    this.training.set(userId, {time: now + TRAINING, channel: channel, user: {mention: user.toString(), username: user.username}})
                 }
             }
             
             if(sc == "miniboss"){
                 if(!this.miniboss.has(userId) || force){
                     this.addTimer(userId, "miniboss", now + MINIBOSS, channel_id, user)
-                    this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel, user: {mention: user.mention, username: user.username}})
+                    this.miniboss.set(userId, {time: now + MINIBOSS, channel: channel, user: {mention: user.toString(), username: user.username}})
                     
                     if(!message.mentions.users.first()) return
                     var member = message.guild.member(message.mentions.users.first())
@@ -129,7 +129,7 @@ class RPGReminder {
                             return
                         } 
                         this.addTimer(member.user.id, "miniboss", now + MINIBOSS, channel_id, member.user)
-                        this.miniboss.set(member.user.id, {time: now + MINIBOSS, channel: channel, user: {mention: member.user.mention, username: member.user.username}})
+                        this.miniboss.set(member.user.id, {time: now + MINIBOSS, channel: channel, user: {mention: member.user.toString(), username: member.user.username}})
                     }
                 }
             }
@@ -137,7 +137,7 @@ class RPGReminder {
             if(sc == "arena"){
                 if(!this.arena.has(userId) || force){
                     this.addTimer(userId, "arena", now + ARENA, channel_id, user)
-                    this.arena.set(userId, {time: now + ARENA, channel: channel, user: {mention: user.mention, username: user.username}})
+                    this.arena.set(userId, {time: now + ARENA, channel: channel, user: {mention: user.toString(), username: user.username}})
                     
                     if(!message.mentions.users.first()) return
                     var member = message.channel.guild.members.get(message.mentions.users.first().id)
@@ -148,7 +148,7 @@ class RPGReminder {
                             return
                         }
                         this.addTimer(member.user.id, "arena", now + ARENA, channel_id, member.user)
-                        this.arena.set(member.user.id, {time: now + ARENA, channel: channel, user: {mention: member.user.mention, username: member.user.username}})
+                        this.arena.set(member.user.id, {time: now + ARENA, channel: channel, user: {mention: member.user.toString(), username: member.user.username}})
                     }
                 }
             }
@@ -162,7 +162,7 @@ class RPGReminder {
                sc == "bigboat" || sc == "drill"){
                 if(!this.progress.has(userId) || force){
                     this.addTimer(userId, "progress", now + PROGRESS, channel_id, user)
-                    this.progress.set(userId, {time: now + PROGRESS, channel: channel, user: {mention: user.mention, username: user.username}})
+                    this.progress.set(userId, {time: now + PROGRESS, channel: channel, user: {mention: user.toString(), username: user.username}})
                 }
             }
         }
@@ -234,7 +234,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.mention +', Lootbox ready!')
+                channel.send(user.toString() +', Lootbox ready!')
                 this.lootbox.delete(id)
                 this.removeTimer(id, "lootbox")
             }
@@ -248,7 +248,7 @@ class RPGReminder {
             if((time - now) <= 0){
                 var role = channel.guild.roles.cache.find(r => r.name.toLowerCase() == "rpg");
                 
-                channel.send(role.mention +', Guild Raid/Upgrade')
+                channel.send(role.toString() +', Guild Raid/Upgrade')
                 this.guild.delete(id)
                 this.removeTimer(id, "guild")
             }
@@ -273,7 +273,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send('**'+ user.mention +'**, Adventure Ready!')
+                channel.send('**'+ user.toString() +'**, Adventure Ready!')
                 this.adventure.delete(id)
                 this.removeTimer(id, "adventure")
             }
@@ -312,7 +312,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.mention +', Miniboss Ready!')
+                channel.send(user.toString() +', Miniboss Ready!')
                 this.miniboss.delete(id)
                 this.removeTimer(id, "miniboss")
             }
@@ -325,7 +325,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.mention +', Horse Breed/Race Ready!')
+                channel.send(user.toString() +', Horse Breed/Race Ready!')
                 this.horse.delete(id)
                 this.removeTimer(id, "horse")
             }
@@ -338,7 +338,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.mention +', Arena Ready!')
+                channel.send(user.toString() +', Arena Ready!')
                 this.arena.delete(id)
                 this.removeTimer(id, "arena")
             }
@@ -350,7 +350,7 @@ class RPGReminder {
     */
     
     addTimer(userId, type, time, channelId, user, callback = () => {}){
-        Timer.collection.findOneAndUpdate({user_id: userId, type: type, channel_id: channelId, username: user.username, mention: user.mention}, {$set: {time: time}}, {upsert: true}, err => {
+        Timer.collection.findOneAndUpdate({user_id: userId, type: type, channel_id: channelId, username: user.username, mention: user.toString()}, {$set: {time: time}}, {upsert: true}, err => {
             if(err){
                 this.client.logger.error(err)
                 callback(true, {message: 'Failed to add new timer.'})
