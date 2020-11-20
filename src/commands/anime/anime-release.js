@@ -77,8 +77,6 @@ class AnimeReleaseCommand extends Command {
                 var airingAt = anime.airingAt;
                 
                 content += (i + 1) +'. ['+ this.shortText(title) +']('+ url +') (EP '+ episode +') - In '+ this.formatTime(diff) + '\n';
-            } else {
-                i--;
             }
         }
         
