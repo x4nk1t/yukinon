@@ -234,7 +234,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.toString() +', Lootbox ready!')
+                channel.send(user.mention +', Lootbox ready!')
                 this.lootbox.delete(id)
                 this.removeTimer(id, "lootbox")
             }
@@ -273,7 +273,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send('**'+ user.toString() +'**, Adventure Ready!')
+                channel.send('**'+ user.mention +'**, Adventure Ready!')
                 this.adventure.delete(id)
                 this.removeTimer(id, "adventure")
             }
@@ -312,7 +312,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.toString() +', Miniboss Ready!')
+                channel.send(user.mention +', Miniboss Ready!')
                 this.miniboss.delete(id)
                 this.removeTimer(id, "miniboss")
             }
@@ -325,7 +325,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.toString() +', Horse Breed/Race Ready!')
+                channel.send(user.mention +', Horse Breed/Race Ready!')
                 this.horse.delete(id)
                 this.removeTimer(id, "horse")
             }
@@ -338,7 +338,7 @@ class RPGReminder {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.toString() +', Arena Ready!')
+                channel.send(user.mention +', Arena Ready!')
                 this.arena.delete(id)
                 this.removeTimer(id, "arena")
             }
