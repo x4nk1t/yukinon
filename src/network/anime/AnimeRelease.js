@@ -20,7 +20,7 @@ class AnimeRelease {
     }
     
     setTimeouts(){
-        this.episodes.forEach(episode => {
+        this.episodes.forEach((episode, key) => {
             var now = new Date().getTime()
             var title = episode.title;
             var url = episode.url;
@@ -45,6 +45,8 @@ class AnimeRelease {
                     
                     this.client.channels.cache.filter(channel => channel.name == 'releases-all').each((channel, key) => {
                         if(channel.type == 'text'){
+                            this.episodes.splice(key, 1)
+                            
                             channel.send({embed: embed}).catch(console.log)
                         }
                     })

@@ -7,14 +7,65 @@ class AnimeReleaseCommand extends Command {
             description: "Shows animes about to release.",
             aliases: ['ar']
         })
+        
+        this.emojis = ['⏪', '⏩'];
     }
     
-    execute(message, commandArgs){
-        var count = 0;
-        var now = new Date().getTime()
-        var description = ''
+    async execute(message, commandArgs){
+        var lastPage = Math.floor(this.client.animeRelease.episodes.length / 10);
+    
+        var embed = {
+            title: 'Airing Schedules',
+            description: this.getPage(0),
+            footer: {text: 'Requested by '+ message.author.username + ' • Page (1 / '+ (lastPage + 1) +')', icon_url: message.author.displayAvatarURL()}
+        }
         
-        this.client.animeRelease.episodes.some(anime => {
+        const sent = await message.channel.send({embed: embed})
+        
+        if(!this.client.animeRelease.episodes.length) return
+        
+        for(const emoji of this.emojis) sent.react(emoji)
+        
+        const reactionCollector = sent.createReactionCollector((reaction, user) => this.emojis.includes(reaction.emoji.name) && !user.bot, {timeout: 120000})
+        
+        var page = 0;
+        
+        reactionCollector.on('collect', reaction => {
+            reaction.users.remove(message.author)
+            
+            switch(reaction.emoji.name){
+                case this.emojis[0]:
+                    page = page == 0 ? 0 : page - 1;
+                    break;
+                case this.emojis[1]:
+                    page = page == lastPage ? lastPage : page + 1;
+                    break;
+            }
+            embed.description = this.getPage(page);
+            embed.footer = {text: 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +' / '+ (lastPage + 1) +')', icon_url: message.author.displayAvatarURL()}
+            sent.edit({embed: embed})
+        })
+        
+        reactionCollector.on('end', () => {
+            if(!sent.deleted) sent.reactions.removeAll()
+        })
+    }
+    
+    getPage(page){
+        var episodes = this.client.animeRelease.episodes;
+        var content = '';
+        var now = new Date().getTime()
+        var start = page == 0 ? 0 : page * 10;
+        
+        if(!episodes.length){
+            return 'No releases available.'
+        }
+        
+        for(var i = start; i < (start + 10); i++){
+            var anime = episodes[i];
+            
+            if(!episodes[i]) continue
+            
             var diff = anime.airingAt - now;
             
             if(diff > 0){
@@ -24,20 +75,14 @@ class AnimeReleaseCommand extends Command {
                 var url = anime.url;
                 var cover = anime.cover;
                 var airingAt = anime.airingAt;
-            
-                description += (count + 1) +'. ['+ this.shortText(title) +']('+ url +') (EP '+ episode +')\n-In '+ this.formatTime(diff) + '\n';
-                count++
                 
-                if(count == 10) return true
+                content += (i + 1) +'. ['+ this.shortText(title) +']('+ url +') (EP '+ episode +') - In '+ this.formatTime(diff) + '\n';
+            } else {
+                i--;
             }
-        })
-        
-        var embed = {
-            description: description,
-            footer: {text: 'Requested by '+ message.author.username, icon_url: message.author.displayAvatarURL()}
         }
         
-        message.channel.send({embed: embed})
+        return content
     }
     
     formatTime(time){
@@ -52,9 +97,7 @@ class AnimeReleaseCommand extends Command {
         var minutes = Math.floor(r / 60);
         r %= 60;
         
-        var seconds = Math.floor(r);
-        
-        return `${days}d ${hours}h ${minutes}m ${seconds}s` 
+        return `${days}d ${hours}h ${minutes}m` 
     }
     
     shortText(text, length = 30) {
