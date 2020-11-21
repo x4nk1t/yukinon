@@ -26,7 +26,7 @@ class AnimeReleaseCommand extends Command {
         
         for(const emoji of this.emojis) sent.react(emoji)
         
-        const reactionCollector = sent.createReactionCollector((reaction, user) => this.emojis.includes(reaction.emoji.name) && !user.bot, {timeout: 120000})
+        const reactionCollector = sent.createReactionCollector((reaction, user) => this.emojis.includes(reaction.emoji.name) && !user.bot, {time: 120000})
         
         var page = 0;
         

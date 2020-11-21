@@ -43,13 +43,13 @@ class AnimeRelease {
                         timestamp: new Date(),
                     }
                     
-                    this.client.channels.cache.filter(channel => channel.name == 'releases-all').each((channel, key) => {
+                    this.client.channels.cache.filter(channel => channel.name == 'releases-all').each(channel => {
                         if(channel.type == 'text'){
-                            this.episodes.splice(key, 1)
-                            
                             channel.send({embed: embed}).catch(console.log)
                         }
                     })
+                    
+                    this.episodes.splice(key, 1)
                 }, difference)
             }
         })
