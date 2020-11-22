@@ -43,13 +43,13 @@ class CommandLoader{
             const folderName = path.split('/')[path.split('/').length - 2];
             const folderPath = folderName +'/'+ fileName;
             
-            if(fileName.endsWith('.js')){
+            if(fileName.endsWith('.js') && fileName.toLowerCase() != 'command.js' && fileName.toLowerCase() != 'commandloader.js'){
+                const command = require('./'+ folderPath)
+                const updatedCommand = new command(this)
+                    
                 if(updatedCommand instanceof Command) {
                     this.client.logger.info(`Updating ${folderPath}`)
                     delete require.cache[require.resolve('./'+ folderPath)]
-                    const command = require('./'+ folderPath)
-                    
-                    const updatedCommand = new command(this)
                     
                     this.unloadCommand(updatedCommand)
                 
