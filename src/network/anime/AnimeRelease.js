@@ -49,7 +49,7 @@ class AnimeRelease {
                         }
                     })
                     
-                    this.episodes.splice(array.indexOf(episode), 1)
+                    this.episodes.splice(this.episodes.indexOf(episode), 1)
                 }, difference)
             }
         })
