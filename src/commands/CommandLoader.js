@@ -1,6 +1,7 @@
 const Discord = require('discord.js')
 const fs = require('fs');
 const Command = require('./Command.js');
+const chokidar = require('chokidar')
 
 class CommandLoader{
     constructor(client){
@@ -15,10 +16,10 @@ class CommandLoader{
     
     loadAllCommands(){
         fs.readdirSync(`${__dirname}/../commands`).filter(f => !(f.endsWith('.js'))).forEach(dir => {
-            const commands = fs.readdirSync(`${__dirname}/../commands/${dir}`).filter(f => f.endsWith('.js'));
+            const commands = fs.readdirSync(`${__dirname}/${dir}`).filter(f => f.endsWith('.js'));
             
             commands.forEach(f => {
-                const command = require(`${__dirname}/../commands/${dir}/${f}`)
+                const command = require(`${__dirname}/${dir}/${f}`)
                 const commandClass = new command(this)
                 
                 if(commandClass instanceof Command){
@@ -31,6 +32,36 @@ class CommandLoader{
                     this.client.logger.error(`Couldn't load ${f}. Reason: Not a command.`)
                 }
             })
+        })
+        
+        if(this.client.devMode) this.runHotReload()
+    }
+    
+    runHotReload(){
+        chokidar.watch('.').on('change', (path, event) => {
+            const fileName = path.split('/')[path.split('/').length - 1];
+            const folderName = path.split('/')[path.split('/').length - 2];
+            const folderPath = folderName +'/'+ fileName;
+            
+            if(fileName.endsWith('.js')){
+                this.client.logger.info(`Updating ${folderPath}`)
+                delete require.cache[require.resolve('./'+ folderPath)]
+                const command = require('./'+ folderPath)
+                
+                const updatedCommand = new command(this)
+                
+                this.unloadCommand(updatedCommand)
+                
+                if(updatedCommand instanceof Command) {
+                    if(updatedCommand.options.enabled) {
+                        this.loadCommand(updatedCommand)
+                    } else {
+                        this.client.logger.error(updatedCommand.options.name +' command has been disabled in new update.')
+                    }
+                } else {
+                    this.client.logger.error('Updated command is not instance of Command.')
+                }
+            }
         })
     }
     
@@ -67,6 +98,13 @@ class CommandLoader{
             this.aliases.set(alias, commandClass)
         })
         this.commands.set(name, commandClass)
+    }
+    
+    unloadCommand(commandClass){
+        commandClass.options.aliases.forEach(alias => {
+            this.aliases.delete(alias)
+        })
+        this.commands.delete(commandClass.options.name)
     }
     
     loadCommand(commandClass){
