@@ -64,11 +64,11 @@ class AnimeReleaseCommand extends Command {
         for(var i = start; i < (start + 10); i++){
             var anime = episodes[i];
             
-            if(!episodes[i]) continue
-            
             var diff = anime.airingAt - now;
             
             if(diff > 0){
+                if(!episodes[i]) continue
+                
                 var id = anime.id;
                 var title = anime.title;
                 var episode = anime.episode;
@@ -77,6 +77,8 @@ class AnimeReleaseCommand extends Command {
                 var airingAt = anime.airingAt;
                 
                 content += (i + 1) +'. ['+ this.shortText(title) +']('+ url +') (EP '+ episode +') - In '+ this.formatTime(diff) + '\n';
+            } else {
+                
             }
         }
         

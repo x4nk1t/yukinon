@@ -20,7 +20,7 @@ class AnimeRelease {
     }
     
     setTimeouts(){
-        this.episodes.forEach((episode, key) => {
+        this.episodes.forEach(episode => {
             var now = new Date().getTime()
             var title = episode.title;
             var url = episode.url;
@@ -49,7 +49,7 @@ class AnimeRelease {
                         }
                     })
                     
-                    this.episodes.splice(key, 1)
+                    this.episodes.splice(array.indexOf(episode), 1)
                 }, difference)
             }
         })
