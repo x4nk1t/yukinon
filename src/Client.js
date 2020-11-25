@@ -25,6 +25,8 @@ class Client extends Discord.Client{
         this.rpgReminder = new RPGReminder(this)
         this.emojiSender = new EmojiSender(this)
         
+        this.profiles = new Discord.Collection()
+        
         this.db.on('error', err => this.logger.error(err))
         this.db.once('open', () => this.logger.info('Connected to database'))
         
