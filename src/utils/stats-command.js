@@ -1,5 +1,5 @@
 const os = require('os')
-const Command = require('../Command.js');
+const Command = require('./Command.js');
 
 class Stats extends Command{
     constructor(commandLoader){

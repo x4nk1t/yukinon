@@ -1,4 +1,4 @@
-const Command = require('../Command.js');
+const Command = require('../../../utils/Command.js');
 
 class RemindersCommand extends Command{
     constructor(commandLoader){
@@ -12,7 +12,7 @@ class RemindersCommand extends Command{
     
     execute(message, commandArgs){
         const embed = {}
-        const reminder = this.client.rpgReminder;
+        const reminder = this.client.rpgManager;
         var userId = message.author.id;
         var username = message.author.username;
         

@@ -1,4 +1,4 @@
-const Command = require('../Command.js');
+const Command = require('../../../utils/Command.js');
 
 class Coinflip extends Command{
     constructor(commandLoader){

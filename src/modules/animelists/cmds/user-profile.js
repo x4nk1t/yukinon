@@ -1,5 +1,4 @@
-const Command = require('../Command.js')
-const fetch = require('node-fetch')
+const Command = require('../../../utils/Command.js')
 
 class UserProfile extends Command{
     constructor(commandLoader){
@@ -66,46 +65,6 @@ class UserProfile extends Command{
         } else {
             this.sendUsage(message)
         }
-    }
-    
-    getAnilistProfile(username){
-        return new Promise((resolve, reject) => {
-            const query = `query($username: String){User(name: $username){id,name,siteUrl,donatorTier,avatar {large},statistics {anime {count,meanScore,minutesWatched,episodesWatched},manga{count,meanScore,chaptersRead,volumesRead}}}}`;
-            
-            var options = this.optionBuilder({query: query, variables: {username: username}})
-            this.sendRequest(options, (err, data) => {
-                if(err){
-                    reject(null)
-                } else {
-                    resolve(data)
-                }
-            })
-        })
-    }
-    
-    sendRequest(options, callback = () => {}){
-        fetch(this.apiUrl, options).then(response => response.json()).then(data => {
-            callback(false, data)
-        }).catch(err => {
-            console.log(err)
-            callback(true, err)
-        })
-    }
-    
-    optionBuilder(object, token = ""){
-        var options = {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(object)
-        }
-        if(token != ""){
-            options.headers.Authorization = 'Bearer '+ token;
-        }
-        
-        return options;
     }
 }
 

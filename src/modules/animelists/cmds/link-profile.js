@@ -1,5 +1,5 @@
-const Command = require('../Command.js')
-const Profile = require('../../network/database/models/profile.js')
+const Command = require('../../../utils/Command.js')
+const Profile = require('./models/profile.js')
 
 class LinkProfile extends Command{
     constructor(commandLoader){

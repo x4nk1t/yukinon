@@ -1,5 +1,6 @@
-const Eris = require('eris')
-const Timer = require('../network/database/models/timer.js')
+const Discord = require('discord.js')
+const Timer = require('./models/timer.js')
+const ReminderCommand = require('./cmds/reminders.js')
 
 const LOOTBOX = 10800000; //3hrs
 const GUILD = 7200000; //2hrs
@@ -11,19 +12,26 @@ const MINIBOSS = 43200000; //12hr
 const HORSE = 86400000; //1d
 const ARENA = 86400000; //1d
 
-class RPGReminder {
+class RPGManager {
     constructor(client){
         this.client = client;
         
-        this.hunt = new Eris.Collection();
-        this.adventure = new Eris.Collection();
-        this.progress = new Eris.Collection();
-        this.training = new Eris.Collection();
-        this.guild = new Eris.Collection();
-        this.lootbox = new Eris.Collection();
-        this.miniboss = new Eris.Collection();
-        this.horse = new Eris.Collection();
-        this.arena = new Eris.Collection();
+        this.hunt = new Discord.Collection();
+        this.adventure = new Discord.Collection();
+        this.progress = new Discord.Collection();
+        this.training = new Discord.Collection();
+        this.guild = new Discord.Collection();
+        this.lootbox = new Discord.Collection();
+        this.miniboss = new Discord.Collection();
+        this.horse = new Discord.Collection();
+        this.arena = new Discord.Collection();
+        
+        this.cmdManager = this.client.commandManager;
+        this.loadCommands()
+    }
+    
+    loadCommands(){
+        this.cmdManager.loadCommand(new ReminderCommand(this.cmdManager))
     }
     
     execute(message){
@@ -173,9 +181,7 @@ class RPGReminder {
             if(message.author.bot) return;
             
             if(message.content.toLowerCase().startsWith('rpg')){
-                if(!this.client.devMode){
-                    this.execute(message)
-                }
+                if(!this.client.devMode){ this.execute(message) }
             }
         })
         
@@ -399,4 +405,4 @@ class RPGReminder {
     }
 }
 
-module.exports = RPGReminder
+module.exports = RPGManager
