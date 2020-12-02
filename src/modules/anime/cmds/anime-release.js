@@ -1,4 +1,4 @@
-const Command = require('../Command.js');
+const Command = require('../../../utils/Command.js');
 
 class AnimeReleaseCommand extends Command {
     constructor(commandLoader){
@@ -12,9 +12,10 @@ class AnimeReleaseCommand extends Command {
     }
     
     async execute(message, commandArgs){
-        var lastPage = Math.floor(this.client.animeRelease.episodes.length / 10);
+        var lastPage = Math.floor(this.client.animeManager.episodes.length / 10);
     
         var embed = {
+            color: 'BLUE',
             title: 'Airing Schedules',
             description: this.getPage(0),
             footer: {text: 'Requested by '+ message.author.username + ' • Page (1 / '+ (lastPage + 1) +')', icon_url: message.author.displayAvatarURL()}
@@ -22,7 +23,7 @@ class AnimeReleaseCommand extends Command {
         
         const sent = await message.channel.send({embed: embed})
         
-        if(!this.client.animeRelease.episodes.length) return
+        if(!this.client.animeManager.episodes.length) return
         
         for(const emoji of this.emojis) sent.react(emoji)
         
@@ -45,14 +46,10 @@ class AnimeReleaseCommand extends Command {
             embed.footer = {text: 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +' / '+ (lastPage + 1) +')', icon_url: message.author.displayAvatarURL()}
             sent.edit({embed: embed})
         })
-        
-        reactionCollector.on('end', () => {
-            if(!sent.deleted) sent.reactions.removeAll()
-        })
     }
     
     getPage(page){
-        var episodes = this.client.animeRelease.episodes;
+        var episodes = this.client.animeManager.episodes;
         var content = '';
         var now = new Date().getTime()
         var start = page == 0 ? 0 : page * 10;

@@ -1,12 +1,18 @@
-const fetch = require('node-fetch')
-const Eris = require('eris')
+const AnimeReleaseCMD = require('./cmds/anime-release.js')
+const WhatAnime = require('./cmds/what-anime.js')
 
-class AnimeRelease {
+const fetch = require('node-fetch')
+
+class AnimeManager {
     constructor(client){
         this.client = client;
         
         this.apiUrl = 'https://graphql.anilist.co';
         this.episodes = [];
+        
+        this.cmdManager = client.commandManager;
+        
+        this.loadCommands()
     }
     
     async run(){
@@ -17,6 +23,11 @@ class AnimeRelease {
         } else {
             setTimeout(() => this.run(), 300000) //5min
         }
+    }
+    
+    loadCommands(){
+        this.cmdManager.loadCommand(new AnimeReleaseCMD(this.cmdManager))
+        this.cmdManager.loadCommand(new WhatAnime(this.cmdManager))
     }
     
     setTimeouts(){
@@ -54,6 +65,10 @@ class AnimeRelease {
             }
         })
     }
+    
+    /*
+    * API
+    */
     
     getNewReleases(){
         return new Promise((resolve, reject) => {
@@ -117,4 +132,4 @@ class AnimeRelease {
     }
 }
 
-module.exports = AnimeRelease
+module.exports = AnimeManager

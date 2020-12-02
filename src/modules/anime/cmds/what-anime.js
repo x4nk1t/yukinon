@@ -1,6 +1,6 @@
-const Command = require('../Command.js');
-const AnimeInfo = require('../../network/anime/AnimeInfo.js');
-const WhatAnimeGrabber = require('../../network/anime/WhatAnimeGrabber.js');
+const Command = require('../../../utils/Command.js');
+const AnimeInfo = require('../network/AnimeInfo.js');
+const WhatAnimeGrabber = require('../network/WhatAnimeGrabber.js');
 
 class WhatAnime extends Command{
     constructor(commandLoader){

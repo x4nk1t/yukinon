@@ -8,6 +8,7 @@ class Command {
         }
         this.commandLoader = commandLoader;
         this.client = commandLoader.client;
+        this.prefix = commandLoader.prefix;
         
         this.options = {
             name: options.name || '',
