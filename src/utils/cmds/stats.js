@@ -1,5 +1,5 @@
 const os = require('os')
-const Command = require('./Command.js');
+const Command = require('../Command.js');
 
 class Stats extends Command{
     constructor(commandLoader){
@@ -10,16 +10,18 @@ class Stats extends Command{
         });
     }
     
-    execute(message, commandArgs){
+    async execute(message, commandArgs){
+        var sent = await message.channel.send('Pong!!')
+        
         var embed = {
             color: 'GREEN',
             fields: [
-                { name: 'Ping', value: (new Date().getTime() - message.createdTimestamp) +'ms', inline: true },
+                { name: 'Ping', value: (sent.createdTimestamp - message.createdTimestamp) +'ms', inline: true },
                 { name: 'Uptime', value: this.getUptime(), inline: true },
                 { name: 'Memory Usage', value: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + 'MB', inline: true }
             ]
         }
-        message.channel.send({embed: embed});
+        sent.edit({content: '', embed: embed});
     }
     
     getUptime(){

@@ -3,7 +3,8 @@ const fs = require('fs');
 const Command = require('./utils/Command.js');
 const chokidar = require('chokidar')
 
-const StatsCommand = require('./utils/stats-command.js')
+const StatsCommand = require('./utils/cmds/stats.js')
+const EmojisCommand = require('./utils/cmds/emojis.js')
 
 class CommandManager{
     constructor(client){
@@ -18,6 +19,7 @@ class CommandManager{
     
     loadCommands(){
         this.loadCommand(new StatsCommand(this))
+        this.loadCommand(new EmojisCommand(this))
     }
     
     execute(message){
