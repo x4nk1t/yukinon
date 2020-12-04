@@ -127,7 +127,7 @@ class TrackAnime extends Command{
                         var id = detail.id;
                         
                         if(originCountry == "JP"){
-                            description += '- ['+ this.shortText(title) +'](https://anilist.co/anime/'+ id +')\n'
+                            description += '- ['+ this.shortText(title) +'](https://anilist.co/anime/'+ id +') (ID '+ id +')\n'
                         }
                     })                
                 } else {
@@ -136,7 +136,7 @@ class TrackAnime extends Command{
                 
                 message.channel.send({
                     embed: {
-                        title: channel.toString() +'\'s tracking list',
+                        title: '#'+ channel.name +' tracking list',
                         color: 'BLUE',
                         description: description
                     }

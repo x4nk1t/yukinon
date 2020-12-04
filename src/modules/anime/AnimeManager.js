@@ -40,6 +40,7 @@ class AnimeManager {
     setTimeouts(){
         this.episodes.forEach(episode => {
             var now = new Date().getTime()
+            var id = episode.id;
             var title = episode.title;
             var url = episode.url;
             var episode_num = episode.episode;
@@ -61,9 +62,18 @@ class AnimeManager {
                         timestamp: new Date(),
                     }
                     
-                    this.client.channels.cache.filter(channel => channel.name == 'releases-all').each(channel => {
-                        if(channel.type == 'text'){
-                            channel.send({embed: embed}).catch(console.log)
+                    this.animeChannels.forEach(ch => {
+                        var channel = this.client.channels.cache.get(ch.channel_id)
+                        var trackings = ch.tracking.split(',')
+                        
+                        if(trackings == ''){
+                            channel.send({embed: embed})
+                        } else {  
+                            trackings.forEach(tr => {
+                                if(tr == id){
+                                    channel.send({embed: embed})
+                                }
+                            })
                         }
                     })
                     
