@@ -1,6 +1,9 @@
 const AnimeReleaseCMD = require('./cmds/anime-release.js')
 const WhatAnime = require('./cmds/what-anime.js')
+const AnimeChannel = require('./cmds/anime-channel.js')
+const TrackAnime = require('./cmds/anime-track.js')
 
+const Channels = require('./models/channels.js')
 const fetch = require('node-fetch')
 
 class AnimeManager {
@@ -9,6 +12,7 @@ class AnimeManager {
         
         this.apiUrl = 'https://graphql.anilist.co';
         this.episodes = [];
+        this.animeChannels = [];
         
         this.cmdManager = client.commandManager;
         
@@ -16,6 +20,7 @@ class AnimeManager {
     }
     
     async run(){
+        await this.getAnimeChannels().then(data => { this.animeChannels = data; }).catch(console.log)
         await this.getNewReleases().then(data => { this.episodes = data; }).catch(console.log)
         
         if(this.episodes.length) {
@@ -28,6 +33,8 @@ class AnimeManager {
     loadCommands(){
         this.cmdManager.loadCommand(new AnimeReleaseCMD(this.cmdManager))
         this.cmdManager.loadCommand(new WhatAnime(this.cmdManager))
+        this.cmdManager.loadCommand(new AnimeChannel(this.cmdManager))
+        this.cmdManager.loadCommand(new TrackAnime(this.cmdManager))
     }
     
     setTimeouts(){
@@ -67,8 +74,81 @@ class AnimeManager {
     }
     
     /*
-    * API
+    * Database API
     */
+    
+    getAnimeChannels(){
+        return new Promise((resolve, reject) => {
+            Channels.collection.find({}, async (err, channels) => {
+                if(err){
+                    reject(err)
+                    return
+                }
+                
+                const ch = await channels.toArray()
+                resolve(ch)
+            })
+        })
+    }
+    
+    addAnimeChannel(channel_id){
+        return new Promise((resolve, reject) => {
+            Channels.collection.findOneAndUpdate({channel_id: channel_id, tracking: ''}, {$set: {last_updated: new Date().getTime()}}, {upsert: true}, err => {
+                if(err){
+                    this.client.logger.error(err)
+                    resolve(false)
+                    return
+                }
+                resolve(true)
+            })
+        })
+    }
+    
+    removeAnimeChannel(channel_id){
+        return new Promise((resolve, reject) => {
+            Channels.collection.removeOne({channel_id: channel_id}, (err, channels) => {
+                if(err){
+                    this.client.logger.error(err)
+                    resolve(false)
+                    return
+                }
+                resolve(true)
+            })
+        })
+    }
+    
+    updateTracking(channel_id, tracking){
+        return new Promise((resolve, reject) => {
+            Channels.collection.findOneAndUpdate({channel_id: channel_id}, {$set: { tracking: tracking, last_updated: new Date().getTime()}},(err, channels) => {
+                if(err){
+                    this.client.logger.error(err)
+                    resolve(false)
+                    return
+                }
+                resolve(true)
+            })
+        })
+    }
+    
+    /*
+    * Anilist API
+    */
+    
+    getAnimeFromIDArray(idArray){
+        return new Promise((resolve, reject) => {
+            var query = `query($idArray: [Int]){Page{media(id_in: $idArray){title {userPreferred},id,idMal,countryOfOrigin}}}`;
+            var variables = {idArray: idArray}
+            var options = this.optionBuilder({query: query, variables: variables})
+            this.sendRequest(options, (err, data) => {
+                if(err){
+                    reject(data)
+                    return
+                }
+                const media = data.data.Page.media
+                resolve(media)
+            })
+        })
+    }
     
     getNewReleases(){
         return new Promise((resolve, reject) => {

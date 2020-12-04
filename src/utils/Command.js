@@ -21,7 +21,7 @@ class Command {
     }
     
     sendUsage(message, deleteMsg = false){
-        message.channel.send('**Usage:** '+ this.commandLoader.prefix + this.options.name + ' '+ this.options.usage).then(m => {
+        message.channel.send({embed: { color: 'BLUE' , description: '**Usage:** '+ this.commandLoader.prefix + this.options.name + ' '+ this.options.usage}}).then(m => {
             if(deleteMsg) {
                 setTimeout(() => {
                     message.delete()

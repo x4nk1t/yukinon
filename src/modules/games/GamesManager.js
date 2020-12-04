@@ -1,5 +1,4 @@
 const Coinflip = require('./coinflip/coinflip.js')
-const BlackJack = require('./blackjack/blackjack.js')
 
 class GamesManager {
     constructor(client){
@@ -12,7 +11,6 @@ class GamesManager {
     
     loadCommands(){
         this.cmdManager.loadCommand(new Coinflip(this.cmdManager))
-        this.cmdManager.loadCommand(new BlackJack(this.cmdManager))
     }
 }
 
