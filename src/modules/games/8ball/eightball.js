@@ -5,6 +5,7 @@ class EightBall extends Command{
         super(commandLoader, {
             name: '8ball',
             description: 'Ask your questions to 8ball.',
+            usage: '<question>',
             aliases: ['eb', '8b'],
         })
 
@@ -12,7 +13,11 @@ class EightBall extends Command{
     }
 
     execute(message, commandArgs){
-        message.channel.send('🎱| '+ this.replies[Math.round(Math.random() * this.replies.length)])
+        if(commandArgs.length >= 1) {
+            message.channel.send('🎱| '+ this.replies[Math.round(Math.random() * this.replies.length)])
+        } else {
+            message.channel.send('Come on! Ask something.')
+        }
     }
 }
 
