@@ -1,7 +1,7 @@
-const AnimeManager = require('../modules/anime/AnimeManager.js');
-const RPGManager = require('../modules/rpg/RPGManager.js');
-const EmojiSender = require('../modules/emoji/EmojiSender.js');
-const GamesManager = require('../modules/games/GamesManager.js')
+const AnimeManager = require('./anime/AnimeManager.js');
+const RPGManager = require('./rpg/RPGManager.js');
+const EmojiSender = require('./emoji/EmojiSender.js');
+const GamesManager = require('./games/GamesManager.js');
 
 class ModuleManager {
     constructor(client){
