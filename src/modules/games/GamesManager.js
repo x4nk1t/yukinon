@@ -1,4 +1,5 @@
 const Coinflip = require('./coinflip/coinflip.js')
+const EightBall = require('./8ball/eightball.js')
 
 class GamesManager {
     constructor(client){
@@ -11,6 +12,7 @@ class GamesManager {
     
     loadCommands(){
         this.cmdManager.loadCommand(new Coinflip(this.cmdManager))
+        this.cmdManager.loadCommand(new EightBall(this.cmdManager))
     }
 }
 
