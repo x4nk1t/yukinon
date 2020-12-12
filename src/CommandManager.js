@@ -5,6 +5,7 @@ const chokidar = require('chokidar')
 
 const StatsCommand = require('./utils/cmds/stats.js')
 const EmojisCommand = require('./utils/cmds/emojis.js')
+const HelpCommand = require('./utils/cmds/help.js')
 
 class CommandManager{
     constructor(client){
@@ -20,6 +21,7 @@ class CommandManager{
     loadCommands(){
         this.loadCommand(new StatsCommand(this))
         this.loadCommand(new EmojisCommand(this))
+        this.loadCommand(new HelpCommand(this))
     }
     
     execute(message){
