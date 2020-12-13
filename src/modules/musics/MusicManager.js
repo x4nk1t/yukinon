@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const Play = require('./cmds/Play.js')
-const Queue = require('./cmds/Queue.js')
+const Play = require('./cmds/play.js')
+const Queue = require('./cmds/queue.js')
 
 class MusicManager {
     constructor(client){
