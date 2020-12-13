@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const Play = require('./cmds/play.js')
 const Queue = require('./cmds/queue.js')
+const Leave = require('./cmds/leave.js')
 
 class MusicManager {
     constructor(client){
@@ -16,6 +17,7 @@ class MusicManager {
     loadCommands(){
         this.cmdManager.loadCommand(new Play(this.cmdManager))
         this.cmdManager.loadCommand(new Queue(this.cmdManager))
+        this.cmdManager.loadCommand(new Leave(this.cmdManager))
     }
 }
 

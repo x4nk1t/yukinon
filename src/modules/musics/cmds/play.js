@@ -7,7 +7,7 @@ class Play extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: 'play',
-            description: 'Play music in voice channel.',
+            description: 'Play music.',
             usage: '[yt link|query]',
             aliases: ['p'],
             guildOnly: true
@@ -23,30 +23,36 @@ class Play extends Command{
 
             if(commandArgs[0]){
                 var query = commandArgs[0];
-                if(query.startsWith('https://') || query.startsWith('http://')){
-                    if(ytdl.validateURL(query)){
-                        var info = await ytdl.getBasicInfo(query)
-                        var music = info.player_response.videoDetails
+                var bot_vc = message.guild.member(this.client.user).voice.channel;
 
-                        voiceChannel.join().then(connection => {
-                            if(manager.queue.get(voiceChannel.id)){
-                                var queue = manager.queue.get(voiceChannel.id)
-                                if(queue.queues.length){
-                                    message.channel.send(this.embed(`Added **${music.title}** to queue.`))
+                if(!bot_vc || bot_vc.id == voiceChannel.id){
+                    if(query.startsWith('https://') || query.startsWith('http://')){
+                        if(ytdl.validateURL(query)){
+                            var info = await ytdl.getBasicInfo(query)
+                            var music = info.player_response.videoDetails
+
+                            voiceChannel.join().then(connection => {
+                                if(manager.queue.get(voiceChannel.id)){
+                                    var queue = manager.queue.get(voiceChannel.id)
+                                    if(queue.queues.length){
+                                        message.channel.send(this.embed(`Added **${music.title}** to queue.`))
+                                    } else {
+                                        this.playMusic(connection, message, voiceChannel, music.title, query)
+                                    }
+                                    queue.queues.push({title: music.title, link: query})
                                 } else {
+                                    manager.queue.set(voiceChannel.id, {queues: [{title: music.title, link: query}]})
                                     this.playMusic(connection, message, voiceChannel, music.title, query)
                                 }
-                                queue.queues.push({title: music.title, link: query})
-                            } else {
-                                manager.queue.set(voiceChannel.id, {queues: [{title: music.title, link: query}]})
-                                this.playMusic(connection, message, voiceChannel, music.title, query)
-                            }
-                        })
+                            })
+                        } else {
+                            message.channel.send(this.embed('Link is not valid.'))
+                        }
                     } else {
-                        message.channel.send(this.embed('Link is not valid.'))
+                        message.channel.send(this.embed('You must use youtube links to play.'))
                     }
                 } else {
-                    message.channel.send(this.embed('You must use youtube links to play.'))
+                    message.channel.send(this.embed('Bot is already connected to `'+ voiceChannel.name +'`.'))
                 }
             } else {
                 this.sendUsage(message)
