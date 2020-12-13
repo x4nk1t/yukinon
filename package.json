@@ -10,11 +10,14 @@
   "author": "x4nk1t",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/opus": "^0.3.3",
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
     "chokidar": "^3.4.3",
-    "discord.js": "^12.4.1",
+    "discord.js": "^12.5.1",
+    "ffmpeg-static": "^4.2.7",
     "mongoose": "^5.9.25",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "ytdl-core": "^4.1.4"
   }
 }

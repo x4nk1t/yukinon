@@ -2,6 +2,7 @@ const AnimeManager = require('./anime/AnimeManager.js');
 const RPGManager = require('./rpg/RPGManager.js');
 const EmojiSender = require('./emoji/EmojiSender.js');
 const GamesManager = require('./games/GamesManager.js');
+const MusicManager = require('./musics/MusicManager.js');
 
 class ModuleManager {
     constructor(client){
@@ -21,6 +22,8 @@ class ModuleManager {
         this.client.rpgManager.run()
         
         this.client.gamesManager = new GamesManager(this.client)
+
+        this.client.musicManager = new MusicManager(this.client)
     }
 }
 
