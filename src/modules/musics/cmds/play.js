@@ -1,14 +1,12 @@
 const Command = require('../../../utils/Command.js')
 const ytdl = require('ytdl-core');
-const MusicManager = require('../MusicManager.js');
-const { QueryCursor } = require('mongoose');
 
 class Play extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: 'play',
             description: 'Play music.',
-            usage: '[yt link|query]',
+            usage: '[yt link]',
             aliases: ['p'],
             guildOnly: true
         })
@@ -20,29 +18,45 @@ class Play extends Command{
 
         if(member.voice.channel){
             const voiceChannel = member.voice.channel;
+            const bot_vc = message.guild.member(this.client.user).voice.channel;
 
-            if(commandArgs[0]){
+            if(!commandArgs[0]){
+                const connection = message.guild.voice.connection;
+                if(connection){
+                    const dispatcher = connection.dispatcher;
+                    if(dispatcher.paused){
+                        dispatcher.resume();
+                        message.channel.send(this.embed('Music resumed.'))
+                    } else {
+                        message.channel.send(this.embed('Music is currently playing. Use `'+ this.prefix + this.options.name +' '+ this.options.usage +'` to add song to queue.'))
+                    }
+                } else { 
+                    this.sendUsage(message)
+                    return
+                }
+            } else {
                 var query = commandArgs[0];
-                var bot_vc = message.guild.member(this.client.user).voice.channel;
 
                 if(!bot_vc || bot_vc.id == voiceChannel.id){
                     if(query.startsWith('https://') || query.startsWith('http://')){
                         if(ytdl.validateURL(query)){
                             var info = await ytdl.getBasicInfo(query)
                             var music = info.player_response.videoDetails
+                            var length = music.lengthSeconds;
+                            var thumbnail = music.thumbnail.thumbnails[music.thumbnail.thumbnails.length - 1].url;
 
                             voiceChannel.join().then(connection => {
                                 if(manager.queue.get(voiceChannel.id)){
                                     var queue = manager.queue.get(voiceChannel.id)
+                                    queue.queues.push({title: music.title, link: query, length: length, thumbnail: thumbnail})
                                     if(queue.queues.length){
                                         message.channel.send(this.embed(`Added **${music.title}** to queue.`))
                                     } else {
-                                        this.playMusic(connection, message, voiceChannel, music.title, query)
+                                        manager.playMusic(connection, message, voiceChannel, music.title, query, length)
                                     }
-                                    queue.queues.push({title: music.title, link: query})
                                 } else {
-                                    manager.queue.set(voiceChannel.id, {queues: [{title: music.title, link: query}]})
-                                    this.playMusic(connection, message, voiceChannel, music.title, query)
+                                    manager.queue.set(voiceChannel.id, {queues: [{title: music.title, link: query, length: length, thumbnail: thumbnail}]})
+                                    manager.playMusic(connection, message, voiceChannel, music.title, query)
                                 }
                             })
                         } else {
@@ -54,33 +68,10 @@ class Play extends Command{
                 } else {
                     message.channel.send(this.embed('Bot is already connected to `'+ voiceChannel.name +'`.'))
                 }
-            } else {
-                this.sendUsage(message)
             }
         } else {
             message.channel.send(this.embed('You must be connected to voice channel.'))
         }
-    }
-
-    playMusic(connection, message, voiceChannel, title, link){
-        const dispatcher = connection.play(ytdl(link, {quality: 'highestaudio'}))
-        message.channel.send(this.embed(`Now playing: \n **${title}**`))
-
-        dispatcher.on('finish', () => {
-            const manager = this.client.musicManager;
-
-            const queue = manager.queue.get(voiceChannel.id)
-            queue.queues.splice(0, 1)
-
-            if(queue.queues.length){
-                const nextMusic = queue.queues[0]
-
-                this.playMusic(connection, message, voiceChannel, nextMusic.title, nextMusic.link);
-            } else {
-                message.channel.send(this.embed('No more queues left. Leaving channel.'))
-                voiceChannel.leave()
-            }
-        })
     }
 
     embed(message){
