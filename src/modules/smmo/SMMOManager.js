@@ -1,7 +1,8 @@
 const Discord = require('discord.js');
 const axios = require('axios')
 
-const User = require('./cmds/user.js')
+const User = require('./cmds/user.js');
+const WorldBosses = require('./cmds/worldbosses.js');
 
 class SMMOManager {
     constructor(client){
@@ -16,6 +17,7 @@ class SMMOManager {
 
     loadCommands(){
         this.cmdManager.loadCommand(new User(this.cmdManager))
+        this.cmdManager.loadCommand(new WorldBosses(this.cmdManager))
     }
     
     async run(){
@@ -80,13 +82,16 @@ class SMMOManager {
         return (days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's')
     }
 
+    sendRequest(method, url, body = ''){
+        return axios({ method: method, url: url, data: {api_key: this.api_key} })
+    }
+
     getBossDetails(){
         return new Promise((resolve, reject) => {
-            axios({
-                method: 'post',
-                url: 'https://api.simple-mmo.com/v1/worldboss/all',
-                data: {api_key: this.api_key}
-            }).then(response => { resolve(response.data) }).catch(err => { reject(err)})
+            this.sendRequest('post', 'https://api.simple-mmo.com/v1/worldboss/all')
+                .then(response => {
+                    resolve(response.data)
+                }).catch(err => { reject(err)})
         })
     }
 }
