@@ -63,7 +63,33 @@ class Play extends Command{
                             message.channel.send(this.embed('Link is not valid.'))
                         }
                     } else {
-                        message.channel.send(this.embed('You must use youtube links to play.'))
+                        const video = await manager.searchYoutube(query)
+                        const videoId = video.videoId;
+                        const link = 'https://www.youtube.com/watch?v='+ videoId;
+
+                        if(videoId == null){
+                            message.channel.send(this.embed('Video not found with the query.'))
+                        } else {
+                            var info = await ytdl.getBasicInfo(videoId)
+                            var music = info.player_response.videoDetails
+                            var length = music.lengthSeconds;
+                            var thumbnail = music.thumbnail.thumbnails[music.thumbnail.thumbnails.length - 1].url;
+
+                            voiceChannel.join().then(connection => {
+                                if(manager.queue.get(voiceChannel.id)){
+                                    var queue = manager.queue.get(voiceChannel.id)
+                                    queue.queues.push({title: music.title, link: link, length: length, thumbnail: thumbnail})
+                                    if(queue.queues.length){
+                                        message.channel.send(this.embed(`Added **${music.title}** to queue.`))
+                                    } else {
+                                        manager.playMusic(connection, message, voiceChannel, music.title, link, length)
+                                    }
+                                } else {
+                                    manager.queue.set(voiceChannel.id, {queues: [{title: music.title, link: link, length: length, thumbnail: thumbnail}]})
+                                    manager.playMusic(connection, message, voiceChannel, music.title, link)
+                                }
+                            })
+                        }
                     }
                 } else {
                     message.channel.send(this.embed('Bot is already connected to `'+ voiceChannel.name +'`.'))

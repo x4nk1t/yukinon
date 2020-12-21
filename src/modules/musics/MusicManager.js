@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const ytdl = require('ytdl-core');
+const axios = require('axios');
 
 const Play = require('./cmds/play.js')
 const Queue = require('./cmds/queue.js')
@@ -7,7 +8,7 @@ const Leave = require('./cmds/leave.js')
 const Volume = require('./cmds/volume.js')
 const Pause = require('./cmds/pause.js')
 const Next = require('./cmds/next.js')
-const NowPlaying = require('./cmds/now-playing.js')
+const NowPlaying = require('./cmds/now-playing.js');
 
 class MusicManager {
     constructor(client){
@@ -28,6 +29,33 @@ class MusicManager {
         this.cmdManager.loadCommand(new Pause(this.cmdManager))
         this.cmdManager.loadCommand(new Next(this.cmdManager))
         this.cmdManager.loadCommand(new NowPlaying(this.cmdManager))
+    }
+
+    searchYoutube(query){
+        return new Promise((resolve, reject) => {
+            const url = 'https://youtube.com/results?search_query='+ encodeURI(query);
+
+            axios.get(url)
+                .then(response => {
+                    const data = response.data;
+                    const start = data.indexOf('ytInitialData') + 'ytInitialData'.length + 3;
+                    const end = data.indexOf('};', start) + 1;
+                    const json = data.substring(start, end);
+                    const parse = JSON.parse(json);
+                    const contents = parse.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents;
+                    
+                    if(contents.length){
+                        const video = contents[0].videoRenderer;
+
+                        resolve(video)
+                    } else {
+                        resolve(null);
+                    }
+                }).catch(err => {
+                    this.client.logger.error(err)
+                    reject(err)
+                })
+        })
     }
 
     playMusic(connection, message, voiceChannel, title, link){
