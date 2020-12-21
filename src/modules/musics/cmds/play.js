@@ -63,12 +63,13 @@ class Play extends Command{
                             message.channel.send(this.embed('Link is not valid.'))
                         }
                     } else {
-                        const video = await manager.searchYoutube(query)
+                        const searchText = commandArgs.join(' ')
+                        const video = await manager.searchYoutube(searchText)
+                        const videoId = video.videoId;
 
-                        if(videoId == null){
+                        if(video == null){
                             message.channel.send(this.embed('Video not found with the query.'))
                         } else {
-                            const videoId = video.videoId;
                             const link = 'https://www.youtube.com/watch?v='+ videoId;
 
                             var info = await ytdl.getBasicInfo(videoId)
