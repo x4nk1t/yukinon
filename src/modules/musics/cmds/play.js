@@ -65,11 +65,11 @@ class Play extends Command{
                     } else {
                         const searchText = commandArgs.join(' ')
                         const video = await manager.searchYoutube(searchText)
-                        const videoId = video.videoId;
 
                         if(video == null){
                             message.channel.send(this.embed('Video not found with the query.'))
                         } else {
+                            const videoId = video.videoId;
                             const link = 'https://www.youtube.com/watch?v='+ videoId;
 
                             var info = await ytdl.getBasicInfo(videoId)
