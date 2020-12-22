@@ -45,7 +45,7 @@ class MusicManager {
                     const contents = parse.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents;
                     
                     if(contents.length){
-                        const video = contents[0].videoRenderer;
+                        const video = contents[0].videoRenderer || contents[1].videoRenderer;
 
                         resolve(video)
                     } else {
