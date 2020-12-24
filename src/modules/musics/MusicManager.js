@@ -73,6 +73,8 @@ class MusicManager {
 
                 this.playMusic(connection, message, voiceChannel, nextMusic.title, nextMusic.link);
             } else {
+                if(manager.queue.get(voiceChannel.id)) manager.queue.delete(voiceChannel.id)
+                
                 message.channel.send(this.embed('No more queues left. Leaving channel.'))
                 voiceChannel.leave()
             }
