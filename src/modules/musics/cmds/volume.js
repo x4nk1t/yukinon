@@ -16,6 +16,7 @@ class Volume extends Command{
         const bot_member = message.member.guild.member(this.client.user)
         const bot_vc = bot_member.voice.channel;
         const volumeLevel = commandArgs[0];
+        const manager = this.client.musicManager;
 
         if(!bot_vc){
             message.channel.send(this.embed('Bot is not connected to any voice channels.'))
@@ -42,6 +43,7 @@ class Volume extends Command{
                         message.channel.send(this.embed('Nothing is currently playing.'))
                     } else {
                         connection.dispatcher.setVolume(volume)
+                        manager.queue.get(message.guild.voice.channel.id).volume = volume;
                         message.channel.send(this.embed('Set volume level to **'+ volumeLevel + '**'))
                     }
                 } else {

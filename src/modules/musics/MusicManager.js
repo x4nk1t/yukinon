@@ -60,12 +60,14 @@ class MusicManager {
 
     playMusic(connection, message, voiceChannel, title, link){
         const dispatcher = connection.play(ytdl(link, {quality: 'highestaudio'}))
+        const queue = this.queue.get(voiceChannel.id)
+        const volume = queue.volume ? queue.volume : 1;
+
+        dispatcher.setVolume(volume)
         message.channel.send(this.embed(`Now playing: \n **${title}**`))
 
         dispatcher.on('finish', () => {
-            const manager = this.client.musicManager;
-
-            const queue = manager.queue.get(voiceChannel.id)
+            const queue = this.queue.get(voiceChannel.id)
             queue.queues.splice(0, 1)
 
             if(queue.queues.length){
@@ -73,7 +75,7 @@ class MusicManager {
 
                 this.playMusic(connection, message, voiceChannel, nextMusic.title, nextMusic.link);
             } else {
-                if(manager.queue.get(voiceChannel.id)) manager.queue.delete(voiceChannel.id)
+                if(this.queue.get(voiceChannel.id)) this.queue.delete(voiceChannel.id)
                 
                 message.channel.send(this.embed('No more queues left. Leaving channel.'))
                 voiceChannel.leave()

@@ -13,12 +13,15 @@ class Stats extends Command{
     async execute(message, commandArgs){
         var sent = await message.channel.send('Pong!!')
         
+        var used = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+        var total = (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2);
+
         var embed = {
             color: 'GREEN',
             fields: [
                 { name: 'Ping', value: (sent.createdTimestamp - message.createdTimestamp) +'ms', inline: true },
                 { name: 'Uptime', value: this.getUptime(), inline: true },
-                { name: 'Memory Usage', value: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + 'MB', inline: true }
+                {name: 'Memory usage', value: used +'MB /'+ total + ' MB'}
             ]
         }
         sent.edit({content: '', embed: embed});
