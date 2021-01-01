@@ -126,18 +126,22 @@ class SMMOManager {
         const profile_number = data.profile_number != null ? "#"+ data.profile_number : '';
         const guild = data.guild ? `[${data.guild.name}](https://web.simple-mmo.com/guilds/view/${data.guild.id})` : 'None';
 
+        const total_str = `[${(data.str + data.bonus_str).toLocaleString()}](https://web.simple-mmo.com/user/view/${data.id}/inventory "${data.str.toLocaleString()}(+${data.bonus_str.toLocaleString()})")`;
+        const total_def = `[${(data.def + data.bonus_def).toLocaleString()}](https://web.simple-mmo.com/user/view/${data.id}/inventory "${data.def.toLocaleString()}(+${data.bonus_def.toLocaleString()})")`;
+        const total_dex = `[${(data.dex + data.bonus_dex).toLocaleString()}](https://web.simple-mmo.com/user/view/${data.id}/inventory "${data.dex.toLocaleString()}(+${data.bonus_dex.toLocaleString()})")`;
+
         const embed = {
             title: data.name + profile_number,
             color: 'BLUE',
             url: 'https://web.simple-mmo.com/user/view/'+ data.id,
-            description: `*${data.motto}*\n[[Attack]](https://web.simple-mmo.com/user/attack/${data.id}) [[Message]](https://web.simple-mmo.com/messages/view/user/${data.id}) [[Send Gold]](https://web.simple-mmo.com/sendgold/${data.id}) [[Send Item]](https://web.simple-mmo.com/inventory?sendid=${data.id})`,
+            description: `*${data.motto}*\n[Attack](https://web.simple-mmo.com/user/attack/${data.id}) | [Message](https://web.simple-mmo.com/messages/view/user/${data.id}) | [Send Gold](https://web.simple-mmo.com/sendgold/${data.id}) | [Send Item](https://web.simple-mmo.com/inventory?sendid=${data.id})`,
             fields: [
                 {name: 'Level', value: data.level.toLocaleString(), inline: true},
                 {name: 'Gold', value: data.gold.toLocaleString(), inline: true},
                 {name: 'Steps', value: data.steps.toLocaleString(), inline: true},
-                {name: 'Strength', value: data.str.toLocaleString() + ` (+${data.bonus_str.toLocaleString()})`, inline: true},
-                {name: 'Defence', value: data.def.toLocaleString() + ` (+${data.bonus_def.toLocaleString()})`, inline: true},
-                {name: 'Dexterity', value: data.dex.toLocaleString() + ` (+${data.bonus_dex.toLocaleString()})`, inline: true},
+                {name: 'Strength', value: total_str, inline: true},
+                {name: 'Defence', value: total_def, inline: true},
+                {name: 'Dexterity', value: total_dex, inline: true},
                 {name: 'User Kills', value: data.user_kills.toLocaleString(), inline: true},
                 {name: 'NPC Kills', value: data.npc_kills.toLocaleString(), inline: true},
                 {name: 'Quests Completed', value: data.quests_complete.toLocaleString(), inline: true},
