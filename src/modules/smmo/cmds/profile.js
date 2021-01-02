@@ -20,7 +20,7 @@ class Profile extends Command{
 
         const id = d.ingame_id;
 
-        manager.sendRequest('post', 'https://api.simple-mmo.com/v1/player/info/'+ id)
+        manager.sendRequest('post', '/player/info/'+ id)
             .then(response => {
                 const data = response.data;
                 

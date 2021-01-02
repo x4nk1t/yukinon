@@ -6,8 +6,11 @@ const WorldBosses = require('./cmds/worldbosses.js');
 const Link = require('./cmds/link.js');
 const Profile = require('./cmds/profile.js');
 const Unlink = require('./cmds/unlink.js');
+const Guild = require('./cmds/guild.js');
+const GuildMembers = require('./cmds/guild-members.js');
 
-const SMMO = require('./models/smmo.js')
+const SMMO = require('./models/smmo.js');
+const Constants = require('./Constants.js');
 
 class SMMOManager {
     constructor(client){
@@ -17,16 +20,21 @@ class SMMOManager {
 
         this.worldboss = [];
         this.profiles = new Discord.Collection();
+        this.guildsCache = new Discord.Collection();
+        this.guildMembersCache = new Discord.Collection();
+        this.usersProfileCache = new Discord.Collection();
 
         this.loadCommands()
     }
 
     loadCommands(){
+        this.cmdManager.loadCommand(new Guild(this.cmdManager))
+        this.cmdManager.loadCommand(new GuildMembers(this.cmdManager))
+        this.cmdManager.loadCommand(new Link(this.cmdManager))
+        this.cmdManager.loadCommand(new Profile(this.cmdManager))
+        this.cmdManager.loadCommand(new Unlink(this.cmdManager))
         this.cmdManager.loadCommand(new User(this.cmdManager))
         this.cmdManager.loadCommand(new WorldBosses(this.cmdManager))
-        this.cmdManager.loadCommand(new Profile(this.cmdManager))
-        this.cmdManager.loadCommand(new Link(this.cmdManager))
-        this.cmdManager.loadCommand(new Unlink(this.cmdManager))
     }
     
     async run(){
@@ -97,12 +105,12 @@ class SMMOManager {
     }
 
     sendRequest(method, url, body = ''){
-        return axios({ method: method, url: url, data: {api_key: this.api_key} })
+        return axios({ method: method, url: Constants.API_URL + url, data: {api_key: this.api_key} })
     }
 
     getBossDetails(){
         return new Promise((resolve, reject) => {
-            this.sendRequest('post', 'https://api.simple-mmo.com/v1/worldboss/all')
+            this.sendRequest('post', '/worldboss/all')
                 .then(response => {
                     resolve(response.data)
                 }).catch(err => { reject(err)})

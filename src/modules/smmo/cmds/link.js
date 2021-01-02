@@ -23,7 +23,7 @@ class Link extends Command{
             const id = commandArgs[0];
 
             if(!isNaN(id) && !isNaN(parseFloat(id))){
-                manager.sendRequest('post', 'https://api.simple-mmo.com/v1/player/info/'+ id)
+                manager.sendRequest('post', '/player/info/'+ id)
                     .then(async response => {
                         const data = response.data;
                         

@@ -1,6 +1,6 @@
 const Command = require('../../../utils/Command.js')
 
-class Volume extends Command{
+class User extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: 'user',
@@ -16,7 +16,7 @@ class Volume extends Command{
         if(commandArgs[0]){
             var id = commandArgs[0];
             if(!isNaN(id) && !isNaN(parseFloat(id))){
-                manager.sendRequest('post', 'https://api.simple-mmo.com/v1/player/info/'+ id)
+                manager.sendRequest('post', '/player/info/'+ id)
                     .then(response => {
                         const data = response.data;
                         
@@ -41,4 +41,4 @@ class Volume extends Command{
     }
 }
 
-module.exports = Volume
+module.exports = User

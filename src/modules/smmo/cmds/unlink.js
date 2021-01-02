@@ -1,7 +1,7 @@
 const Command = require('../../../utils/Command.js');
 const SMMO = require('../models/smmo.js');
 
-class Unink extends Command{
+class Unlink extends Command{
     constructor(commandLoader){
         super(commandLoader, {
             name: 'unlink',
@@ -29,4 +29,4 @@ class Unink extends Command{
     }
 }
 
-module.exports = Unink
+module.exports = Unlink
