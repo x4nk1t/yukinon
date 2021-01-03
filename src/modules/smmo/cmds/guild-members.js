@@ -22,72 +22,46 @@ class GuildMembers extends Command{
 
         if(!isNaN(id) && !isNaN(parseFloat(id))){
             var membersData;
-            var description = '';
-            var members = [];
+            var description;
             var guildData;
-
-            if(manager.guildMembersCache.get(id)){
-                const cache = manager.guildMembersCache.get(id);
-                const diff = (new Date().getTime() - cache.last_updated);
-
-                if(diff < 3600000){//1hr
-                    membersData = cache.data;
-                } else {
-                    manager.guildMembersCache.delete(id)
-                    this.execute(message, commandArgs)
-                    return
-                }
-            } else {
-                message.channel.send({embed: {color: 'BLUE', description: 'This might take some time. Please wait.'}})
-                
-                await manager.sendRequest('post', '/guilds/members/'+ id).then(membersResponse => {
-                    membersData = membersResponse.data;
-                    if(membersData.error && membersData.error == 'guild not found'){
-                        message.channel.send({embed: {color: 'BLUE', description: 'Guild not found!'}})
-                        return
-                    }
-
-                    manager.guildMembersCache.set(id, {data: membersData, last_updated: new Date().getTime()})
-                })
-            }
-
+            var notFound = false;
+            
             await manager.sendRequest('post', '/guilds/info/'+ id).then(guildResponse => {
                 guildData = guildResponse.data;
+
+                if(guildData.error && guildData.error == 'guild not found'){
+                    notFound = true;
+                    message.channel.send({embed: {color: 'BLUE', description: 'Guild not found!'}})
+                    return
+                }
             })
+            
+            if(notFound) return
+
+            await manager.sendRequest('post', '/guilds/members/'+ id).then(membersResponse => {
+                membersData = membersResponse.data;
+            })
+            
+            var sent = await message.channel.send({embed: {color: 'BLUE', description: 'This might take some time. Please wait.'}})
 
             for(const info of membersData){
                 var user_id = info.user_id;
 
-                if(!manager.usersProfileCache.get(user_id)){
-                    await manager.sendRequest('post', '/player/info/'+ user_id).then(response2 => {
-                        if(response2.error) return
+                await manager.sendRequest('post', '/player/info/'+ user_id).then(response2 => {
+                    if(response2.error) return
 
-                        manager.usersProfileCache.set(user_id, {data: response2.data, last_updated: new Date().getTime()})
-                    })
-                }
+                    const userData = response2.data;
 
-                const userData = manager.usersProfileCache.get(user_id).data;
-                members.push({id: userData.id, name: userData.name, level: userData.level})
+                    if(!description) description = guildData.name +' Members (Count: '+ membersData.length +')\n'
+                    
+                    description += `${userData.name} (Lv. ${userData.level.toLocaleString()})\n`
+                })
             }
 
-            for(var i = 0; i < 10; i++){
-                const member = members[i];
-                if(member) description += `${i + 1}. [${member.name}](https://web.simple-mmo.com/user/view/${member.id}/attack) - Level ${member.level} \n`
-            }
+            const content = "``` "+ description +" ```"
 
-            const embed = {
-                title: guildData.name,
-                color: 'BLUE',
-                thumbnail: {url: Constants.ICONS_URL + guildData.icon},
-                url: 'https://web.simple-mmo.com/guilds/view/'+ guildData.id,
-                description: description,
-                footer: {
-                    text: 'Requested by '+ message.author.username,
-                    icon_url: message.author.displayAvatarURL()
-                }
-            }
-
-            message.channel.send({embed: embed})
+            if(sent) sent.delete()
+            message.channel.send(content)
         } else {
             this.sendUsage(message)
         }

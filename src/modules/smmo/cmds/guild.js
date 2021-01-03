@@ -32,13 +32,9 @@ class Guild extends Command{
                     var leaderData;
                     var membersCount;
 
-                    if(manager.usersProfileCache.get(id)){
-                        leaderData = manager.usersProfileCache.get(id).data;
-                    } else {
-                        await manager.sendRequest('post', '/player/info/'+ data.owner).then(response2 => {
-                            leaderData = response2.data;
-                        })
-                    }
+                    await manager.sendRequest('post', '/player/info/'+ data.owner).then(response2 => {
+                        leaderData = response2.data;
+                    })
 
                     await manager.sendRequest('post', '/guilds/members/'+ id).then(membersResponse => {
                         membersCount = membersResponse.data.length;
@@ -50,11 +46,11 @@ class Guild extends Command{
                         thumbnail: {url: Constants.ICONS_URL + data.icon},
                         color: 'BLUE',
                         fields: [
-                            { name: 'Tag', value: `\`${data.tag}\``, inline: true },
-                            { name: 'EXP', value: data.exp, inline: true },
-                            { name: 'PvP', value: data.passive == 0 ? 'Yes' : 'No', inline: true },
-                            { name: 'Total Members', value: membersCount, inline: true },
                             { name: 'Leader', value: `[${leaderData.name}](https://web.simple-mmo.com/user/view/${leaderData.id})` },
+                            { name: 'Tag', value: `\`${data.tag}\``, inline: true },
+                            { name: 'EXP', value: data.exp.toLocaleString(), inline: true },
+                            { name: 'PvP', value: data.passive == 0 ? 'Yes' : 'No', inline: true },
+                            { name: 'Total Members', value: membersCount, inline: true }
                         ]
                     }
 

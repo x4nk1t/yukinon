@@ -20,9 +20,6 @@ class SMMOManager {
 
         this.worldboss = [];
         this.profiles = new Discord.Collection();
-        this.guildsCache = new Discord.Collection();
-        this.guildMembersCache = new Discord.Collection();
-        this.usersProfileCache = new Discord.Collection();
 
         this.loadCommands()
     }
@@ -162,7 +159,7 @@ class SMMOManager {
             }
         }
         if(data.safeModeTime){
-            embed.fields.push({name: 'Safe Mode Time <:idk:769065058788442112>', value: data.safeModeTime, inline: true})
+            embed.fields.push({name: 'Safe Mode Time', value: data.safeModeTime, inline: true})
         }
 
         return embed;
