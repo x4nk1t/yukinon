@@ -20,7 +20,9 @@ class Help extends Command{
                     if(b.options.name > a.options.name) return -1;
                     return 0
                 }).each(command => {
-                this.commandContent.push({name: command.options.name, value: command.options.description, inline: false})
+                    if(command.options.showInHelp){
+                        this.commandContent.push({name: command.options.name, value: command.options.description, inline: false})
+                    }
             })
         }
         var page = 0;

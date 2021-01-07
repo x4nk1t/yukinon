@@ -17,6 +17,7 @@ class Command {
             guildOnly: options.guildOnly || true,
             usage: options.usage || '',
             enabled: (options.enabled == undefined || options.enabled == true) ? true : false,
+            showInHelp: (options.showInHelp == undefined || options.showInHelp == true) ? true : false
         }
     }
     

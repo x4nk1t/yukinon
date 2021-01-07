@@ -8,6 +8,7 @@ const Profile = require('./cmds/profile.js');
 const Unlink = require('./cmds/unlink.js');
 const Guild = require('./cmds/guild.js');
 const GuildMembers = require('./cmds/guild-members.js');
+const ReloadBoss = require('./cmds/reload-boss.js');
 
 const SMMO = require('./models/smmo.js');
 const Constants = require('./Constants.js');
@@ -20,6 +21,7 @@ class SMMOManager {
 
         this.worldboss = [];
         this.profiles = new Discord.Collection();
+        this.authorizedUsers = ['620152697450135552', '505715662652702747']
 
         this.loadCommands()
     }
@@ -29,6 +31,7 @@ class SMMOManager {
         this.cmdManager.loadCommand(new GuildMembers(this.cmdManager))
         this.cmdManager.loadCommand(new Link(this.cmdManager))
         this.cmdManager.loadCommand(new Profile(this.cmdManager))
+        this.cmdManager.loadCommand(new ReloadBoss(this.cmdManager))
         this.cmdManager.loadCommand(new Unlink(this.cmdManager))
         this.cmdManager.loadCommand(new User(this.cmdManager))
         this.cmdManager.loadCommand(new WorldBosses(this.cmdManager))
@@ -40,9 +43,21 @@ class SMMOManager {
                 this.profiles.set(profile.user_id, {_id: profile._id, user_id: profile.user_id, ingame_id: profile.ingame_id})
             })
         }).catch(console.error)
-        await this.getBossDetails().then(details => {this.worldboss = details;}).catch(console.error)
+
+        this.loadAllBosses()
+    }
+
+    loadAllBosses(){
+        return new Promise(async (resolve, reject) => {
+            await this.getBossDetails().then(details => {this.worldboss = details;}).catch(console.error)
         
-        if(this.worldboss.length) this.setTimeouts(); else setTimeout(() => {this.run()}, 600000) //Check again in 10 minutes
+            if(this.worldboss.length) {
+                this.setTimeouts();
+            } else {
+                setTimeout(() => {this.loadAllBosses()}, 600000) //Check again in 10 minutes
+            }
+            resolve({error: 0})
+        })
     }
 
     setTimeouts(){
