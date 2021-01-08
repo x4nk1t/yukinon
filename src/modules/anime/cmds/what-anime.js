@@ -7,7 +7,7 @@ class WhatAnime extends Command{
         super(commandLoader, {
             name: "what-anime",
             description: "Search for anime with screenshots.",
-            usage: "<image link>",
+            usage: "[image link]",
             aliases: ['anime']
         });
         
@@ -17,16 +17,27 @@ class WhatAnime extends Command{
     
     execute(message, commandArgs){        
         var embed = {
-            title: 'Error',
-            color: 'RED'
+            color: 'BLUE'
         }
-            
-        if(!commandArgs[0]){
-            this.sendUsage(message)
+        var image_link = '';
+        
+        if (message.attachments.size >= 1){
+            image_link = message.attachments.first().url;
+        } else if(commandArgs[0]){
+            if(commandArgs[0].startsWith('http://') || commandArgs[0].startsWith('https://')) {
+                image_link = commandArgs[0];
+            } else {
+                embed.description = 'URL not valid.';
+                message.channel.send({embed: embed})
+                return
+            }
+        } else {
+            embed.description = 'You must atleast provide an attachment or a image url.';
+            message.channel.send({embed: embed})
             return
         }
         
-        this.whatAnime.getDetails(commandArgs[0], (error, json) => {
+        this.whatAnime.getDetails(image_link, (error, json) => {
             if(error){
                 embed.description = json.message
                 
