@@ -12,7 +12,7 @@ class AnimeChannel extends Command{
     
     execute(message, commandArgs){
         var channel = message.channel;
-        var embed = {}
+        var embed = {color: 'BLUE'}
         if(commandArgs[0]){
             if(commandArgs[0] == 'add' || commandArgs[0] == 'remove'){
                 if(commandArgs[1]){
@@ -30,16 +30,13 @@ class AnimeChannel extends Command{
                                     return
                                 }
                             })
-                            embed.color = 'GREEN';
                             embed.description = 'Successfully removed '+ channel.toString() + '.';
                         } else {
-                            embed.color = 'RED';
                             embed.description = 'Something went wrong while removing '+ channel.toString()
                         }
                         
                         message.channel.send({embed: embed})
                     } else {
-                        embed.color = 'RED';
                         embed.description = ((channel.id == message.channel.id) ? 'This' : channel.toString()) +' is not an anime channel.';
                         message.channel.send({embed: embed})
                     }
@@ -47,25 +44,28 @@ class AnimeChannel extends Command{
                     if(!this.isAnimeChannel(channel.id)){                    
                         const add = this.client.animeManager.addAnimeChannel(channel.id)
                         if(add){
-                            this.client.animeManager.animeChannels.push({channel_id: channel.id, tracking: '', last_updated: new Date().getTime()})
-                            embed.color = 'GREEN';
+                            this.client.animeManager.animeChannels.push({channel_id: channel.id, tracking: [], last_updated: new Date().getTime()})
                             embed.description = 'Successfully added '+ channel.toString() + '.';
                         } else {
-                            embed.color = 'RED';
                             embed.description = 'Something went wrong while adding '+ channel.toString()
                         }
                         
                         message.channel.send({embed: embed})
                     } else {
-                        embed.color = 'RED';
                         embed.description = ((channel.id == message.channel.id) ? 'This' : channel.toString()) +' is already an anime channel. You don\'t have to do it twice.';
                         message.channel.send({embed: embed})
                     }
                 }
                 return
             }
+        } else {
+            if(this.isAnimeChannel(channel.id)){
+                embed.description = 'This is an anime channel.';
+            } else {
+                embed.description = 'This is not an anime channel';
+            }
+            message.channel.send({embed: embed})
         }
-        this.sendUsage(message)
     }
     
     isAnimeChannel(channel_id){

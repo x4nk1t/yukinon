@@ -64,16 +64,16 @@ class AnimeManager {
                     
                     this.animeChannels.forEach(ch => {
                         var channel = this.client.channels.cache.get(ch.channel_id)
-                        var trackings = ch.tracking.split(',')
+                        var trackings = ch.tracking
                         
-                        if(trackings == ''){
-                            channel.send({embed: embed})
-                        } else {  
+                        if(trackings.length){
                             trackings.forEach(tr => {
                                 if(tr == id){
                                     channel.send({embed: embed})
                                 }
                             })
+                        } else {
+                            channel.send({embed: embed})
                         }
                     })
                     
@@ -103,7 +103,7 @@ class AnimeManager {
     
     addAnimeChannel(channel_id){
         return new Promise((resolve, reject) => {
-            Channels.collection.findOneAndUpdate({channel_id: channel_id, tracking: ''}, {$set: {last_updated: new Date().getTime()}}, {upsert: true}, err => {
+            Channels.collection.findOneAndUpdate({channel_id: channel_id, tracking: []}, {$set: {last_updated: new Date().getTime()}}, {upsert: true}, err => {
                 if(err){
                     this.client.logger.error(err)
                     resolve(false)
