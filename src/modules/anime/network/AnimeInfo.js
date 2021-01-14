@@ -3,17 +3,28 @@ const axios = require('axios');
 class AnimeInfo {
     constructor(client){
         this.client = client;
-        this.baseUrl = 'http://api.jikan.moe/v3/anime/';
     }
     
-    getDetails(mal_id, callback){
-        axios(this.baseUrl+mal_id)
-            .then(response => callback(response.data))
-            .catch (error => {
-                this.client.logger.error(error)
-                callback(null);
+    getDetails(anilist_id, callback){
+        const manager = this.client.animeManager;
+
+        const query = `query($id: Int){Media(id: $id){id,title {userPreferred},coverImage {extraLarge},source,episodes,status,meanScore,siteUrl}}`
+
+        const options = manager.optionBuilder({query: query, variables: {id: anilist_id}})
+
+        manager.sendRequest(options, (err, data) => {
+            if(err){
+                this.client.logger.error(err)
+                callback(null)
+                return
             }
-        )
+            
+            if(data.errors){
+                callback(null)
+            } else {
+                callback(data.data.Media)
+            }
+        })
     }
 }
 

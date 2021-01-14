@@ -50,11 +50,11 @@ class WhatAnime extends Command{
             const title_english = json.docs[0].title_english || 'N/A';
             const title_romaji = json.docs[0].title_romaji || 'N/A';
             
-            this.animeInfo.getDetails(mal_id, data => {
+            this.animeInfo.getDetails(anilist_id, data => {
                 if(data == null){
                     embed.title = title_romaji
                     embed.color = 'BLUE'
-                    embed.url = 'https://myanimelist.net/anime/'+ mal_id
+                    embed.url = 'https://anilist.co/anime/'+ anilist_id
                     embed.thumbnail = {url: commandArgs[0]}
                     embed.fields = [
                         {name: 'English', value: title_english, inline: true},
@@ -67,28 +67,24 @@ class WhatAnime extends Command{
                     return
                 }
                 
-                const imageUrl = data.image_url
-                const title = data.title
-                const type = data.type
+                const imageUrl = data.coverImage.extraLarge
                 const source = data.source
                 const episodes = data.episodes || 'N/A'
-                const airing = data.airing ? 'Yes' : 'No'
-                const score = data.score
-                const aired = data.aired.string
-                const mal_url = data.url
+                const airing = data.status == "RELEASING" ? 'Yes' : 'No'
+                const score = (data.meanScore / 10).toFixed(2)
+                const url = data.siteUrl
                 
-                embed.title = title
+                embed.title = title_romaji
                 embed.color = 'BLUE'
-                embed.url = mal_url
+                embed.url = url
                 embed.thumbnail = {url: imageUrl}
                 embed.fields = [
-                    {name: 'English', value: title_english, inline: true},
+                    {name: 'English', value: title_english},
                     {name: 'Score', value: score.toString(), inline: true},
-                    {name: 'Type', value: type, inline: true},
                     {name: 'Source', value: source, inline: true},
                     {name: 'Episodes', value: episodes, inline: true},
                     {name: 'Airing', value: airing, inline: true},
-                    {name: 'Aired', value: aired, inline: true},
+                    {name: 'MAL', value: 'https://myanimelist.net/anime/'+ mal_id},
                     {name: 'AniList', value: 'https://anilist.co/anime/'+ anilist_id},
                     {name: '\u200b', value: '*Note: Results might not be accurate.*'}
                 ]
