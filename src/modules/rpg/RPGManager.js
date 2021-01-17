@@ -148,7 +148,7 @@ class RPGManager {
                     this.arena.set(userId, {time: now + ARENA, channel: channel, user: {mention: user.toString(), username: user.username}})
                     
                     if(!message.mentions.users.first()) return
-                    var member = message.channel.guild.members.get(message.mentions.users.first().id)
+                    var member = message.channel.guild.member(message.mentions.users.first().id)
                     
                     if(member){
                         if(member.user.id == "620152697450135552") {
