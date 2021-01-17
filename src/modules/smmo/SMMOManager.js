@@ -9,6 +9,7 @@ const Unlink = require('./cmds/unlink.js');
 const Guild = require('./cmds/guild.js');
 const GuildMembers = require('./cmds/guild-members.js');
 const ReloadBoss = require('./cmds/reload-boss.js');
+const Simulate = require('./cmds/simulate.js');
 
 const SMMO = require('./models/smmo.js');
 const Constants = require('./Constants.js');
@@ -32,6 +33,7 @@ class SMMOManager {
         this.cmdManager.loadCommand(new Link(this.cmdManager))
         this.cmdManager.loadCommand(new Profile(this.cmdManager))
         this.cmdManager.loadCommand(new ReloadBoss(this.cmdManager))
+        this.cmdManager.loadCommand(new Simulate(this.cmdManager))
         this.cmdManager.loadCommand(new Unlink(this.cmdManager))
         this.cmdManager.loadCommand(new User(this.cmdManager))
         this.cmdManager.loadCommand(new WorldBosses(this.cmdManager))
@@ -116,7 +118,7 @@ class SMMOManager {
         return (days +'d '+ hours +'h '+ minutes + 'm '+ seconds + 's')
     }
 
-    sendRequest(method, url, body = ''){
+    sendRequest(method, url){
         return axios({ method: method, url: Constants.API_URL + url, data: {api_key: this.api_key} })
     }
 
@@ -173,9 +175,7 @@ class SMMOManager {
                 icon_url: message.author.displayAvatarURL() 
             }
         }
-        if(data.safeModeTime){
-            embed.fields.push({name: 'Safe Mode Time', value: data.safeModeTime, inline: true})
-        }
+        embed.fields.push({name: 'Safe Mode Time', value: data.safeModeTime ? data.safeModeTime : 'Perma safe', inline: true})
 
         return embed;
     }
