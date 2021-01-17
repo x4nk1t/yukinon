@@ -24,6 +24,10 @@ class Play extends Command{
                 const connection = message.guild.voice.connection;
                 if(connection){
                     const dispatcher = connection.dispatcher;
+                    if(!dispatcher){
+                        message.channel.send(this.embed('Nothing is playing.'))
+                        return
+                    }
                     if(dispatcher.paused){
                         dispatcher.resume();
                         message.channel.send(this.embed('Music resumed.'))

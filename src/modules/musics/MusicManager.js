@@ -77,8 +77,13 @@ class MusicManager {
             } else {
                 if(this.queue.get(voiceChannel.id)) this.queue.delete(voiceChannel.id)
                 
-                message.channel.send(this.embed('No more queues left. Leaving channel.'))
-                voiceChannel.leave()
+                message.channel.send(this.embed(`No more queues left.`))
+
+                setTimeout(() => {
+                    if(!this.queue.get(voiceChannel.id)){
+                        voiceChannel.leave()
+                    }
+                }, 60000)
             }
         })
     }
