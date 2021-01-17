@@ -8,7 +8,7 @@ class AnimeReleaseCommand extends Command {
             aliases: ['ar']
         })
         
-        this.emojis = ['⏪', '⏩'];
+        this.emojis = ['⏪', '◀️', '▶️' ,'⏩'];
     }
     
     async execute(message, commandArgs){
@@ -23,7 +23,7 @@ class AnimeReleaseCommand extends Command {
         
         const sent = await message.channel.send({embed: embed})
         
-        if(!this.client.animeManager.episodes.length) return
+        if(!this.client.animeManager.episodes.length || lastPage == 1) return
         
         for(const emoji of this.emojis) sent.react(emoji)
         
@@ -36,11 +36,17 @@ class AnimeReleaseCommand extends Command {
             
             switch(reaction.emoji.name){
                 case this.emojis[0]:
+                    page = 0;
+                break;
+                case this.emojis[1]:
                     page = page == 0 ? 0 : page - 1;
                     break;
-                case this.emojis[1]:
+                case this.emojis[2]:
                     page = page == lastPage ? lastPage : page + 1;
                     break;
+                case this.emojis[3]:
+                    page = lastPage;
+                break;
             }
             embed.description = this.getPage(page);
             embed.footer = {text: 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +' / '+ (lastPage + 1) +')', icon_url: message.author.displayAvatarURL()}
@@ -52,7 +58,7 @@ class AnimeReleaseCommand extends Command {
         var episodes = this.client.animeManager.episodes;
         var content = '';
         var now = new Date().getTime()
-        var start = page == 0 ? 0 : page * 10;
+        var start = page * 10;
         
         if(!episodes.length){
             return 'No releases available.'
@@ -66,12 +72,9 @@ class AnimeReleaseCommand extends Command {
             var diff = anime.airingAt - now;
             
             if(diff > 0){
-                var id = anime.id;
                 var title = anime.title;
                 var episode = anime.episode;
                 var url = anime.url;
-                var cover = anime.cover;
-                var airingAt = anime.airingAt;
                 
                 content += (i + 1) +'. ['+ this.shortText(title) +']('+ url +') (EP '+ episode +') - In '+ this.formatTime(diff) + '\n';
             }
