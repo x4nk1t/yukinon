@@ -14,6 +14,7 @@ class GuildMembers extends Command{
     async execute(message, commandArgs){
         const manager = this.client.smmoManager;
         const id = commandArgs[0];
+        const attackMode = commandArgs[1].toLowerCase() == 'atk';
 
         if(!id){
             this.sendUsage(message)
@@ -60,7 +61,7 @@ class GuildMembers extends Command{
                 color: 'BLUE',
                 title: guildData.name + ' Members (Count '+ membersData.length +')',
                 url: 'https://web.simple-mmo.com/guilds/view/'+ guildData.id +'/members',
-                description: this.getPage(0, usersData),
+                description: this.getPage(0, usersData, attackMode),
                 footer: {
                     text: 'Requested by '+ message.author.username + ' • Page (1/'+ (lastPage + 1) +')',
                     icon_url: message.author.displayAvatarURL()
@@ -102,7 +103,7 @@ class GuildMembers extends Command{
                     color: 'BLUE',
                     title: guildData.name + ' Members (Count '+ membersData.length +')',
                     url: 'https://web.simple-mmo.com/guilds/view/'+ guildData.id +'/members',
-                    description: this.getPage(page, usersData),
+                    description: this.getPage(page, usersData, attackMode),
                     footer: {
                         text: 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +'/'+ (lastPage + 1) +')',
                         icon_url: message.author.displayAvatarURL()
@@ -116,7 +117,7 @@ class GuildMembers extends Command{
         }
     }
 
-    getPage(page, users){
+    getPage(page, users, attackMode){
         const usersData = users.array()
         const perPage = 10;
         const startIndex = page * perPage;
@@ -125,7 +126,20 @@ class GuildMembers extends Command{
         for(var i = startIndex; i < (startIndex + perPage); i++){
             const user = usersData[i];
             if(!user) continue;
-            description += `[${user.name}](https://web.simple-mmo.com/user/view/${user.id}) (Lv. ${user.level.toLocaleString()})\n`;
+            
+            if(attackMode) {
+                var attackable = "";
+                if(user.safeMode){
+                    attackable = "❌ `SAFEMODE`"
+                } else if ((user.hp / user.max_hp * 100) < 50){
+                    attackable = "❌ `HP: "+ (user.hp / user.max_hp * 100).toFixed(2) + "%`";
+                } else {
+                    attackable = "✅";
+                }
+                description += `[${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) (Lv. ${user.level.toLocaleString()}) - **Attackable:** ${attackable}\n`;
+            } else {
+                description += `[${user.name}](https://web.simple-mmo.com/user/view/${user.id}) (Lv. ${user.level.toLocaleString()})\n`;
+            }
         }
 
         return description
