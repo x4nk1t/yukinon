@@ -14,7 +14,7 @@ class GuildMembers extends Command{
     async execute(message, commandArgs){
         const manager = this.client.smmoManager;
         const id = commandArgs[0];
-        const attackMode = commandArgs[1].toLowerCase() == 'atk';
+        const attackMode = commandArgs[1] ? commandArgs[1].toLowerCase() == "atk" : false;
 
         if(!id){
             this.sendUsage(message)
