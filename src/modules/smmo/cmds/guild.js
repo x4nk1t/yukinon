@@ -46,7 +46,7 @@ class Guild extends Command{
                         thumbnail: {url: Constants.ICONS_URL + data.icon},
                         color: 'BLUE',
                         fields: [
-                            { name: 'Leader', value: `[${leaderData.name}](https://web.simple-mmo.com/user/view/${leaderData.id})` },
+                            { name: 'Leader', value: `[${leaderData.name}](https://web.simple-mmo.com/user/view/${leaderData.id})`, inline: true },
                             { name: 'Tag', value: `\`${data.tag}\``, inline: true },
                             { name: 'EXP', value: data.exp.toLocaleString(), inline: true },
                             { name: 'PvP', value: data.passive == 0 ? 'Yes' : 'No', inline: true },

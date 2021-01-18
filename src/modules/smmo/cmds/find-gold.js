@@ -1,13 +1,12 @@
-const Discord = require('discord.js');
-const Command = require('../../../utils/Command.js');
+const Command = require('../../../utils/Command.js')
 
-class GuildMembers extends Command{
+class FindGold extends Command{
     constructor(commandLoader){
         super(commandLoader, {
-            name: 'guild-members',
-            description: 'Check a smmo guild members.',
-            usage: '<id>',
-            aliases: ['gm']
+            name: 'find-gold',
+            description: 'Search for player with gold in a specific guild.',
+            aliases: ['fg'],
+            showInHelp: false
         })
     }
 
@@ -23,7 +22,7 @@ class GuildMembers extends Command{
         if(!isNaN(id) && !isNaN(parseFloat(id))){
             var membersData;
             var guildData;
-            var usersData = new Discord.Collection();
+            var unfilteredUsersData = [];
             var notFound = false;
             
             await manager.sendRequest('post', '/guilds/info/'+ id).then(guildResponse => {
@@ -41,8 +40,6 @@ class GuildMembers extends Command{
             await manager.sendRequest('post', '/guilds/members/'+ id).then(membersResponse => {
                 membersData = membersResponse.data;
             })
-
-            const lastPage = Math.floor(membersData.length / 10);
             
             var sent = await message.channel.send({embed: {color: 'BLUE', description: 'This might take some time. Please wait.'}})
 
@@ -52,13 +49,19 @@ class GuildMembers extends Command{
                 await manager.sendRequest('post', '/player/info/'+ user_id).then(response2 => {
                     if(response2.error) return
 
-                    usersData.set(user_id, response2.data)
+                    unfilteredUsersData.push(response2.data)
                 })
             }
 
+            const usersData = unfilteredUsersData.filter((user) => (user.gold >= 500000 && !user.safeMode))
+
+            usersData.sort((a, b) => b.gold - a.gold)
+
+            const lastPage = Math.floor(usersData.length / 10);
+
             const embed = {
                 color: 'BLUE',
-                title: guildData.name + ' Members (Count '+ membersData.length +')',
+                title: guildData.name + ' Members w/ GOLDS',
                 url: 'https://web.simple-mmo.com/guilds/view/'+ guildData.id +'/members',
                 description: this.getPage(0, usersData),
                 footer: {
@@ -66,6 +69,8 @@ class GuildMembers extends Command{
                     icon_url: message.author.displayAvatarURL()
                 },
             }
+
+            if(embed.description == "") embed.description = 'No members found with 500k+ gold and off safemode.'
 
             if(sent) sent.delete()
             const firstPage = await message.channel.send({embed: embed})
@@ -98,38 +103,34 @@ class GuildMembers extends Command{
                     break;
                 }
 
-                const embed2 = {
-                    color: 'BLUE',
-                    title: guildData.name + ' Members (Count '+ membersData.length +')',
-                    url: 'https://web.simple-mmo.com/guilds/view/'+ guildData.id +'/members',
-                    description: this.getPage(page, usersData),
-                    footer: {
-                        text: 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +'/'+ (lastPage + 1) +')',
-                        icon_url: message.author.displayAvatarURL()
-                    },
+                embed.description = this.getPage(page, usersData)
+                embed.footer = {
+                    text: 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +'/'+ (lastPage + 1) +')',
+                    icon_url: message.author.displayAvatarURL()
                 }
 
-                firstPage.edit({embed: embed2})
+                firstPage.edit({embed: embed})
             })
         } else {
             this.sendUsage(message)
         }
     }
 
-    getPage(page, users){
-        const usersData = users.array()
+    getPage(page, usersData){
         const perPage = 10;
         const startIndex = page * perPage;
         var description = '';
 
         for(var i = startIndex; i < (startIndex + perPage); i++){
             const user = usersData[i];
+            
             if(!user) continue;
-            description += `[${user.name}](https://web.simple-mmo.com/user/view/${user.id}) (Lv. ${user.level.toLocaleString()})\n`;
+
+            description += `[${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) - Lv. ${user.level.toLocaleString()} (Gold: ${user.gold.toLocaleString()})\n`;
         }
 
         return description
     }
 }
 
-module.exports = GuildMembers
+module.exports = FindGold

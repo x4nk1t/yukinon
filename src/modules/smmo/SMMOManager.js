@@ -10,6 +10,7 @@ const Guild = require('./cmds/guild.js');
 const GuildMembers = require('./cmds/guild-members.js');
 const ReloadBoss = require('./cmds/reload-boss.js');
 const Simulate = require('./cmds/simulate.js');
+const FindGold = require('./cmds/find-gold.js');
 
 const SMMO = require('./models/smmo.js');
 const Constants = require('./Constants.js');
@@ -28,6 +29,7 @@ class SMMOManager {
     }
 
     loadCommands(){
+        this.cmdManager.loadCommand(new FindGold(this.cmdManager))
         this.cmdManager.loadCommand(new Guild(this.cmdManager))
         this.cmdManager.loadCommand(new GuildMembers(this.cmdManager))
         this.cmdManager.loadCommand(new Link(this.cmdManager))
@@ -156,7 +158,7 @@ class SMMOManager {
             title: data.name + profile_number,
             color: 'BLUE',
             url: 'https://web.simple-mmo.com/user/view/'+ data.id,
-            description: `*${data.motto}*\n[Attack](https://web.simple-mmo.com/user/attack/${data.id}) | [Message](https://web.simple-mmo.com/messages/view/user/${data.id}) | [Send Gold](https://web.simple-mmo.com/sendgold/${data.id}) | [Send Item](https://web.simple-mmo.com/inventory?sendid=${data.id})`,
+            description: `*${data.motto}*\nID: ${data.id}\n[Attack](https://web.simple-mmo.com/user/attack/${data.id}) | [Message](https://web.simple-mmo.com/messages/view/user/${data.id}) | [Send Gold](https://web.simple-mmo.com/sendgold/${data.id}) | [Send Item](https://web.simple-mmo.com/inventory?sendid=${data.id})`,
             fields: [
                 {name: 'Level', value: data.level.toLocaleString(), inline: true},
                 {name: 'Gold', value: data.gold.toLocaleString(), inline: true},
