@@ -24,7 +24,7 @@ class GuildMembers extends Command{
         if(!isNaN(id) && !isNaN(parseFloat(id))){
             var membersData;
             var guildData;
-            var usersData = new Discord.Collection();
+            var usersData = [];
             var notFound = false;
             
             await manager.sendRequest('post', '/guilds/info/'+ id).then(guildResponse => {
@@ -42,8 +42,6 @@ class GuildMembers extends Command{
             await manager.sendRequest('post', '/guilds/members/'+ id).then(membersResponse => {
                 membersData = membersResponse.data;
             })
-
-            const lastPage = Math.floor(membersData.length / 10);
             
             var sent = await message.channel.send({embed: {color: 'BLUE', description: 'This might take some time. Please wait.'}})
 
@@ -53,9 +51,15 @@ class GuildMembers extends Command{
                 await manager.sendRequest('post', '/player/info/'+ user_id).then(response2 => {
                     if(response2.error) return
 
-                    usersData.set(user_id, response2.data)
+                    usersData.push(response2.data)
                 })
             }
+
+            if(attackMode) {
+                usersData = usersData.filter(user => !user.safeMode)
+            }
+
+            const lastPage = Math.floor(usersData.length / 10);
 
             const embed = {
                 color: 'BLUE',
@@ -117,8 +121,7 @@ class GuildMembers extends Command{
         }
     }
 
-    getPage(page, users, attackMode){
-        const usersData = users.array()
+    getPage(page, usersData, attackMode){
         const perPage = 10;
         const startIndex = page * perPage;
         var description = '';
@@ -129,14 +132,12 @@ class GuildMembers extends Command{
             
             if(attackMode) {
                 var attackable = "";
-                if(!user.safeMode){
-                    if ((user.hp / user.max_hp * 100) < 50){
-                        attackable = "❌ `HP: "+ (user.hp / user.max_hp * 100).toFixed(2) + "%`";
-                    } else {
-                        attackable = "✅";
-                    }
-                    description += `[${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) (Lv. ${user.level.toLocaleString()}) - **Attackable:** ${attackable}\n`;
+                if ((user.hp / user.max_hp * 100) < 50){
+                    attackable = "❌ `HP: "+ (user.hp / user.max_hp * 100).toFixed(2) + "%`";
+                } else {
+                    attackable = "✅";
                 }
+                description += `[${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) (Lv. ${user.level.toLocaleString()}) - **Attackable:** ${attackable}\n`;
             } else {
                 description += `[${user.name}](https://web.simple-mmo.com/user/view/${user.id}) (Lv. ${user.level.toLocaleString()})\n`;
             }
