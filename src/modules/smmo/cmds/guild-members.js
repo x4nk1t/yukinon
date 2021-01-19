@@ -129,14 +129,14 @@ class GuildMembers extends Command{
             
             if(attackMode) {
                 var attackable = "";
-                if(user.safeMode){
-                    attackable = "❌ `SAFEMODE`"
-                } else if ((user.hp / user.max_hp * 100) < 50){
-                    attackable = "❌ `HP: "+ (user.hp / user.max_hp * 100).toFixed(2) + "%`";
-                } else {
-                    attackable = "✅";
+                if(!user.safeMode){
+                    if ((user.hp / user.max_hp * 100) < 50){
+                        attackable = "❌ `HP: "+ (user.hp / user.max_hp * 100).toFixed(2) + "%`";
+                    } else {
+                        attackable = "✅";
+                    }
+                    description += `[${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) (Lv. ${user.level.toLocaleString()}) - **Attackable:** ${attackable}\n`;
                 }
-                description += `[${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) (Lv. ${user.level.toLocaleString()}) - **Attackable:** ${attackable}\n`;
             } else {
                 description += `[${user.name}](https://web.simple-mmo.com/user/view/${user.id}) (Lv. ${user.level.toLocaleString()})\n`;
             }
