@@ -126,7 +126,7 @@ class FindGold extends Command{
             
             if(!user) continue;
 
-            description += `[${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) - Lv. ${user.level.toLocaleString()} (Gold: ${user.gold.toLocaleString()})\n`;
+            description += `[ID: ${user.id}] [${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) - Lv. ${user.level.toLocaleString()} (Gold: ${user.gold.toLocaleString()})\n`;
         }
 
         return description
