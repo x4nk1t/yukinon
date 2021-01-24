@@ -116,7 +116,8 @@ class RPGManager {
                 }
             }
 
-            if(sc == "training" || sc == "tr"){
+            if(sc == "training" || sc == "tr" ||
+               sc == "ultraining" || sc == "ultr"){
                 if(!this.training.has(userId) || force){
                     this.addTimer(userId, "training", now + TRAINING, channel_id, user)
                     this.training.set(userId, {time: now + TRAINING, channel: channel, user: {mention: user.toString(), username: user.username}})
@@ -167,7 +168,8 @@ class RPGManager {
                sc == "mine" || sc == "bowsaw" ||
                sc == "boat" || sc == "pickaxe" ||
                sc == "tractor" || sc == "chainsaw" ||
-               sc == "bigboat" || sc == "drill"){
+               sc == "bigboat" || sc == "drill" ||
+               sc == "greenhouse" || sc == "dynamite"){
                 if(!this.progress.has(userId) || force){
                     this.addTimer(userId, "progress", now + PROGRESS, channel_id, user)
                     this.progress.set(userId, {time: now + PROGRESS, channel: channel, user: {mention: user.toString(), username: user.username}})
