@@ -6,7 +6,7 @@ const TIPS = 300000; //5m
 const WORK = 600000; //10m
 const OVERTIME = 1800000; //30m
 const CLEAN = 86400000; //1d
-const Daily = 86400000; //1d
+const DAILY = 86400000; //1d
 const VOTE = 43200000; //12h
 
 class TacoManager {
