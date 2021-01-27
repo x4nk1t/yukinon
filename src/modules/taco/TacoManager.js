@@ -322,28 +322,38 @@ class TacoManager {
 
                     switch(sub){
                         case "flipper":
-                            this.addTimer(userId, 'flipper', now + FLIPPER, channel_id, user)
-                            this.flipper.set(userId, {time: now + FLIPPER, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            if(!this.flipper.has(userId) || force){
+                                this.addTimer(userId, 'flipper', now + FLIPPER, channel_id, user)
+                                this.flipper.set(userId, {time: now + FLIPPER, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
                         break;
 
                         case "karaoke":
-                            this.addTimer(userId, 'karaoke', now + KARAOKE, channel_id, user)
-                            this.karaoke.set(userId, {time: now + KARAOKE, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            if(!this.karaoke.has(userId) || force){
+                                this.addTimer(userId, 'karaoke', now + KARAOKE, channel_id, user)
+                                this.karaoke.set(userId, {time: now + KARAOKE, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
                         break;
                         
                         case "music":
-                            this.addTimer(userId, 'music', now + MUSIC, channel_id, user)
-                            this.music.set(userId, {time: now + MUSIC, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            if(!this.music.has(userId) || force){
+                                this.addTimer(userId, 'music', now + MUSIC, channel_id, user)
+                                this.music.set(userId, {time: now + MUSIC, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
                         break;
 
                         case "airplane":
-                            this.addTimer(userId, 'airplane', now + AIRPLANE, channel_id, user)
-                            this.airplane.set(userId, {time: now + AIRPLANE, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            if(!this.airplane.has(userId) || force){
+                                this.addTimer(userId, 'airplane', now + AIRPLANE, channel_id, user)
+                                this.airplane.set(userId, {time: now + AIRPLANE, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
                         break;
 
                         case "chef":
-                            this.addTimer(userId, 'chef', now + CHEF, channel_id, user)
-                            this.chef.set(userId, {time: now + CHEF, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            if(!this.chef.has(userId) || force){
+                                this.addTimer(userId, 'chef', now + CHEF, channel_id, user)
+                                this.chef.set(userId, {time: now + CHEF, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
                         break;
                     }
                 break;
