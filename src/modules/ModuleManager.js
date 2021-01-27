@@ -4,6 +4,7 @@ const EmojiSender = require('./emoji/EmojiSender.js');
 const GamesManager = require('./games/GamesManager.js');
 const MusicManager = require('./musics/MusicManager.js');
 const SMMOManager = require('./smmo/SMMOManager.js');
+const TacoManager = require('./taco/TacoManager.js');
 
 class ModuleManager {
     constructor(client){
@@ -21,6 +22,9 @@ class ModuleManager {
         
         this.client.rpgManager = new RPGManager(this.client)
         this.client.rpgManager.run()
+
+        this.client.tacoManager = new TacoManager(this.client)
+        this.client.tacoManager.run()
 
         this.client.smmoManager = new SMMOManager(this.client)
         this.client.smmoManager.run()

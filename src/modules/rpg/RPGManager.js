@@ -1,6 +1,6 @@
 const Discord = require('discord.js')
 const Timer = require('./models/timer.js')
-const ReminderCommand = require('./cmds/reminders.js')
+const RpgRemindersCommand = require('./cmds/rpg-reminders.js')
 
 const LOOTBOX = 10800000; //3hrs
 const GUILD = 7200000; //2hrs
@@ -31,7 +31,7 @@ class RPGManager {
     }
     
     loadCommands(){
-        this.cmdManager.loadCommand(new ReminderCommand(this.cmdManager))
+        this.cmdManager.loadCommand(new RpgRemindersCommand(this.cmdManager))
     }
     
     execute(message){

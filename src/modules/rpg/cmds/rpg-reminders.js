@@ -1,12 +1,12 @@
 const Command = require('../../../utils/Command.js');
 
-class RemindersCommand extends Command{
+class RpgRemindersCommand extends Command{
     constructor(commandLoader){
         super(commandLoader, {
-            name: "reminders",
+            name: "rpg-reminders",
             description: "Shows all rpg reminders",
             usage: "[user]",
-            aliases: ['r']
+            aliases: ['rr']
         });
     }
     
@@ -65,7 +65,7 @@ class RemindersCommand extends Command{
             description = "N/A";
         }
         
-        embed.title = username +'\'s reminders'
+        embed.title = username +'\'s rpg reminders'
         embed.color = 'BLUE'
         embed.description = description
         embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.displayAvatarURL()}
@@ -92,4 +92,4 @@ class RemindersCommand extends Command{
     }
 }
 
-module.exports = RemindersCommand
+module.exports = RpgRemindersCommand
