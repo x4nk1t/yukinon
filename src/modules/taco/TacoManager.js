@@ -9,6 +9,12 @@ const CLEAN = 86400000; //1d
 const DAILY = 86400000; //1d
 const VOTE = 43200000; //12h
 
+const FLIPPER = 28800000; //8h
+const KARAOKE = 21600000; //6h
+const MUSIC = 14400000; //4h
+const AIRPLANE = 86400000; //1d
+const CHEF = 14400000; //4h
+
 class TacoManager {
     constructor(client){
         this.client = client;
@@ -19,6 +25,13 @@ class TacoManager {
         this.daily = new Discord.Collection();
         this.clean = new Discord.Collection();
         this.vote = new Discord.Collection();
+        this.buy = new Discord.Collection();
+
+        this.flipper = new Discord.Collection();
+        this.karaoke = new Discord.Collection();
+        this.music = new Discord.Collection();
+        this.airplane = new Discord.Collection();
+        this.chef = new Discord.Collection();
 
         this.cmdManager = this.client.commandManager;
         this.loadCommands()
@@ -65,6 +78,26 @@ class TacoManager {
                         case "vote":
                             this.vote.set(userId, {time: time, channel: channel, user: user})
                         break;
+
+                        case "flipper":
+                            this.flipper.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "karaoke":
+                            this.karaoke.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "music":
+                            this.music.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "airplane":
+                            this.airplane.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "chef":
+                            this.chef.set(userId, {time: time, channel: channel, user: user})
+                        break;
                     }
                 } else {
                     removeList.push(data._id)
@@ -86,7 +119,7 @@ class TacoManager {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.username +', Tips ready!')
+                channel.send('**'+ user.username +'**, Tips ready!')
                 this.tips.delete(id)
             }
         })
@@ -98,7 +131,7 @@ class TacoManager {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.username +', Work ready!')
+                channel.send('**'+ user.username +'**, Work ready!')
                 this.work.delete(id)
             }
         })
@@ -152,6 +185,75 @@ class TacoManager {
                 channel.send(user.mention +', Vote Claim ready!')
                 this.vote.delete(id)
                 this.removeTimer(id, "vote")
+            }
+        })
+
+        
+        /*
+        * Buy commands
+        */
+        this.flipper.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Flipper ready to purchase!')
+                this.flipper.delete(id)
+                this.removeTimer(id, "flipper")
+            }
+        })
+
+        this.karaoke.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Karaoke ready to purchase!')
+                this.karaoke.delete(id)
+                this.removeTimer(id, "karaoke")
+            }
+        })
+
+        this.music.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Music ready to purchase!')
+                this.music.delete(id)
+                this.removeTimer(id, "music")
+            }
+        })
+
+        this.airplane.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Airplane ready to purchase!')
+                this.airplane.delete(id)
+                this.removeTimer(id, "airplane")
+            }
+        })
+
+        this.chef.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Chef ready to purchase!')
+                this.chef.delete(id)
+                this.removeTimer(id, "chef")
             }
         })
     }
@@ -212,6 +314,37 @@ class TacoManager {
                     if(!this.vote.has(userId) || force){
                         this.addTimer(userId, 'vote', now + VOTE, channel_id, user)
                         this.vote.set(userId, {time: now + VOTE, channel: channel, user: {mention: user.toString(), username: user.username}})
+                    }
+                break;
+
+                case "buy":
+                    var sub = args[1].toLowerCase()
+
+                    switch(sub){
+                        case "flipper":
+                            this.addTimer(userId, 'flipper', now + FLIPPER, channel_id, user)
+                            this.flipper.set(userId, {time: now + FLIPPER, channel: channel, user: {mention: user.toString(), username: user.username}})
+                        break;
+
+                        case "karaoke":
+                            this.addTimer(userId, 'karaoke', now + KARAOKE, channel_id, user)
+                            this.karaoke.set(userId, {time: now + KARAOKE, channel: channel, user: {mention: user.toString(), username: user.username}})
+                        break;
+                        
+                        case "music":
+                            this.addTimer(userId, 'music', now + MUSIC, channel_id, user)
+                            this.music.set(userId, {time: now + MUSIC, channel: channel, user: {mention: user.toString(), username: user.username}})
+                        break;
+
+                        case "airplane":
+                            this.addTimer(userId, 'airplane', now + AIRPLANE, channel_id, user)
+                            this.airplane.set(userId, {time: now + AIRPLANE, channel: channel, user: {mention: user.toString(), username: user.username}})
+                        break;
+
+                        case "chef":
+                            this.addTimer(userId, 'chef', now + CHEF, channel_id, user)
+                            this.chef.set(userId, {time: now + CHEF, channel: channel, user: {mention: user.toString(), username: user.username}})
+                        break;
                     }
                 break;
             }

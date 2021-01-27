@@ -31,6 +31,12 @@ class TacoRemindersCommand extends Command{
         var clean = reminder.clean.get(userId);
         var daily = reminder.daily.get(userId);
         var vote = reminder.vote.get(userId);
+
+        var flipper = reminder.flipper.get(userId);
+        var karaoke = reminder.karaoke.get(userId);
+        var music = reminder.music.get(userId);
+        var airplane = reminder.airplane.get(userId);
+        var chef = reminder.chef.get(userId);
         
         var description = '';
         
@@ -51,6 +57,26 @@ class TacoRemindersCommand extends Command{
         }
         if(vote){
             description += "**Vote:** "+ this.formatTime(vote.time) +"\n";
+        }
+
+        if(flipper){
+            description += "\n**Flipper:** "+ this.formatTime(flipper.time) +"\n";
+        }
+
+        if(karaoke){
+            description += "**Karaoke:** "+ this.formatTime(karaoke.time) +"\n";
+        }
+
+        if(music){
+            description += "**Music:** "+ this.formatTime(music.time) +"\n";
+        }
+
+        if(airplane){
+            description += "**Airplane:** "+ this.formatTime(airplane.time) +"\n";
+        }
+
+        if(chef){
+            description += "**Chef:** "+ this.formatTime(chef.time) +"\n";
         }
         
         if(description == ''){
