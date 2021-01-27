@@ -94,7 +94,7 @@ class SMMOManager {
                 embed.title = boss.name;
                 embed.url = 'https://web.simple-mmo.com/worldboss/view/'+ boss.id
                 embed.description = 'Click the name to go to world boss page.'
-                embed.fields = [{name: 'Level', value: boss.level, inline: true}, {name: 'HP', value: boss.max_hp, inline: true}]
+                embed.fields = [{name: 'Level', value: boss.level.toLocaleString(), inline: true}, {name: 'HP', value: boss.max_hp.toLocaleString(), inline: true}]
 
                 this.worldboss.splice(this.worldboss.indexOf(boss), 1)
                 
