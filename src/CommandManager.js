@@ -1,11 +1,12 @@
 const Discord = require('discord.js')
-const fs = require('fs');
 const Command = require('./utils/Command.js');
-const chokidar = require('chokidar')
 
 const StatsCommand = require('./utils/cmds/stats.js')
 const EmojisCommand = require('./utils/cmds/emojis.js')
 const HelpCommand = require('./utils/cmds/help.js')
+const ChangeStatus = require('./utils/cmds/change-status.js')
+
+const BotSettings = require('./utils/models/bot-settings.js')
 
 class CommandManager{
     constructor(client){
@@ -16,10 +17,20 @@ class CommandManager{
         this.aliases = new Discord.Collection();
 
         this.loadCommands()
+        this.run()
+    }
+
+    run(){
+        BotSettings.collection.findOne({name: 'status'}, async (err, status) => {
+            if(err) return
+            
+            await this.client.user.setStatus(status.value);
+        })
     }
     
     loadCommands(){
         this.loadCommand(new StatsCommand(this))
+        this.loadCommand(new ChangeStatus(this))
         this.loadCommand(new EmojisCommand(this))
         this.loadCommand(new HelpCommand(this))
     }
