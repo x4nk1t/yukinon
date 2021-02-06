@@ -3,6 +3,7 @@ const Command = require('./utils/Command.js');
 
 const StatsCommand = require('./utils/cmds/stats.js')
 const EmojisCommand = require('./utils/cmds/emojis.js')
+const EvalCommand = require('./utils/cmds/eval.js')
 const HelpCommand = require('./utils/cmds/help.js')
 const ChangeStatus = require('./utils/cmds/change-status.js')
 
@@ -29,6 +30,7 @@ class CommandManager{
     
     loadCommands(){
         this.loadCommand(new StatsCommand(this))
+        this.loadCommand(new EvalCommand(this))
         this.loadCommand(new ChangeStatus(this))
         this.loadCommand(new EmojisCommand(this))
         this.loadCommand(new HelpCommand(this))

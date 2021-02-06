@@ -21,6 +21,9 @@ class Client extends Discord.Client{
         
         this.db.on('error', err => this.logger.error(err))
         this.db.once('open', () => this.logger.info('Connected to database'))
+
+        this.authorizedUsers = ['620152697450135552', '505715662652702747'];
+        this.owners = ['620152697450135552'];
         
         this.registerEvents()
     }

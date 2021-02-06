@@ -23,7 +23,6 @@ class SMMOManager {
 
         this.worldboss = [];
         this.profiles = new Discord.Collection();
-        this.authorizedUsers = ['620152697450135552', '505715662652702747']
 
         this.loadCommands()
     }

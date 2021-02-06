@@ -13,7 +13,7 @@ class ReloadBoss extends Command{
     async execute(message, commandArgs){
         const manager = this.client.smmoManager;
 
-        if(manager.authorizedUsers.includes(message.author.id)){
+        if(this.client.authorizedUsers.includes(message.author.id)){
             if(manager.worldboss.length){
                 message.channel.send({embed: {color: 'BLUE', description: 'There are still bosses left. No need to reload.'}})
             } else {

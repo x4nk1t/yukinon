@@ -11,12 +11,11 @@ class ChangeStatus extends Command{
             showInHelp: false
         });
 
-        this.authorizedUsers = ['620152697450135552']
         this.statuses = ['online', 'dnd', 'idle', 'invisible']
     }
 
     async execute(message, commandArgs){
-        if(this.authorizedUsers.includes(message.author.id) && commandArgs[0]){
+        if(this.client.authorizedUsers.includes(message.author.id) && commandArgs[0]){
             const status = commandArgs[0].toLowerCase()
             
             if(!this.statuses.includes(status)) return
