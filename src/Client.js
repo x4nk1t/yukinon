@@ -26,6 +26,7 @@ class Client extends Discord.Client{
     }
     
     start(){
+        this.commandManager.run()
         this.moduleManager.loadAllModules()
         this.logger.info('Bot running as: '+ this.user.tag)
     }

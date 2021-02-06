@@ -17,7 +17,6 @@ class CommandManager{
         this.aliases = new Discord.Collection();
 
         this.loadCommands()
-        this.run()
     }
 
     run(){
