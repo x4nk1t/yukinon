@@ -41,7 +41,7 @@ class FindGold extends Command{
                 membersData = membersResponse.data;
             })
             
-            var sent = await message.channel.send({embed: {color: 'BLUE', description: 'This might take some time. Please wait.'}})
+            var firstPage = await message.channel.send({embed: {color: 'BLUE', description: 'This might take some time. Please wait.'}})
 
             for(const info of membersData){
                 var user_id = info.user_id;
@@ -72,8 +72,7 @@ class FindGold extends Command{
 
             if(embed.description == "") embed.description = 'No members found with 500k+ gold and off safemode.'
 
-            if(sent) sent.delete()
-            const firstPage = await message.channel.send({embed: embed})
+            await firstPage.edit({embed: embed})
 
             if(lastPage == 0) return
             const emojis = ['⏪', '◀️', '▶️' ,'⏩']
@@ -82,7 +81,7 @@ class FindGold extends Command{
 
             emojis.forEach(emoji => { firstPage.react(emoji) })
 
-            const reactionCollector = firstPage.createReactionCollector((reaction, user) => emojis.includes(reaction.emoji.name) && !user.bot, { time: 120000 })
+            const reactionCollector = firstPage.createReactionCollector((reaction, user) => emojis.includes(reaction.emoji.name) && !user.bot, { time: 300000 })
             reactionCollector.on('collect', reaction => {
                 reaction.users.remove(message.author)
 

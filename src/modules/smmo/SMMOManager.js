@@ -171,13 +171,13 @@ class SMMOManager {
                 {name: 'Quests Completed', value: data.quests_complete.toLocaleString(), inline: true},
                 {name: 'Safe mode' , value: data.safeMode == 0 ? "No" : "Yes", inline: true},
                 {name: 'Guild', value: guild, inline: true},
+                {name: 'Safe Mode Time', value: data.safeModeTime ? data.safeModeTime : 'Perma safe', inline: true}
             ],
             footer: {
                 text: 'Requested by '+ message.author.username,
                 icon_url: message.author.displayAvatarURL() 
             }
         }
-        embed.fields.push({name: 'Safe Mode Time', value: data.safeModeTime ? data.safeModeTime : 'Perma safe', inline: true})
 
         return embed;
     }

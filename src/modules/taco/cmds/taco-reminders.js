@@ -59,7 +59,7 @@ class TacoRemindersCommand extends Command{
             description += "**Vote:** "+ this.formatTime(vote.time) +"\n";
         }
 
-        description += '\n';
+        if(description != "") description += '\n';
 
         if(flipper){
             description += "**Flipper:** "+ this.formatTime(flipper.time) +"\n";
