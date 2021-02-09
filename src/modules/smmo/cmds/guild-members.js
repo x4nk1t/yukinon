@@ -63,7 +63,7 @@ class GuildMembers extends Command{
 
             const embed = {
                 color: 'BLUE',
-                title: guildData.name + ' Members (Count '+ membersData.length +')',
+                title: guildData.name + ' Members ('+ usersData.length +' Attackable)',
                 url: 'https://web.simple-mmo.com/guilds/view/'+ guildData.id +'/members',
                 description: this.getPage(0, usersData, attackMode),
                 footer: {

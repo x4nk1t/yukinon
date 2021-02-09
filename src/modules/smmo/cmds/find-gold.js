@@ -125,7 +125,15 @@ class FindGold extends Command{
             
             if(!user) continue;
 
-            description += `[ID: ${user.id}] [${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) - Lv. ${user.level.toLocaleString()} (Gold: ${user.gold.toLocaleString()})\n`;
+            var attackable = '';
+
+            if ((user.hp / user.max_hp * 100) < 50){
+                attackable = "❌ `HP: "+ (user.hp / user.max_hp * 100).toFixed(2) + "%`";
+            } else {
+                attackable = "✅";
+            }
+
+            description += `[ID: ${user.id}] [${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) - Lv. ${user.level.toLocaleString()} (Gold: ${user.gold.toLocaleString()}) - **Attackable:**${attackable}\n`;
         }
 
         return description

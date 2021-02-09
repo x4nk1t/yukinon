@@ -5,7 +5,7 @@ class EmojiSender {
     
     run(){
         this.client.on('message', message => {
-            if(message.author.bot) return
+            if(message.author.bot && !message.guild) return
             
             var content = message.content;
             var emojis = message.guild.emojis.cache;
