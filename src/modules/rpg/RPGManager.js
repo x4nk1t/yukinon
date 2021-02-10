@@ -28,6 +28,7 @@ class RPGManager {
         
         this.cmdManager = this.client.commandManager;
         this.loadCommands()
+        this.run()
     }
     
     loadCommands(){

@@ -1,6 +1,8 @@
 class EmojiSender {
     constructor(client){
         this.client = client;
+
+        this.run()
     }
     
     run(){

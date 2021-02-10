@@ -17,6 +17,7 @@ class AnimeManager {
         this.cmdManager = client.commandManager;
         
         this.loadCommands()
+        this.run()
     }
     
     async run(){

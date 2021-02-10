@@ -25,6 +25,7 @@ class SMMOManager {
         this.profiles = new Discord.Collection();
 
         this.loadCommands()
+        this.run()
     }
 
     loadCommands(){

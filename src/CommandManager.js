@@ -6,6 +6,7 @@ const EmojisCommand = require('./utils/cmds/emojis.js')
 const EvalCommand = require('./utils/cmds/eval.js')
 const HelpCommand = require('./utils/cmds/help.js')
 const ChangeStatus = require('./utils/cmds/change-status.js')
+const RemindMeCommand = require('./modules/reminders/cmds/remind-me.js')
 
 const BotSettings = require('./utils/models/bot-settings.js')
 
@@ -34,6 +35,7 @@ class CommandManager{
         this.loadCommand(new ChangeStatus(this))
         this.loadCommand(new EmojisCommand(this))
         this.loadCommand(new HelpCommand(this))
+        this.loadCommand(new RemindMeCommand(this))
     }
     
     execute(message){
