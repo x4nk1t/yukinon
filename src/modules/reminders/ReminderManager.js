@@ -1,5 +1,8 @@
 const Discord = require('discord.js');
 
+const RemindMeCommand = require('./cmds/remind-me.js')
+const CheckReminderCommand = require('./cmds/check-reminders.js')
+
 const Reminder = require('./models/reminder.js')
 
 class ReminderManager {
@@ -8,8 +11,15 @@ class ReminderManager {
 
         this.reminders = []
         this.remindersTimeout = new Discord.Collection()
+        this.cmdManager = client.commandManager;
 
+        this.loadCommands()
         this.run()
+    }
+
+    loadCommands(){
+        this.cmdManager.loadCommand(new RemindMeCommand(this.cmdManager))
+        this.cmdManager.loadCommand(new CheckReminderCommand(this.cmdManager))
     }
 
     run(){
