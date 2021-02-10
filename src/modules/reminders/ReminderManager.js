@@ -46,6 +46,16 @@ class ReminderManager {
         const id = obj._id;
         const user_id = obj.user_id;
         const reminder = obj.reminder;
+        const channel = this.client.channels.cache.get(obj.channel_id)
+
+        const user = this.client.users.cache.get(user_id);
+        if(!user) return
+
+        if(channel){
+            channel.send(`Reminder ${user.toString()}: ${reminder}`)
+        } else {
+            user.send('**Reminder:** '+ reminder)
+        }
 
         await this.removeReminder(id)
         this.remindersTimeout.delete(id)
@@ -54,17 +64,11 @@ class ReminderManager {
                 this.reminders.splice(index, 1)
             }
         })
-
-        const user = this.client.users.cache.get(user_id);
-        
-        if(!user) return
-
-        user.send({embed: {color: 'BLUE', description: '**Reminder:** '+ reminder}})
     }
 
-    addReminder(user_id, reminder, time){
+    addReminder(user_id, reminder, time, channel_id){
         return new Promise(async (resolve, reject) => {
-            const obj = {user_id: user_id, reminder: reminder, time: time};
+            const obj = {user_id: user_id, reminder: reminder, time: time, channel_id: channel_id};
 
             Reminder.collection.insertOne(obj, (err, response) => {
                 if(err){

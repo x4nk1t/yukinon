@@ -6,25 +6,26 @@ class RemindMe extends Command{
             name: "remind-me",
             description: "Set a reminder.",
             aliases: ['rm'],
-            usage: '<time> <reminder>'
+            usage: '<time> <reminder>',
+            guildOnly: false
         });
     }
 
     async execute(message, commandArgs){
-        const manager = this.client.reminderManager;
-        const time = this.parseTime(commandArgs[0]);
-        commandArgs.shift()
+        if(commandArgs.length >= 2){
+            const manager = this.client.reminderManager;
+            const time = this.parseTime(commandArgs[0]);
+            commandArgs.shift()
 
-        const reminder = commandArgs.join(' ')
+            const reminder = commandArgs.join(' ')
 
-        if(isNaN(time) && isNaN(parseFloat(time))){
-            message.channel.send({embed: {color: 'BLUE', description: 'Invalid time!\nMake sure time is in following format: 1d4h5m1s'}})
-            return
-        }
+            if(isNaN(time) && isNaN(parseFloat(time))){
+                message.channel.send({embed: {color: 'BLUE', description: 'Invalid time!\nMake sure time is in following format: 1d4h5m1s'}})
+                return
+            }
         
-        if(commandArgs.length >= 1){
             const timeAt = (new Date().getTime() + time);
-            const add = await manager.addReminder(message.author.id, reminder, timeAt)
+            const add = await manager.addReminder(message.author.id, reminder, timeAt, message.channel.id)
 
             if(add){
                 message.channel.send({embed: {color: 'BLUE', description: message.author.toString() +', Reminder set successfully!'}})

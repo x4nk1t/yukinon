@@ -14,7 +14,7 @@ class Command {
             name: options.name || '',
             description: options.description || '',
             aliases: options.aliases || [],
-            guildOnly: options.guildOnly || true,
+            guildOnly: (options.guildOnly == true ? true : false),
             usage: options.usage || '',
             enabled: (options.enabled == undefined || options.enabled == true) ? true : false,
             showInHelp: (options.showInHelp == undefined || options.showInHelp == true) ? true : false
