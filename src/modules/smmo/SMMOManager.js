@@ -11,8 +11,10 @@ const GuildMembers = require('./cmds/guild-members.js');
 const ReloadBoss = require('./cmds/reload-boss.js');
 const Simulate = require('./cmds/simulate.js');
 const FindGold = require('./cmds/find-gold.js');
+const MyStats = require('./cmds/my-stats.js');
 
 const SMMO = require('./models/smmo.js');
+const SMMOStats = require("./models/smmo-stats");
 const Constants = require('./Constants.js');
 
 class SMMOManager {
@@ -23,6 +25,8 @@ class SMMOManager {
 
         this.worldboss = [];
         this.profiles = new Discord.Collection();
+        this.profile_stats = new Discord.Collection();
+        this.statRefreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime()
 
         this.loadCommands()
         this.run()
@@ -39,6 +43,7 @@ class SMMOManager {
         this.cmdManager.loadCommand(new Unlink(this.cmdManager))
         this.cmdManager.loadCommand(new User(this.cmdManager))
         this.cmdManager.loadCommand(new WorldBosses(this.cmdManager))
+        this.cmdManager.loadCommand(new MyStats(this.cmdManager))
     }
     
     async run(){
@@ -48,7 +53,22 @@ class SMMOManager {
             })
         }).catch(console.error)
 
-        this.loadAllBosses()
+        await this.loadAllBosses()
+
+        await this.loadStats().then(stats => {
+            stats.forEach(stat => {
+                this.profile_stats.set(stat.ingame_id, stat)
+            })
+        })
+
+        const now = new Date().getTime()
+        const diff = (this.statRefreshTime - now)
+
+        setTimeout(() => {
+            this.updateStats()
+            this.client.logger.info('smmo stats updated!')
+            this.statRefreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime();
+        }, diff)
     }
 
     loadAllBosses(){
@@ -180,6 +200,61 @@ class SMMOManager {
         }
 
         return embed;
+    }
+
+    /*
+    * Daily Stats
+    */
+
+   loadStats(){
+        return new Promise((resolve, reject) => {
+            SMMOStats.collection.find({}, async (err, data) => {
+                if(err){
+                    reject(err)
+                    return
+                }
+                const array = await data.toArray()
+                resolve(array)
+            })
+        })
+    }
+
+    async updateStats(){
+        for(const [key, profile] of this.profiles) {
+            const id = profile.ingame_id;
+            
+            const response = await this.sendRequest('post', '/player/info/'+ id)
+            
+            if(response.data.error) continue
+
+            const {level, steps, npc_kills, user_kills, quests_complete} = response.data;
+
+            const details = {
+                ingame_id: id,
+                level: level,
+                steps: steps,
+                npc_kills: npc_kills,
+                user_kills: user_kills,
+                quests_complete: quests_complete,
+                datetime: new Date().getTime()
+            }
+
+            this.profile_stats.set(id, details)
+            await this.updateOne(details).catch(console.log)
+        }
+    }
+
+    updateOne(details){
+        return new Promise((resolve, reject) => {
+            SMMOStats.collection.findOneAndUpdate({ingame_id: details.ingame_id}, {$set: details}, {upsert: true}, (err) => {
+                if(err){
+                    this.client.logger.error('Failed to update smmo stats.')
+                    reject(err)
+                    return
+                }
+                resolve()
+            })
+        })
     }
 }
 
