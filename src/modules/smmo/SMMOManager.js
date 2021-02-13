@@ -68,6 +68,7 @@ class SMMOManager {
 
         setTimeout(() => {
             this.updateStats()
+            this.client.logger.info('SMMO profiles updated!')
             this.statRefreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime();
         }, diff)
     }
