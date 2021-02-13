@@ -12,6 +12,7 @@ const ReloadBoss = require('./cmds/reload-boss.js');
 const Simulate = require('./cmds/simulate.js');
 const FindGold = require('./cmds/find-gold.js');
 const MyStats = require('./cmds/my-stats.js');
+const SendDaily = require('./cmds/send-daily.js');
 
 const SMMO = require('./models/smmo.js');
 const SMMOStats = require("./models/smmo-stats");
@@ -44,12 +45,13 @@ class SMMOManager {
         this.cmdManager.loadCommand(new User(this.cmdManager))
         this.cmdManager.loadCommand(new WorldBosses(this.cmdManager))
         this.cmdManager.loadCommand(new MyStats(this.cmdManager))
+        this.cmdManager.loadCommand(new SendDaily(this.cmdManager))
     }
     
     async run(){
         await this.getProfiles().then(profiles => {
             profiles.forEach(profile => {
-                this.profiles.set(profile.user_id, {_id: profile._id, user_id: profile.user_id, ingame_id: profile.ingame_id})
+                this.profiles.set(profile.user_id, profile)
             })
         }).catch(console.error)
 
@@ -66,7 +68,6 @@ class SMMOManager {
 
         setTimeout(() => {
             this.updateStats()
-            this.client.logger.info('smmo stats updated!')
             this.statRefreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime();
         }, diff)
     }
@@ -221,6 +222,8 @@ class SMMOManager {
 
     async updateStats(){
         for(const [key, profile] of this.profiles) {
+            const user_id = profile.user_id;
+            const send_daily = profile.send_daily;
             const id = profile.ingame_id;
             
             const response = await this.sendRequest('post', '/player/info/'+ id)
@@ -237,6 +240,30 @@ class SMMOManager {
                 user_kills: user_kills,
                 quests_complete: quests_complete,
                 datetime: new Date().getTime()
+            }
+
+            if(send_daily == 1) {
+                const user = this.client.users.cache.get(user_id)
+                const stats = this.profile_stats.get(ingame_id)
+
+                if(stats == null) return
+
+                if(user) {
+                    const embed = {
+                        color: 'BLUE',
+                        url: 'https://web.simple-mmo.com/user/view/'+ id,
+                        title: 'Your daily stats',
+                        fields: [
+                            {name: 'Level', value: level - stats.level, inline: true},
+                            {name: 'Steps', value: steps - stats.steps, inline: true},
+                            {name: 'NPC Kills', value: npc_kills - stats.npc_kills, inline: true},
+                            {name: 'User Kills', value: user_kills - stats.user_kills, inline: true},
+                            {name: 'Quests Complete', value: quests_complete - stats.quests_complete, inline: true}
+                        ]
+                    }
+
+                    user.send({embed: embed})
+                }
             }
 
             this.profile_stats.set(id, details)
