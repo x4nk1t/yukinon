@@ -22,13 +22,22 @@ class CheckReminder extends Command{
                 const reminder = reminders[0];
                 const now = new Date().getTime()
                 const time = reminder.time - now;
+                const channel_id = reminder.channel_id;
+                const channel = this.client.channels.cache.get(channel_id);
+                var channel_tag = 'DM';
+
+                if(channel.type != 'dm'){
+                    channel_tag = '<#'+ channel_id +'>';
+                }
+
                 const embed = {
                     color: 'BLUE',
                     title: message.author.username +'\'s reminder',
                     fields: [
                         {name: 'ID', value: id},
                         {name: 'Reminder', value: reminder.reminder},
-                        {name: 'Time left', value: this.formatTime(time)}
+                        {name: 'Time left', value: this.formatTime(time)},
+                        {name: 'Channel', value: channel_tag}
                     ],
                     footer: {
                         text: 'Requested by '+ message.author.username,
