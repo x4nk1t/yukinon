@@ -31,6 +31,10 @@ class SMMOManager {
 
         this.loadCommands()
         this.run()
+
+        this.sendRequest('post', '/guilds/info/541').then(re => {
+            console.log(re.data)
+        })
     }
 
     loadCommands(){

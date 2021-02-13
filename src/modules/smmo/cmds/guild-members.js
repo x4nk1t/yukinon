@@ -55,15 +55,19 @@ class GuildMembers extends Command{
                 })
             }
 
+            var title = '(Count '+ usersData.length +')'
+
             if(attackMode) {
                 usersData = usersData.filter(user => !user.safeMode)
+                title = '('+ usersData.length +' Attackable)'
             }
 
             const lastPage = Math.floor(usersData.length / 10);
 
             const embed = {
                 color: 'BLUE',
-                title: guildData.name + ' Members ('+ usersData.length +' Attackable)',
+                title: guildData.name + ' Members '+ title,
+                thumbnail: {url: 'https://web.simple-mmo.com/img/icons/'+ guildData.icon },
                 url: 'https://web.simple-mmo.com/guilds/view/'+ guildData.id +'/members',
                 description: this.getPage(0, usersData, attackMode),
                 footer: {
@@ -82,8 +86,10 @@ class GuildMembers extends Command{
             emojis.forEach(emoji => { firstPage.react(emoji) })
 
             const reactionCollector = firstPage.createReactionCollector((reaction, user) => emojis.includes(reaction.emoji.name) && !user.bot, { time: 300000 })
-            reactionCollector.on('collect', reaction => {
-                reaction.users.remove(message.author)
+            reactionCollector.on('collect', (reaction, user) => {
+                if(user.id != message.author.id) return
+
+                reaction.users.remove(user)
 
                 switch(reaction.emoji.name){
                     case emojis[0]:
@@ -104,7 +110,8 @@ class GuildMembers extends Command{
 
                 const embed2 = {
                     color: 'BLUE',
-                    title: guildData.name + ' Members (Count '+ membersData.length +')',
+                    title: guildData.name + ' Members '+ title,
+                    thumbnail: {url: 'https://web.simple-mmo.com/img/icons/'+ guildData.icon },
                     url: 'https://web.simple-mmo.com/guilds/view/'+ guildData.id +'/members',
                     description: this.getPage(page, usersData, attackMode),
                     footer: {
@@ -128,6 +135,8 @@ class GuildMembers extends Command{
         for(var i = startIndex; i < (startIndex + perPage); i++){
             const user = usersData[i];
             if(!user) continue;
+
+            const pleb = user.membership == 1 ? '<:pleb:810118239660277761>' : '';
             
             if(attackMode) {
                 var attackable = "";
@@ -136,9 +145,9 @@ class GuildMembers extends Command{
                 } else {
                     attackable = "✅";
                 }
-                description += `[ID: ${user.id}] [${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) (Lv. ${user.level.toLocaleString()}) - **Attackable:** ${attackable}\n`;
+                description += `[ID: ${user.id}] [${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) ${pleb} (Lv. ${user.level.toLocaleString()}) - **Attackable:** ${attackable}\n`;
             } else {
-                description += `[ID: ${user.id}] [${user.name}](https://web.simple-mmo.com/user/view/${user.id}) (Lv. ${user.level.toLocaleString()})\n`;
+                description += `[ID: ${user.id}] [${user.name}](https://web.simple-mmo.com/user/view/${user.id}) ${pleb} (Lv. ${user.level.toLocaleString()})\n`;
             }
         }
 

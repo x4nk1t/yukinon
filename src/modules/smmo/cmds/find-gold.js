@@ -82,8 +82,10 @@ class FindGold extends Command{
             emojis.forEach(emoji => { firstPage.react(emoji) })
 
             const reactionCollector = firstPage.createReactionCollector((reaction, user) => emojis.includes(reaction.emoji.name) && !user.bot, { time: 300000 })
-            reactionCollector.on('collect', reaction => {
-                reaction.users.remove(message.author)
+            reactionCollector.on('collect', (reaction, user) => {
+                if(user.id != message.author.id) return
+
+                reaction.users.remove(user)
 
                 switch(reaction.emoji.name){
                     case emojis[0]:
@@ -125,6 +127,8 @@ class FindGold extends Command{
             
             if(!user) continue;
 
+            const pleb = user.membership == 1 ? '<:pleb:810118239660277761>' : '';
+
             var attackable = '';
 
             if ((user.hp / user.max_hp * 100) < 50){
@@ -133,7 +137,7 @@ class FindGold extends Command{
                 attackable = "✅";
             }
 
-            description += `[ID: ${user.id}] [${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) - Lv. ${user.level.toLocaleString()} (Gold: ${user.gold.toLocaleString()}) - **Attackable:**${attackable}\n`;
+            description += `[ID: ${user.id}] [${user.name}](https://web.simple-mmo.com/user/attack/${user.id}) ${pleb} - Lv. ${user.level.toLocaleString()} (Gold: ${user.gold.toLocaleString()}) - **Attackable:**${attackable}\n`;
         }
 
         return description
