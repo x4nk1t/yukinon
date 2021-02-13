@@ -243,8 +243,8 @@ class SMMOManager {
             }
 
             if(send_daily == 1) {
-                const user = this.client.users.cache.get(user_id)
-                const stats = this.profile_stats.get(ingame_id)
+                const user = await this.client.users.fetch(user_id)
+                const stats = this.profile_stats.get(id)
 
                 if(stats == null) return
 
