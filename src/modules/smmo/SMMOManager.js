@@ -66,8 +66,8 @@ class SMMOManager {
         const now = new Date().getTime()
         const diff = (this.statRefreshTime - now)
 
-        setTimeout(() => {
-            this.updateStats()
+        setTimeout(async () => {
+            await this.updateStats()
             this.client.logger.info('SMMO profiles updated!')
             this.statRefreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime();
         }, diff)
@@ -221,55 +221,58 @@ class SMMOManager {
         })
     }
 
-    async updateStats(){
-        for(const [key, profile] of this.profiles) {
-            const user_id = profile.user_id;
-            const send_daily = profile.send_daily;
-            const id = profile.ingame_id;
-            
-            const response = await this.sendRequest('post', '/player/info/'+ id)
-            
-            if(response.data.error) continue
-
-            const {level, steps, npc_kills, user_kills, quests_complete} = response.data;
-
-            const details = {
-                ingame_id: id,
-                level: level,
-                steps: steps,
-                npc_kills: npc_kills,
-                user_kills: user_kills,
-                quests_complete: quests_complete,
-                datetime: new Date().getTime()
-            }
-
-            if(send_daily == 1) {
-                const user = await this.client.users.fetch(user_id)
-                const stats = this.profile_stats.get(id)
-
-                if(stats == null) return
-
-                if(user) {
-                    const embed = {
-                        color: 'BLUE',
-                        url: 'https://web.simple-mmo.com/user/view/'+ id,
-                        title: 'Your daily stats',
-                        fields: [
-                            {name: 'Level', value: level - stats.level, inline: true},
-                            {name: 'Steps', value: steps - stats.steps, inline: true},
-                            {name: 'NPC Kills', value: npc_kills - stats.npc_kills, inline: true},
-                            {name: 'User Kills', value: user_kills - stats.user_kills, inline: true},
-                            {name: 'Quests Complete', value: quests_complete - stats.quests_complete, inline: true}
-                        ]
-                    }
-
-                    user.send({embed: embed})
+    updateStats(){
+        return new Promise(async (resolve, reject) => {
+            for(const [key, profile] of this.profiles) {
+                const user_id = profile.user_id;
+                const send_daily = profile.send_daily;
+                const id = profile.ingame_id;
+                
+                const response = await this.sendRequest('post', '/player/info/'+ id).catch(console.log)
+                
+                if(response.data.error) continue
+    
+                const {level, steps, npc_kills, user_kills, quests_complete} = response.data;
+    
+                const details = {
+                    ingame_id: id,
+                    level: level,
+                    steps: steps,
+                    npc_kills: npc_kills,
+                    user_kills: user_kills,
+                    quests_complete: quests_complete,
+                    datetime: new Date().getTime()
                 }
+    
+                if(send_daily == 1) {
+                    const user = await this.client.users.fetch(user_id)
+                    const stats = this.profile_stats.get(id)
+    
+                    if(stats == null) return
+    
+                    if(user) {
+                        const embed = {
+                            color: 'BLUE',
+                            url: 'https://web.simple-mmo.com/user/view/'+ id,
+                            title: 'Your daily stats',
+                            fields: [
+                                {name: 'Level', value: level - stats.level, inline: true},
+                                {name: 'Steps', value: steps - stats.steps, inline: true},
+                                {name: 'NPC Kills', value: npc_kills - stats.npc_kills, inline: true},
+                                {name: 'User Kills', value: user_kills - stats.user_kills, inline: true},
+                                {name: 'Quests Complete', value: quests_complete - stats.quests_complete, inline: true}
+                            ]
+                        }
+    
+                        user.send({embed: embed})
+                    }
+                }
+    
+                this.profile_stats.set(id, details)
+                await this.updateOne(details).catch(console.log)
             }
-
-            this.profile_stats.set(id, details)
-            await this.updateOne(details).catch(console.log)
-        }
+            resolve()
+        })
     }
 
     updateOne(details){
