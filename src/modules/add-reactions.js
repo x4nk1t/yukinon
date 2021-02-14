@@ -16,7 +16,6 @@ class AddReactions {
             const endTime = new Date(new Date().setUTCHours(31,0,0,0)).getTime()
 
             if((startTime - now) <= 0 || (endTime - now) >= 0){
-                console.log('high traffic')
                 message.react('❤️')
             }
         })
