@@ -37,7 +37,7 @@ class ReminderManager {
                 const time = reminder.time;
                 const diff = (time - new Date().getTime())
 
-                if(diff > 0){
+                if(diff > 0 && diff < 172800000){ 
                     const timeout = setTimeout(() => {
                         this.sendReminder(reminder)
                     }, diff)
@@ -92,8 +92,10 @@ class ReminderManager {
 
                 const remainingTime = (time - new Date().getTime())
 
-                const timeout = setTimeout(() => { this.sendReminder(obj) }, remainingTime)
-                this.remindersTimeout.set(id, timeout)
+                if(diff > 0 && diff < 172800000){
+                    const timeout = setTimeout(() => { this.sendReminder(obj) }, remainingTime)
+                    this.remindersTimeout.set(id, timeout)
+                }
                 
                 resolve(true)
             })
