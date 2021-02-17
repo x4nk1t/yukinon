@@ -37,12 +37,14 @@ class ReminderManager {
                 const time = reminder.time;
                 const diff = (time - new Date().getTime())
 
-                if(diff > 0 && diff < 172800000){ 
-                    const timeout = setTimeout(() => {
-                        this.sendReminder(reminder)
-                    }, diff)
+                if(diff > 0){ 
+                    if(diff < 172800000){
+                        const timeout = setTimeout(() => {
+                            this.sendReminder(reminder)
+                        }, diff)
 
-                    this.remindersTimeout.set(id, timeout)
+                        this.remindersTimeout.set(id, timeout)
+                    }
                 } else {
                     toRemove.push(id)
                 }
@@ -90,10 +92,10 @@ class ReminderManager {
                 obj._id = id;
                 this.reminders.push(obj)
 
-                const remainingTime = (time - new Date().getTime())
+                const diff = (time - new Date().getTime())
 
                 if(diff > 0 && diff < 172800000){
-                    const timeout = setTimeout(() => { this.sendReminder(obj) }, remainingTime)
+                    const timeout = setTimeout(() => { this.sendReminder(obj) }, diff)
                     this.remindersTimeout.set(id, timeout)
                 }
                 
