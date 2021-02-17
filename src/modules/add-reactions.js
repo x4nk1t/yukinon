@@ -11,7 +11,7 @@ class AddReactions {
             if(message.embeds.length <= 0) return
 
             const description = message.embeds[0].description.toLowerCase();
-            if(!description.includes('<:kakera:469835869059153940>') || description.includes('claim')) return
+            if(!description.includes('<:kakera:469835869059153940>') || description.includes('like')) return
             
             const now = new Date()
             const startDate = new Date(new Date().setUTCHours(14,0,0,0))
