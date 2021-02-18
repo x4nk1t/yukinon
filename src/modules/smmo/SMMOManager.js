@@ -49,28 +49,21 @@ class SMMOManager {
     }
     
     async run(){
-        await this.getProfiles().then(profiles => {
-            profiles.forEach(profile => {
-                this.profiles.set(profile.user_id, profile)
-            })
-        }).catch(console.error)
+        const profiles = await this.getProfiles()
+        
+        profiles.forEach(profile => {
+            this.profiles.set(profile.user_id, profile)
+        })
 
         await this.loadAllBosses()
 
-        await this.loadStats().then(stats => {
-            stats.forEach(stat => {
-                this.profile_stats.set(stat.ingame_id, stat)
-            })
+        const stats = await this.loadStats()
+
+        stats.forEach(stat => {
+            this.profile_stats.set(stat.ingame_id, stat)
         })
 
-        const now = new Date().getTime()
-        const diff = (this.statRefreshTime - now)
-
-        setTimeout(async () => {
-            await this.updateStats()
-            this.client.logger.info('SMMO profiles updated!')
-            this.statRefreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime();
-        }, diff)
+        this.setRefreshTimeout()
     }
 
     loadAllBosses(){
@@ -208,7 +201,19 @@ class SMMOManager {
     * Daily Stats
     */
 
-   loadStats(){
+    setRefreshTimeout(){
+        const now = new Date().getTime()
+        const diff = (this.statRefreshTime - now)
+
+        setTimeout(async () => {
+            await this.updateStats()
+            this.client.logger.info('SMMO stats updated!')
+            this.statRefreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime();
+            this.setRefreshTimeout()
+        }, diff)
+    }
+
+    loadStats(){
         return new Promise((resolve, reject) => {
             SMMOStats.collection.find({}, async (err, data) => {
                 if(err){
