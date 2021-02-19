@@ -32,12 +32,12 @@ class Link extends Command{
                             return
                         }
 
-                        SMMO.collection.insertOne({user_id: message.author.id, ingame_id: id}, err => {
+                        SMMO.collection.insertOne({user_id: message.author.id, ingame_id: id, send_daily: 0}, err => {
                             if(err){
                                 message.channel.send({embed: {color: 'BLUE', description: 'Something went wrong.'}})
                                 return
                             }
-                            manager.profiles.set(message.author.id, {user_id: message.author.id, ingame_id: id})
+                            manager.profiles.set(message.author.id, {user_id: message.author.id, ingame_id: id, send_daily: 0})
                             message.channel.send({embed: {color: 'BLUE', description: 'Successfully linked your account.'}})
                         })
                     })
