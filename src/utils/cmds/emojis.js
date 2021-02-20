@@ -11,7 +11,7 @@ class Emojis extends Command{
     }
 
     execute(message, commandArgs){
-        var embed = { footer: {text: `Requested by ${message.author.username}`, icon_url: message.author.displayAvatarURL()}}
+        var embed = {color: 'BLUE', footer: {text: `Requested by ${message.author.username}`, icon_url: message.author.displayAvatarURL()}}
         const guild = message.guild;
 
         if(guild.emojis.cache.size){
@@ -23,7 +23,25 @@ class Emojis extends Command{
             });
 
             embed.title = guild.name + '\'s Emojis'
-            embed.description = '**Static Emojis** \n'+ normal.join(' ') + '\n\n **Animated Emojis**\n'+ animated.join(' ');
+
+            var description = '**Static Emojis** '
+            embed.fields = [];
+            
+            if(normal.length){
+                description += '('+ normal.length +') \n'+ normal.join(' ')
+            } else {
+                description += '\n N/A'
+            }
+
+            description += '\n\n **Animated Emojis** '
+
+            if(animated.length){
+                description += '('+ animated.length +') \n'+ animated.join(' ');
+            }  else {
+                description += '\n N/A'
+            }
+
+            embed.description = description;
 
             message.channel.send({embed: embed})
         } else {

@@ -17,7 +17,7 @@ class Stats extends Command{
         var total = (process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2);
 
         var embed = {
-            color: 'GREEN',
+            color: 'BLUE',
             fields: [
                 { name: 'Ping', value: (sent.createdTimestamp - message.createdTimestamp) +'ms', inline: true },
                 { name: 'Uptime', value: this.getUptime(), inline: true },
