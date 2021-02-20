@@ -27,7 +27,6 @@ class SMMOManager {
         this.worldboss = [];
         this.profiles = new Discord.Collection();
         this.profile_stats = new Discord.Collection();
-        this.statRefreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime()
 
         this.loadCommands()
         this.run()
@@ -202,13 +201,18 @@ class SMMOManager {
     */
 
     setRefreshTimeout(){
-        const now = new Date().getTime()
-        const diff = (this.statRefreshTime - now)
+        const now = new Date();
+        var refreshTime = (new Date(new Date().setUTCHours(12,0,0,0))).getTime()
+
+        if(now.getUTCHours() >= 12){
+            refreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime()
+        }
+
+        const diff = (refreshTime - now)
 
         setTimeout(async () => {
             await this.updateStats()
             this.client.logger.info('SMMO stats updated!')
-            this.statRefreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime();
             this.setRefreshTimeout()
         }, diff)
     }
