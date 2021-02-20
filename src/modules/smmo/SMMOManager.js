@@ -202,13 +202,15 @@ class SMMOManager {
 
     setRefreshTimeout(){
         const now = new Date();
+        const time = now.getTime();
+        
         var refreshTime = (new Date(new Date().setUTCHours(12,0,0,0))).getTime()
 
         if(now.getUTCHours() >= 12){
             refreshTime = (new Date(new Date().setUTCHours(36,0,0,0))).getTime()
         }
 
-        const diff = (refreshTime - now)
+        const diff = (refreshTime - time)
 
         setTimeout(async () => {
             await this.updateStats()
