@@ -38,21 +38,25 @@ class Simulate extends Command{
 
             if(this.isValidInt(p1) && this.isValidInt(p2)){
                 manager.sendRequest('post', '/player/info/'+ p1).then(response => {
-                    if(response.error && response.error == 'user not found'){
+                    if(response.data.error && response.data.error == 'user not found'){
                         message.channel.send({embed: {color: 'BLUE', description: 'User with id **'+ p1 +'** not found.'}})
                         return
                     }
                     manager.sendRequest('post', '/player/info/'+ p2).then(response2 => {
-                        if(response2.error && response2.error == 'user not found'){
+                        if(response2.data.error && response2.data.error == 'user not found'){
                             message.channel.send({embed: {color: 'BLUE', description: 'User with id '+ p2 +' not found.'}})
                             return
                         }
+                        const battles = []
+
                         var p1_data = response.data;
                         var p2_data = response2.data;
 
-                        const details = this.simulatePVP(p1_data, p2_data);
+                        for(var i = 0; i < 20; i++){
+                            battles.push(this.simulatePVP(p1_data, p2_data))
+                        }
 
-                        message.channel.send({embed: this.battleEmbed(details)})
+                        message.channel.send({embed: this.battleEmbed(battles)})
                     })
                 })
             }
@@ -65,24 +69,35 @@ class Simulate extends Command{
         return !isNaN(id) && !isNaN(parseFloat(id))
     }
 
-    battleEmbed(d){
+    battleEmbed(battles){
+        const d = battles[0]
         var description = '';
+        
+        const p1_attack = '[Attack](https://web.simple-mmo.com/user/attack/'+d.p1.id+')'
+        const p1_profile = '[Profile](https://web.simple-mmo.com/user/view/'+d.p1.id+')'
 
-        description += `**${d.p1.name}** (Lv. ${d.p1.level}) \n`;
+        const p2_attack = '[Attack](https://web.simple-mmo.com/user/attack/'+d.p2.id+')'
+        const p2_profile = '[Profile](https://web.simple-mmo.com/user/view/'+d.p2.id+')'
+
+        description += `**${d.p1.name}** (Lv. ${d.p1.level}) [${p1_attack} | ${p1_profile}] \n`;
         description += `**Damage:** ${d.p1_damage} \n`;
         description += `**Hit Chance:** ${d.p1_hitchance.toFixed(2)}% \n\n`;
 
-        description += `**${d.p2.name}** (Lv. ${d.p2.level}) \n`;
+        description += `**${d.p2.name}** (Lv. ${d.p2.level}) [${p2_attack} | ${p2_profile}] \n`;
         description += `**Damage:** ${d.p2_damage} \n`;
         description += `**Hit Chance:** ${d.p2_hitchance.toFixed(2)}% \n\n`;
 
-        if(d.wonBy && d.wonBy == 'TIED'){
-            description += `**Nobody won the battle! TIED**\n`;
-        } else if(d.battle_completed && d.wonBy) {
-            description += `**${d.wonBy} WON THE BATTLE!**\n`;
-        } else {
-            description += `**Couldn't complete battle within 100 exchange.**`;
-        }
+        const battles_not_completed = battles.filter((b) => b.battle_completed == false);
+        const won_by_p1 = battles.filter((b) => b.wonBy == d.p1.name)
+        const won_by_p2 = battles.filter((b) => b.wonBy == d.p2.name)
+        
+        description += '**Simulating 20 battles!**\n'
+        description += '**'+d.p1.name +' WON:** '+ won_by_p1.length +' battles\n'
+        
+        description += '**'+d.p2.name +' WON:** '+ won_by_p2.length + ' battles\n\n'
+
+        if(battles_not_completed.length) description += '**Couldn\'t complete '+ battles_not_completed.length +' battles in 100 hits each!**'
+
         return {
             color: 'BLUE',
             title: d.p1.name +' vs '+ d.p2.name,
