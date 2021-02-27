@@ -1,4 +1,6 @@
-const Command = require('../../../utils/Command.js')
+const Functions = require('../../../Functions.js');
+const Command = require('../../../utils/Command.js');
+const Constants = require('../Constants.js');
 
 class FindGold extends Command{
     constructor(commandLoader){
@@ -57,7 +59,8 @@ class FindGold extends Command{
 
             usersData.sort((a, b) => b.gold - a.gold)
 
-            const lastPage = Math.floor(usersData.length / 10);
+            const lastPage = (usersData.length / 10);
+            const lastPageFloor = Math.floor(usersData.length / 10);
 
             const embed = {
                 color: 'BLUE',
@@ -65,7 +68,7 @@ class FindGold extends Command{
                 url: 'https://web.simple-mmo.com/guilds/view/'+ guildData.id +'/members',
                 description: this.getPage(0, usersData),
                 footer: {
-                    text: 'Requested by '+ message.author.username + ' • Page (1/'+ (lastPage + 1) +')',
+                    text: 'Requested by '+ message.author.username + ' • Page (1/'+ (lastPageFloor + 1) +')',
                     icon_url: message.author.displayAvatarURL()
                 },
             }
@@ -74,43 +77,13 @@ class FindGold extends Command{
 
             await firstPage.edit({embed: embed})
 
-            if(lastPage == 0) return
-            const emojis = ['⏪', '◀️', '▶️' ,'⏩']
+            if(lastPage <= 1) return
 
-            var page = 0;
-
-            emojis.forEach(emoji => { firstPage.react(emoji) })
-
-            const reactionCollector = firstPage.createReactionCollector((reaction, user) => emojis.includes(reaction.emoji.name) && !user.bot, { time: 300000 })
-            reactionCollector.on('collect', (reaction, user) => {
-                if(user.id != message.author.id) return
-
-                reaction.users.remove(user)
-
-                switch(reaction.emoji.name){
-                    case emojis[0]:
-                        page = 0;
-                    break;
-                    case emojis[1]:
-                        page = (page == 0) ? 0 : page - 1;
-                    break;
-
-                    case emojis[2]:
-                        page = (page == lastPage) ? lastPage : page + 1;
-                    break;
-
-                    case emojis[3]:
-                        page = lastPage;
-                    break;
-                }
-
+            Functions.createReactionCollector(message, firstPage, lastPageFloor, async (page) => {
                 embed.description = this.getPage(page, usersData)
-                embed.footer = {
-                    text: 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +'/'+ (lastPage + 1) +')',
-                    icon_url: message.author.displayAvatarURL()
-                }
+                embed.footer.text = 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +'/'+ (lastPageFloor + 1) +')'
 
-                firstPage.edit({embed: embed})
+                await firstPage.edit({embed: embed})
             })
         } else {
             this.sendUsage(message)
@@ -127,7 +100,7 @@ class FindGold extends Command{
             
             if(!user) continue;
 
-            const pleb = user.membership == 1 ? '<:pleb:810118239660277761>' : '';
+            const pleb = user.membership == 1 ? Constants.PLEB : '';
 
             var attackable = '';
 
