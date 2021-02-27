@@ -84,7 +84,7 @@ class GuildMembers extends Command{
             if(lastPage <= 1) return
 
             Functions.createReactionCollector(message, firstPage, lastPageFloor, async (page) => {
-                embed.description = this.getPage(page, usersData)
+                embed.description = this.getPage(page, usersData, attackMode)
                 embed.footer.text = 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +'/'+ (lastPageFloor + 1) +')'
 
                 await firstPage.edit({embed: embed})
