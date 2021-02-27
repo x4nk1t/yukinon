@@ -17,18 +17,29 @@ class Eval extends Command{
             const evalContent = split.join(' ')
 
             if(evalContent.toLowerCase().includes('token')){
-                message.channel.send({embed: {color: 'BLUE', description: 'Even if you are authorized user, I cannot eval content with word **token** in it.'}})
+                message.channel.send({embed: {color: 'BLUE', description: 'Cannot parse content with **token** word.'}})
                 return
             }
 
             try {
-                eval(evalContent)
+                let evaled = eval(evalContent)
+
+                if(typeof evaled != "string") evaled = require('util').inspect(evaled)
+
+                message.channel.send(this.clean(evaled), {code: 'x1'})
             } catch(err) {
-                message.channel.send({embed: {color: 'BLUE', description: err.name + ': '+ err.message}})
+                message.channel.send(`\`ERROR\` \`\`\`xl\n${this.clean(err)}\n\`\`\``)
             }
         } else {
             message.channel.send({embed: {description: 'You don\'t have permission for this command. <:pooh:789404954430668821>', color: 'BLUE'}})
         }
+    }
+
+    clean(text) {
+        if (typeof(text) === "string")
+            return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+        else
+            return text;
     }
 }
 
