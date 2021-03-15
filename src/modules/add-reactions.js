@@ -15,7 +15,9 @@ class AddReactions {
                 const description = embed.description.toLowerCase();
                 if(!description.includes('<:kakera:469835869059153940>') || description.includes('like') || embed.image == null || message.reactions.cache.size > 0) return
 
-                const now = new Date()
+                message.react('❤️')
+
+                /*const now = new Date()
                 const startDate = new Date(new Date().setUTCHours(12,0,0,0))
                 const endDate = new Date(new Date().setUTCHours(31,0,0,0))
 
@@ -28,8 +30,8 @@ class AddReactions {
                 
                 if((now > startTime) && (now < endTime)){
                     message.react('❤️')
-                }
-            }, 500)
+                } */
+            }, 1000)
         })
     }
 }
