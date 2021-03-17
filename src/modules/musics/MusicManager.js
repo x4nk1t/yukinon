@@ -19,6 +19,37 @@ class MusicManager {
         this.queue = new Discord.Collection();
 
         this.loadCommands()
+        this.run()
+    }
+
+    run(){
+        this.client.on('voiceStateUpdate', (oldState, newState) => {
+            if(oldState.channel && oldState.guild.id == "682563272641478657"){
+                if(oldState.channel.name.startsWith("Musics ")){
+                    const members = oldState.channel.members.filter(member => !member.bot);
+
+                    if(members.size == 0){
+                        oldState.channel.delete()
+                    }
+                }
+            }
+            if(!newState.channel) return
+            if(newState.guild.id == "682563272641478657"){
+                if(newState.channel.name == "Musics"){
+                    const guild = newState.guild;
+                    const parent = newState.channel.parent;
+                    if(parent){
+                        const id = parent.children ? parent.children.filter(channels => channels.type == "voice").size : 1;
+                        guild.channels.create("Musics "+ id, {
+                            type: 'voice',
+                            parent: parent
+                        }).then(newVoiceChannel => {
+                            newState.setChannel(newVoiceChannel)
+                        })
+                    }
+                }
+            }
+        })
     }
     
     loadCommands(){
