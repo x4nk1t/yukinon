@@ -5,6 +5,7 @@ const RpgRemindersCommand = require('./cmds/rpg-reminders.js')
 const LOOTBOX = 10800000; //3hrs
 const GUILD = 7200000; //2hrs
 const HUNT = 60000; //1min
+const FARM = 600000; //10min
 const ADVENTURE = 3600000; //1hr
 const TRAINING = 900000; //15min
 const PROGRESS = 300000; //5min
@@ -19,6 +20,7 @@ class RPGManager {
         this.hunt = new Discord.Collection();
         this.adventure = new Discord.Collection();
         this.progress = new Discord.Collection();
+        this.farm = new Discord.Collection();
         this.training = new Discord.Collection();
         this.guild = new Discord.Collection();
         this.lootbox = new Discord.Collection();
@@ -143,6 +145,13 @@ class RPGManager {
                     }
                 }
             }
+
+            if(sc == "farm"){
+                if(!this.farm.has(userId) || force){
+                    this.addTimer(userId, "farm", now + FARM, channel_id, user)
+                    this.farm.set(userId, {time: now + FARM, channel: channel, user: {mention: user.toString(), username: user.username}})
+                }
+            }
             
             if(sc == "arena"){
                 if(!this.arena.has(userId) || force){
@@ -208,6 +217,9 @@ class RPGManager {
                     }
                     if(type == "progress"){
                         this.progress.set(userId, {time: time, channel: channel, user: user})
+                    }
+                    if(type == "farm"){
+                        this.farm.set(userId, {time: time, channel: channel, user: user})
                     }
                     if(type == "guild"){
                         this.guild.set(userId, {time: time, channel: channel, user: user})
@@ -311,6 +323,19 @@ class RPGManager {
                 channel.send('**'+ user.username +'**, Progress Ready!')
                 this.progress.delete(id)
                 this.removeTimer(id, "progress")
+            }
+        })
+
+        this.farm.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send('**'+ user.username +'**, Farm Ready!')
+                this.farm.delete(id)
+                this.removeTimer(id, "farm")
             }
         })
         

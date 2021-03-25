@@ -26,7 +26,7 @@ class MusicManager {
         this.client.on('voiceStateUpdate', (oldState, newState) => {
             if(oldState.channel && oldState.guild.id == "682563272641478657"){
                 if(oldState.channel.name.startsWith("Musics ")){
-                    const members = oldState.channel.members.filter(member => !member.bot);
+                    const members = oldState.channel.members;
 
                     if(members.size == 0){
                         oldState.channel.delete()

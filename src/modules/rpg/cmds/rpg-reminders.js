@@ -30,6 +30,7 @@ class RpgRemindersCommand extends Command{
         var adventure = reminder.adventure.get(userId);
         var training = reminder.training.get(userId);
         var progress = reminder.progress.get(userId);
+        var farm = reminder.farm.get(userId);
         var miniboss = reminder.miniboss.get(userId);
         var horse = reminder.horse.get(userId);
         var arena = reminder.arena.get(userId);
@@ -50,6 +51,9 @@ class RpgRemindersCommand extends Command{
         }
         if(progress){
             description += "**Progress:** "+ this.formatTime(progress.time) +"\n";
+        }
+        if(farm){
+            description += "**Farm:** "+ this.formatTime(farm.time) +"\n";
         }
         if(miniboss){
             description += "**Miniboss:** "+ this.formatTime(miniboss.time) +"\n";
