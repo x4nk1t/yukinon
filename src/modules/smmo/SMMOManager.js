@@ -35,7 +35,7 @@ class SMMOManager {
     loadCommands(){
         this.cmdManager.loadCommand(new FindGold(this.cmdManager))
         this.cmdManager.loadCommand(new Guild(this.cmdManager))
-        this.cmdManager.loadCommand(new GuildMembers(this.cmdManager))
+        //this.cmdManager.loadCommand(new GuildMembers(this.cmdManager))
         this.cmdManager.loadCommand(new Link(this.cmdManager))
         this.cmdManager.loadCommand(new Profile(this.cmdManager))
         this.cmdManager.loadCommand(new ReloadBoss(this.cmdManager))
@@ -109,8 +109,6 @@ class SMMOManager {
                 embed.url = 'https://web.simple-mmo.com/worldboss/view/'+ boss.id
                 embed.description = 'Click the name to go to world boss page.'
                 embed.fields = [{name: 'Level', value: boss.level.toLocaleString(), inline: true}, {name: 'HP', value: boss.max_hp.toLocaleString(), inline: true}]
-
-                this.worldboss.splice(this.worldboss.indexOf(boss), 1)
                 
                 channel.send({content: `${mention} WB **${boss.name}** in ${minutes}!`, embed: embed})
             }
@@ -216,7 +214,6 @@ class SMMOManager {
 
         setTimeout(async () => {
             await this.updateStats()
-            this.client.logger.info('SMMO stats updated!')
             this.setRefreshTimeout()
         }, diff)
     }
