@@ -5,7 +5,7 @@ class User extends Command{
         super(commandLoader, {
             name: 'user',
             description: 'Check smmo user with id.',
-            usage: '<id>',
+            usage: '<id|tag>',
             aliases: ['u']
         })
     }
@@ -15,6 +15,16 @@ class User extends Command{
 
         if(commandArgs[0]){
             var id = commandArgs[0];
+            const mention = message.mentions.users.first();
+            if(mention){
+                const profile = manager.profiles.get(mention.id)
+                if(profile) {
+                    id = profile.ingame_id;
+                } else {
+                    message.channel.send({embed: {color: 'BLUE', description: mention.toString() +' haven\'t linked their account yet!'}})
+                    return
+                }
+            }
             if(!isNaN(id) && !isNaN(parseFloat(id))){
                 manager.sendRequest('post', '/player/info/'+ id)
                     .then(response => {
