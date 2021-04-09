@@ -33,9 +33,9 @@ class SMMOManager {
     }
 
     loadCommands(){
-        this.cmdManager.loadCommand(new FindGold(this.cmdManager))
+        //this.cmdManager.loadCommand(new FindGold(this.cmdManager))
         this.cmdManager.loadCommand(new Guild(this.cmdManager))
-        //this.cmdManager.loadCommand(new GuildMembers(this.cmdManager))
+        this.cmdManager.loadCommand(new GuildMembers(this.cmdManager))
         this.cmdManager.loadCommand(new Link(this.cmdManager))
         this.cmdManager.loadCommand(new Profile(this.cmdManager))
         this.cmdManager.loadCommand(new ReloadBoss(this.cmdManager))
