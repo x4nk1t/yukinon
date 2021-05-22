@@ -30,8 +30,8 @@ class RedditManager {
     }
 
     sendPosts(posts){
-        posts.forEach(post => {
-            this.reddit_channels.forEach(channel => {
+        this.reddit_channels.forEach(channel => {
+            posts.forEach(post => {
                 const id = channel.channel_id;
                 const subreddits = channel.subreddits;
     
