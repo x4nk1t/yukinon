@@ -10,7 +10,7 @@ class RedditGrabber {
     }
 
     run(){
-        axios.get('https://www.reddit.com/r/all/new/.json?limit=50').then(response => {
+        axios.get('https://www.reddit.com/r/all/new/.json?limit=50').then(async response => {
             const posts = await this.getPosts(response).catch(console.error);
             
             this.redditManager.sendPosts(posts)
