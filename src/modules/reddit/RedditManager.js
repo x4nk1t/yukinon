@@ -61,7 +61,7 @@ class RedditManager {
     }
 
     isImageLink(link){
-        return link.endsWith('.jpg') || link.endsWith('.png');
+        return link.endsWith('.jpg') || link.endsWith('.png') || link.endsWith('.gif');
     }
 
     updateSubOfChannel(channel_id, update){
