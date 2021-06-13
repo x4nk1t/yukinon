@@ -12,11 +12,11 @@
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "axios": "^0.21.1",
-    "chokidar": "^3.4.3",
-    "discord.js": "^12.5.1",
-    "ffmpeg-static": "^4.2.7",
-    "mongoose": "^5.9.25",
+    "chokidar": "^3.5.1",
+    "discord.js": "^12.5.3",
+    "ffmpeg-static": "^4.3.0",
+    "mongoose": "^5.12.13",
     "node-fetch": "^2.6.1",
-    "ytdl-core": "^4.4.3"
+    "ytdl-core": "^4.8.2"
   }
 }
