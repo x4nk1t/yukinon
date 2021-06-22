@@ -21,7 +21,8 @@ class War extends Command{
             var id = commandArgs[1];
             if(!isNaN(id) && !isNaN(parseFloat(id))){
                 if(!list){
-                    list = {user_id: message.author.id, guilds_id: []}
+                    manager.war_list.set(message.author.id, {user_id: message.author.id, guilds_id: []})
+                    list = manager.war_list.get(message.author.id)
                 }
 
                 if(action == "add"){
