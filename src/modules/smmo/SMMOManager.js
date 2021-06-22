@@ -73,6 +73,48 @@ class SMMOManager {
         })
 
         this.setRefreshTimeout()
+        this.sendWarTargets()
+    }
+
+    async sendWarTargets(){
+        const list = this.war_list.get(this.client.owners[0])
+        const attackables = await this.generateAttackables(list.guilds_id)
+
+        if(!attackables.length){
+            return
+        }
+
+        const embed = {
+            title: 'Attackable list (Count '+ attackables.length +')',
+            color: 'BLUE',
+            fields: [],
+        }
+
+        var content = '';
+
+        attackables.sort((a, b) => b.level - a.level).forEach((attackable, index) => {
+            const attId = attackable.user_id;
+            const name = attackable.name;
+            const level = attackable.level;
+
+            const link = "https://web.simple-mmo.com/user/attack/"+ attId;
+
+            content += `[${name}](${link}) lv. ${level} \n`
+            
+            if((index + 1) % 5 == 0 || (index + 1) == attackables.length){
+                embed.fields.push({name: '\u200b', value: content, inline: true})
+                content = '';
+            }
+        })
+
+        setTimeout(() => {
+            this.sendWarTargets()
+        }, 1000 * 60 * 5) //every 5 mins
+
+        if(!embed.fields.length) return
+
+        const ch = await this.client.channels.fetch('856948503275372616')
+        ch.send({embed: embed})
     }
 
     loadAllBosses(){
@@ -332,6 +374,35 @@ class SMMOManager {
                 resolve()
             })
         })
+    }
+
+    async generateAttackables(guilds_id){
+        const attackables = [];
+        const manager = this.client.smmoManager;
+        
+        for(const id of guilds_id){
+            await this.sendRequest('post', '/guilds/info/'+ id)
+                .then(async response => {
+                    const data = response.data;
+                    
+                    if(data.error == 'guild not found'){
+                        return
+                    }
+                    var members;
+
+                    await this.sendRequest('post', '/guilds/members/'+ id).then(membersResponse => {
+                        members = membersResponse.data;
+                    })
+                    
+                    const filtered = members.filter(member => member.safe_mode == 0)
+
+                    filtered.forEach(filter => {
+                        if((filter.current_hp / filter.max_hp) >= 0.5) attackables.push(filter)
+                    })
+                })
+        }
+
+        return attackables;
     }
 }
 

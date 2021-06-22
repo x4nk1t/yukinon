@@ -63,7 +63,7 @@ class War extends Command{
             return
         }
 
-        const attackables = await this.generateAttackables(list.guilds_id)
+        const attackables = await manager.generateAttackables(list.guilds_id)
 
         if(!attackables.length){
             message.channel.send(this.embed('No players are currently attackable.'))
@@ -98,35 +98,6 @@ class War extends Command{
         })
 
         message.channel.send({embed: embed})
-    }
-
-    async generateAttackables(guilds_id){
-        const attackables = [];
-        const manager = this.client.smmoManager;
-        
-        for(const id of guilds_id){
-            await manager.sendRequest('post', '/guilds/info/'+ id)
-                .then(async response => {
-                    const data = response.data;
-                    
-                    if(data.error == 'guild not found'){
-                        return
-                    }
-                    var members;
-
-                    await manager.sendRequest('post', '/guilds/members/'+ id).then(membersResponse => {
-                        members = membersResponse.data;
-                    })
-                    
-                    const filtered = members.filter(member => member.safe_mode == 0)
-
-                    filtered.forEach(filter => {
-                        if((filter.current_hp / filter.max_hp) >= 0.5) attackables.push(filter)
-                    })
-                })
-        }
-
-        return attackables;
     }
 
     embed(message){
