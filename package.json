@@ -10,13 +10,8 @@
   "author": "x4nk1t",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/opus": "^0.3.3",
     "axios": "^0.21.1",
-    "chokidar": "^3.5.2",
     "discord.js": "^12.5.3",
-    "ffmpeg-static": "^4.4.0",
-    "mongoose": "^5.12.14",
-    "node-fetch": "^2.6.1",
-    "ytdl-core": "^4.8.2"
+    "mongoose": "^5.12.14"
   }
 }
