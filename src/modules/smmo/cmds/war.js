@@ -83,7 +83,7 @@ class War extends Command{
         var content = '';
 
         attackables.sort((a, b) => b.level - a.level).forEach((attackable, index) => {
-            const attId = attackable.id;
+            const attId = attackable.user_id;
             const name = attackable.name;
             const level = attackable.level;
 
