@@ -13,9 +13,11 @@ const Simulate = require('./cmds/simulate.js');
 const FindGold = require('./cmds/find-gold.js');
 const MyStats = require('./cmds/my-stats.js');
 const SendDaily = require('./cmds/send-daily.js');
+const War = require('./cmds/war.js');
 
 const SMMO = require('./models/smmo.js');
 const SMMOStats = require("./models/smmo-stats");
+const Wars = require("./models/wars");
 const Constants = require('./Constants.js');
 
 class SMMOManager {
@@ -27,6 +29,7 @@ class SMMOManager {
         this.worldboss = [];
         this.profiles = new Discord.Collection();
         this.profile_stats = new Discord.Collection();
+        this.war_list = new Discord.Collection();
 
         this.loadCommands()
         this.run()
@@ -45,6 +48,7 @@ class SMMOManager {
         this.cmdManager.loadCommand(new WorldBosses(this.cmdManager))
         this.cmdManager.loadCommand(new MyStats(this.cmdManager))
         this.cmdManager.loadCommand(new SendDaily(this.cmdManager))
+        this.cmdManager.loadCommand(new War(this.cmdManager))
     }
     
     async run(){
@@ -60,6 +64,12 @@ class SMMOManager {
 
         stats.forEach(stat => {
             this.profile_stats.set(stat.ingame_id, stat)
+        })
+
+        const wars = await this.loadWars()
+
+        wars.forEach(war => {
+            this.war_list.set(war.user_id, war)
         })
 
         this.setRefreshTimeout()
@@ -290,6 +300,32 @@ class SMMOManager {
             SMMOStats.collection.findOneAndUpdate({ingame_id: details.ingame_id}, {$set: details}, {upsert: true}, (err) => {
                 if(err){
                     this.client.logger.error('Failed to update smmo stats.')
+                    reject(err)
+                    return
+                }
+                resolve()
+            })
+        })
+    }
+
+    loadWars(){
+        return new Promise((resolve, reject) => {
+            Wars.collection.find({}, async (err, data) => {
+                if(err){
+                    reject(err)
+                    return
+                }
+                const array = await data.toArray()
+                resolve(array)
+            })
+        })
+    }
+
+    updateWar(details){
+        return new Promise((resolve, reject) => {
+            Wars.collection.findOneAndUpdate({user_id: details.user_id}, {$set: details}, {upsert: true}, (err) => {
+                if(err){
+                    this.client.logger.error('Failed to update war list.')
                     reject(err)
                     return
                 }
