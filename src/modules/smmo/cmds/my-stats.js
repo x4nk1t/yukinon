@@ -32,7 +32,7 @@ class MyStats extends Command{
                     
                     const stats = manager.profile_stats.get(id);
 
-                    if(stats == null){
+                    if(stats == null || stats.level == 0){
                         message.channel.send({embed: {color: 'BLUE', description: 'It takes a day to generate your stats if you just linked your account!'}})
                         return
                     }

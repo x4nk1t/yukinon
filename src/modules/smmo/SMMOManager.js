@@ -73,7 +73,7 @@ class SMMOManager {
         })
 
         this.setRefreshTimeout()
-        this.sendWarTargets()
+        //this.sendWarTargets()
     }
 
     async sendWarTargets(){

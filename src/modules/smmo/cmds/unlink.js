@@ -1,4 +1,5 @@
 const Command = require('../../../utils/Command.js');
+const SMMOStats = require('../models/smmo-stats.js');
 const SMMO = require('../models/smmo.js');
 
 class Unlink extends Command{
@@ -18,12 +19,15 @@ class Unlink extends Command{
             return
         }
         
+        SMMOStats.collection.removeOne({ingame_id: d.ingame_id})
+
         SMMO.collection.removeOne({user_id: message.author.id}, err => {
             if(err){
                 message.channel.send({embed: {color: 'BLUE', description: 'Something went wrong.'}})
                 return
             }
             manager.profiles.delete(message.author.id)
+            manager.profiles_stats.delete(message.author.id)
             message.channel.send({embed: {color: 'BLUE', description: 'Successfully unlinked your account.'}})
         })
     }

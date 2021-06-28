@@ -1,5 +1,6 @@
 const Command = require('../../../utils/Command.js');
 const SMMO = require('../models/smmo.js');
+const SMMOStats = require('../models/smmo-stats.js');
 
 class Link extends Command{
     constructor(commandLoader){
@@ -31,6 +32,9 @@ class Link extends Command{
                             message.channel.send({embed: {color: 'BLUE', description: 'User not found.'}})
                             return
                         }
+
+                        
+                        SMMOStats.collection.insertOne({ingame_id: id, level: 0, steps: 0, npc_kills: 0, user_kills: 0, quests_complete: 0, datetime: new Date().getTime()})
 
                         SMMO.collection.insertOne({user_id: message.author.id, ingame_id: id, send_daily: 0}, err => {
                             if(err){
