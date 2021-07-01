@@ -6,6 +6,7 @@ const SMMOManager = require('./smmo/SMMOManager.js');
 const TacoManager = require('./taco/TacoManager.js');
 const ReminderManager = require('./reminders/ReminderManager.js');
 
+const JoinLeaveManager = require('./joinleave/JoinLeaveManager.js')
 const AddReactionsMudae = require('./add-reactions.js');
 
 class ModuleManager {
@@ -31,6 +32,8 @@ class ModuleManager {
         this.client.reminderManager = new ReminderManager(this.client)
 
         this.client.addReactionsMudae = new AddReactionsMudae(this.client)
+
+        this.client.joinLeaveManager = new JoinLeaveManager(this.client)
     }
 }
 
