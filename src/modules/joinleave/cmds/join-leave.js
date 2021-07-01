@@ -1,4 +1,4 @@
-const { MessageManager } = require('discord.js');
+const { MessageManager, Message } = require('discord.js');
 const Command = require('../../../utils/Command.js');
 
 class JoinLeaveCommand extends Command{
@@ -15,6 +15,11 @@ class JoinLeaveCommand extends Command{
         const manager = this.client.joinLeaveManager;
         const guild = message.guild;
         const joinLeave = manager.joinLeaveChannels.get(guild.id);
+
+        if(!message.member.hasPermission('MANAGE_GUILD')){
+            message.channel.send(this.embed('You don\'t have permission to use this command!'))
+            return
+        }
         
         if(commandArgs[0]){
             if(commandArgs[0] == "add"){
