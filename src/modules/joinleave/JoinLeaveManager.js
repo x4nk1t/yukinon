@@ -73,7 +73,7 @@ class JoinLeaveManager {
             if(joinLeave){
                 const user = member.user;
                 const messageChannel = await this.client.channels.fetch(joinLeave.channel_id);
-                const content = `Welcome ${user.toString()} to the server! \n Have a look around and enjoy your stay here!`
+                const content = `Welcome ${user.toString()} to the server! \nHave a look around and enjoy your stay here!`
                 
                 if(messageChannel) messageChannel.send(content)
             }
@@ -84,7 +84,7 @@ class JoinLeaveManager {
             if(joinLeave){
                 const user = member.user;
                 const messageChannel = await this.client.channels.fetch(joinLeave.channel_id);
-                const content = `${user.toString()} left the server! \n Hope you enjoyed your stay here!`
+                const content = `${user.toString()} left the server! \nHope you enjoyed your stay here!`
                 
                 if(messageChannel) messageChannel.send(content)
             }
