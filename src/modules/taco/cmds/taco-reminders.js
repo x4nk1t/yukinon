@@ -37,9 +37,15 @@ class TacoRemindersCommand extends Command{
         var music = reminder.music.get(userId);
         var airplane = reminder.airplane.get(userId);
         var chef = reminder.chef.get(userId);
+
+        var chairs = reminder.chairs.get(userId);
+        var sail = reminder.sail.get(userId);
+        var concert = reminder.concert.get(userId);
+        var tours = reminder.tours.get(userId);
+        var hammock = reminder.hammock.get(userId);
         
         var description = '';
-        
+
         if(tips){
             description += "**Tips:** "+ this.formatTime(tips.time) +"\n";
         }
@@ -79,6 +85,27 @@ class TacoRemindersCommand extends Command{
 
         if(chef){
             description += "**Chef:** "+ this.formatTime(chef.time) +"\n";
+        }
+
+        /* Beach Commands */
+        if(chairs){
+            description += "**Chairs:** "+ this.formatTime(chairs.time) +"\n";
+        }
+
+        if(sail){
+            description += "**Sail:** "+ this.formatTime(sail.time) +"\n";
+        }
+
+        if(concert){
+            description += "**Concert:** "+ this.formatTime(concert.time) +"\n";
+        }
+
+        if(tours){
+            description += "**Tours:** "+ this.formatTime(tours.time) +"\n";
+        }
+
+        if(hammock){
+            description += "**Hammock:** "+ this.formatTime(hammock.time) +"\n";
         }
         
         if(description == ''){

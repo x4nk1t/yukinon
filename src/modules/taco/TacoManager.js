@@ -15,6 +15,12 @@ const MUSIC = 14400000; //4h
 const AIRPLANE = 86400000; //1d
 const CHEF = 14400000; //4h
 
+const CHAIRS = 28800000; //8h
+const SAIL = 21600000; //6h
+const CONCERT = 14400000; //4h
+const TOURS = 86400000; //1d
+const HAMMOCK = 14400000; //4h
+
 class TacoManager {
     constructor(client){
         this.client = client;
@@ -32,6 +38,12 @@ class TacoManager {
         this.music = new Discord.Collection();
         this.airplane = new Discord.Collection();
         this.chef = new Discord.Collection();
+
+        this.chairs = new Discord.Collection();
+        this.sail = new Discord.Collection();
+        this.concert = new Discord.Collection();
+        this.tours = new Discord.Collection();
+        this.hammock = new Discord.Collection();
 
         this.cmdManager = this.client.commandManager;
         this.loadCommands()
@@ -98,6 +110,27 @@ class TacoManager {
 
                         case "chef":
                             this.chef.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        /* Beach commands */
+                        case "chairs":
+                            this.chairs.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "sail":
+                            this.sail.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "concert":
+                            this.concert.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "tours":
+                            this.tours.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "hammock":
+                            this.hammock.set(userId, {time: time, channel: channel, user: user})
                         break;
                     }
                 } else {
@@ -200,7 +233,7 @@ class TacoManager {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.mention +', Flipper ready to purchase!')
+                channel.send(user.mention +', Flipper ready to purchase! [SHACK]')
                 this.flipper.delete(id)
                 this.removeTimer(id, "flipper")
             }
@@ -213,7 +246,7 @@ class TacoManager {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.mention +', Karaoke ready to purchase!')
+                channel.send(user.mention +', Karaoke ready to purchase! [SHACK]')
                 this.karaoke.delete(id)
                 this.removeTimer(id, "karaoke")
             }
@@ -226,7 +259,7 @@ class TacoManager {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.mention +', Music ready to purchase!')
+                channel.send(user.mention +', Music ready to purchase! [SHACK]')
                 this.music.delete(id)
                 this.removeTimer(id, "music")
             }
@@ -239,7 +272,7 @@ class TacoManager {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.mention +', Airplane ready to purchase!')
+                channel.send(user.mention +', Airplane ready to purchase! [SHACK]')
                 this.airplane.delete(id)
                 this.removeTimer(id, "airplane")
             }
@@ -252,9 +285,78 @@ class TacoManager {
             var user = value.user;
             
             if((time - now) <= 0){
-                channel.send(user.mention +', Chef ready to purchase!')
+                channel.send(user.mention +', Chef ready to purchase! [SHACK]')
                 this.chef.delete(id)
                 this.removeTimer(id, "chef")
+            }
+        })
+
+        /*
+        * Beach
+        */
+
+        this.chairs.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Chairs ready to purchase! [BEACH]')
+                this.chairs.delete(id)
+                this.removeTimer(id, "chairs")
+            }
+        })
+
+        this.sail.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Sail ready to purchase! [BEACH]')
+                this.sail.delete(id)
+                this.removeTimer(id, "sail")
+            }
+        })
+
+        this.concert.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Concert ready to purchase! [BEACH]')
+                this.concert.delete(id)
+                this.removeTimer(id, "concert")
+            }
+        })
+
+        this.tours.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Tours ready to purchase! [BEACH]')
+                this.tours.delete(id)
+                this.removeTimer(id, "tours")
+            }
+        })
+
+        this.hammock.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Hammock ready to purchase! [BEACH]')
+                this.hammock.delete(id)
+                this.removeTimer(id, "hammock")
             }
         })
     }
@@ -354,6 +456,42 @@ class TacoManager {
                             if(!this.chef.has(userId) || force){
                                 this.addTimer(userId, 'chef', now + CHEF, channel_id, user)
                                 this.chef.set(userId, {time: now + CHEF, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
+                        break;
+
+                        /* Beach commands */
+                        case "chairs":
+                            if(!this.chairs.has(userId) || force){
+                                this.addTimer(userId, 'chairs', now + CHAIRS, channel_id, user)
+                                this.chairs.set(userId, {time: now + CHAIRS, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
+                        break;
+
+                        case "sail":
+                            if(!this.sail.has(userId) || force){
+                                this.addTimer(userId, 'sail', now + SAIL, channel_id, user)
+                                this.sail.set(userId, {time: now + SAIL, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
+                        break;
+                        
+                        case "concert":
+                            if(!this.concert.has(userId) || force){
+                                this.addTimer(userId, 'concert', now + CONCERT, channel_id, user)
+                                this.concert.set(userId, {time: now + CONCERT, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
+                        break;
+
+                        case "tours":
+                            if(!this.tours.has(userId) || force){
+                                this.addTimer(userId, 'tours', now + TOURS, channel_id, user)
+                                this.tours.set(userId, {time: now + TOURS, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
+                        break;
+
+                        case "hammock":
+                            if(!this.hammock.has(userId) || force){
+                                this.addTimer(userId, 'hammock', now + HAMMOCK, channel_id, user)
+                                this.hammock.set(userId, {time: now + HAMMOCK, channel: channel, user: {mention: user.toString(), username: user.username}})
                             }
                         break;
                     }
