@@ -27,7 +27,7 @@ class Unlink extends Command{
                 return
             }
             manager.profiles.delete(message.author.id)
-            manager.profiles_stats.delete(message.author.id)
+            manager.profile_stats.delete(message.author.id)
             message.channel.send({embed: {color: 'BLUE', description: 'Successfully unlinked your account.'}})
         })
     }
