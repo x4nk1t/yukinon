@@ -4,6 +4,7 @@ const EmojiSender = require('./emoji/EmojiSender.js');
 const GamesManager = require('./games/GamesManager.js');
 const SMMOManager = require('./smmo/SMMOManager.js');
 const TacoManager = require('./taco/TacoManager.js');
+const LevelingManager = require('./leveling/LevelingManager.js');
 const ReminderManager = require('./reminders/ReminderManager.js');
 
 const JoinLeaveManager = require('./joinleave/JoinLeaveManager.js')
@@ -34,6 +35,8 @@ class ModuleManager {
         this.client.addReactionsMudae = new AddReactionsMudae(this.client)
 
         this.client.joinLeaveManager = new JoinLeaveManager(this.client)
+
+        this.client.levelingManager = new LevelingManager(this.client)
     }
 }
 
