@@ -43,7 +43,7 @@ class LevelingManager {
                 const levelEmbed = new Discord.MessageEmbed()
                     .setColor('BLUE')
                     .setTitle('New Level!')
-                    .setDescription(`**GG** ${message.author}, you just leveled up to level **${user.level + 1}**! 🥳🥳`)
+                    .setDescription(`**GG** ${message.author}, you just leveled up to level **${user.level}**! 🥳🥳`)
 
                 const sendEmbed = await message.channel.send(levelEmbed)
             }
