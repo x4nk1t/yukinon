@@ -66,104 +66,17 @@ class SMMOManager {
             this.profile_stats.set(stat.ingame_id, stat)
         })
 
-        const wars = await this.loadWars()
-
-        wars.forEach(war => {
-            this.war_list.set(war.user_id, war)
-        })
-
         this.setRefreshTimeout()
-        //this.sendWarTargets()
-    }
-
-    async sendWarTargets(){
-        const list = this.war_list.get(this.client.owners[0])
-        const attackables = await this.generateAttackables(list.guilds_id)
-
-        if(!attackables.length){
-            return
-        }
-
-        const embed = {
-            title: 'Attackable list (Count '+ attackables.length +')',
-            color: 'BLUE',
-            fields: [],
-        }
-
-        var content = '';
-
-        attackables.sort((a, b) => b.level - a.level).forEach((attackable, index) => {
-            const attId = attackable.user_id;
-            const name = attackable.name;
-            const level = attackable.level;
-
-            const link = "https://web.simple-mmo.com/user/attack/"+ attId;
-
-            content += `[${name}](${link}) lv. ${level} \n`
-            
-            if((index + 1) % 5 == 0 || (index + 1) == attackables.length){
-                embed.fields.push({name: '\u200b', value: content, inline: true})
-                content = '';
-            }
-        })
-
-        setTimeout(() => {
-            this.sendWarTargets()
-        }, 1000 * 60 * 5) //every 5 mins
-
-        if(!embed.fields.length) return
-
-        const ch = await this.client.channels.fetch('856948503275372616')
-        ch.send({embed: embed})
     }
 
     loadAllBosses(){
         return new Promise(async (resolve, reject) => {
             await this.getBossDetails().then(details => {this.worldboss = details;}).catch(console.error)
         
-            if(this.worldboss.length) {
-                this.setTimeouts();
-            } else {
+            if(!this.worldboss.length) {
                 setTimeout(() => {this.loadAllBosses()}, 600000) //Check again in 10 minutes
             }
             resolve({error: 0})
-        })
-    }
-
-    setTimeouts(){
-        this.worldboss.forEach(boss => {
-            const time = boss.enable_time * 1000;
-            const now = new Date().getTime()
-            const diff = time - now;
-            const first_timeout = diff - 600000;
-            const second_timeout = diff - 60000;
-
-            if(diff > 0){
-                if(diff > 600000){
-                    setTimeout(() => { this.sendBoss(boss, '10 minutes') }, first_timeout)
-                }
-                if(diff > 60000){
-                    setTimeout(() => { this.sendBoss(boss, '1 minute') }, second_timeout)
-                }
-            }
-        })
-    }
-
-    sendBoss(boss, minutes){
-        this.client.guilds.cache.each(guild => {
-            const channel = guild.channels.cache.find(channel => channel.name.toString() == 'smmo');
-            if(channel){
-                const role = guild.roles.cache.find(role => role.name.toLowerCase() == 'wb ping')
-                var mention = ''
-                if(role) mention = '['+ role.toString() +']'
-                const embed = {color: 'BLUE'}
-                embed.title = boss.name;
-                embed.url = 'https://web.simple-mmo.com/worldboss/view/'+ boss.id
-                embed.description = 'Click the name to go to world boss page.'
-                embed.fields = [{name: 'Level', value: boss.level.toLocaleString(), inline: true}, {name: 'HP', value: boss.max_hp.toLocaleString(), inline: true}]
-                
-                channel.send({content: `${mention} WB **${boss.name}** in ${minutes}!`, embed: embed})
-            }
         })
     }
 
@@ -346,19 +259,6 @@ class SMMOManager {
                     return
                 }
                 resolve()
-            })
-        })
-    }
-
-    loadWars(){
-        return new Promise((resolve, reject) => {
-            Wars.collection.find({}, async (err, data) => {
-                if(err){
-                    reject(err)
-                    return
-                }
-                const array = await data.toArray()
-                resolve(array)
             })
         })
     }

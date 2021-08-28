@@ -42,7 +42,7 @@ class CommandManager{
 
         if(command != null){
             if(command.options.guildOnly && !message.guild){
-                message.channel.send('You must be in guild to use this command.')
+                message.channel.send({embed: {color: 'BLUE', decription: 'You must be in guild to use this command.'}})
                 return;
             }
 
