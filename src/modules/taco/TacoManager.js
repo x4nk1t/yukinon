@@ -21,6 +21,12 @@ const CONCERT = 14400000; //4h
 const TOURS = 86400000; //1d
 const HAMMOCK = 14400000; //4h
 
+const DELIVERY = 28800000; //8h
+const MASCOT = 21600000; //6h
+const SAMPLES = 14400000; //4h
+const BUS = 86400000; //1d
+const HAPPY = 14400000; //4h
+
 class TacoManager {
     constructor(client){
         this.client = client;
@@ -44,6 +50,12 @@ class TacoManager {
         this.concert = new Discord.Collection();
         this.tours = new Discord.Collection();
         this.hammock = new Discord.Collection();
+
+        this.delivery = new Discord.Collection();
+        this.mascot = new Discord.Collection();
+        this.samples = new Discord.Collection();
+        this.bus = new Discord.Collection();
+        this.happy = new Discord.Collection();
 
         this.cmdManager = this.client.commandManager;
         this.loadCommands()
@@ -131,6 +143,27 @@ class TacoManager {
 
                         case "hammock":
                             this.hammock.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        /* City commands */
+                        case "delivery":
+                            this.delivery.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "mascot":
+                            this.mascot.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "samples":
+                            this.samples.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "bus":
+                            this.bus.set(userId, {time: time, channel: channel, user: user})
+                        break;
+
+                        case "happy":
+                            this.happy.set(userId, {time: time, channel: channel, user: user})
                         break;
                     }
                 } else {
@@ -359,6 +392,72 @@ class TacoManager {
                 this.removeTimer(id, "hammock")
             }
         })
+
+
+        this.delivery.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Delivery ready to purchase! [CITY]')
+                this.delivery.delete(id)
+                this.removeTimer(id, "delivery")
+            }
+        })
+
+        this.mascot.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Mascot ready to purchase! [CITY]')
+                this.mascot.delete(id)
+                this.removeTimer(id, "mascot")
+            }
+        })
+
+        this.samples.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Samples ready to purchase! [CITY]')
+                this.samples.delete(id)
+                this.removeTimer(id, "samples")
+            }
+        })
+
+        this.bus.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Bus ready to purchase! [CITY]')
+                this.bus.delete(id)
+                this.removeTimer(id, "bus")
+            }
+        })
+
+        this.happy.forEach((value, key, map) => {
+            var id = key;
+            var time = value.time;
+            var channel = value.channel;
+            var user = value.user;
+            
+            if((time - now) <= 0){
+                channel.send(user.mention +', Happy Hours ready to purchase! [CITY]')
+                this.happy.delete(id)
+                this.removeTimer(id, "happy")
+            }
+        })
     }
 
     execute(message){
@@ -492,6 +591,42 @@ class TacoManager {
                             if(!this.hammock.has(userId) || force){
                                 this.addTimer(userId, 'hammock', now + HAMMOCK, channel_id, user)
                                 this.hammock.set(userId, {time: now + HAMMOCK, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
+                        break;
+
+                        /* City commands */
+                        case "delivery":
+                            if(!this.delivery.has(userId) || force){
+                                this.addTimer(userId, 'delivery', now + DELIVERY, channel_id, user)
+                                this.delivery.set(userId, {time: now + DELIVERY, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
+                        break;
+
+                        case "mascot":
+                            if(!this.mascot.has(userId) || force){
+                                this.addTimer(userId, 'mascot', now + MASCOT, channel_id, user)
+                                this.mascot.set(userId, {time: now + MASCOT, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
+                        break;
+
+                        case "samples":
+                            if(!this.samples.has(userId) || force){
+                                this.addTimer(userId, 'samples', now + SAMPLES, channel_id, user)
+                                this.samples.set(userId, {time: now + SAMPLES, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
+                        break;
+
+                        case "bus":
+                            if(!this.bus.has(userId) || force){
+                                this.addTimer(userId, 'bus', now + BUS, channel_id, user)
+                                this.bus.set(userId, {time: now + BUS, channel: channel, user: {mention: user.toString(), username: user.username}})
+                            }
+                        break;
+
+                        case "happy":
+                            if(!this.happy.has(userId) || force){
+                                this.addTimer(userId, 'happy', now + HAPPY, channel_id, user)
+                                this.happy.set(userId, {time: now + HAPPY, channel: channel, user: {mention: user.toString(), username: user.username}})
                             }
                         break;
                     }
