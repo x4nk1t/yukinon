@@ -44,6 +44,12 @@ class TacoRemindersCommand extends Command{
         var tours = reminder.tours.get(userId);
         var hammock = reminder.hammock.get(userId);
         
+        var delivery = reminder.delivery.get(userId);
+        var mascot = reminder.mascot.get(userId);
+        var samples = reminder.samples.get(userId);
+        var bus = reminder.bus.get(userId);
+        var happy = reminder.happy.get(userId);
+        
         var description = '';
 
         if(tips){
@@ -106,6 +112,27 @@ class TacoRemindersCommand extends Command{
 
         if(hammock){
             description += "**Hammock:** "+ this.formatTime(hammock.time) +"\n";
+        }
+
+        /* City commands */
+        if(delivery){
+            description += "**Delivery:** "+ this.formatTime(delivery.time) +"\n";
+        }
+
+        if(mascot){
+            description += "**Mascot:** "+ this.formatTime(mascot.time) +"\n";
+        }
+
+        if(samples){
+            description += "**Samples:** "+ this.formatTime(samples.time) +"\n";
+        }
+
+        if(bus){
+            description += "**Bus:** "+ this.formatTime(bus.time) +"\n";
+        }
+
+        if(happy){
+            description += "**Happy Hours:** "+ this.formatTime(happy.time) +"\n";
         }
         
         if(description == ''){
