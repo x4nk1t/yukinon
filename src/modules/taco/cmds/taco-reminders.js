@@ -11,6 +11,9 @@ class TacoRemindersCommand extends Command{
     }
     
     execute(message, commandArgs){
+        message.channel.send({embed: {color: 'BLUE', description: 'Command under update!'}})
+
+        return
         const embed = {}
         const reminder = this.client.tacoManager;
         var userId = message.author.id;

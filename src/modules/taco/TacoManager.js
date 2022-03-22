@@ -1,63 +1,40 @@
 const Discord = require('discord.js');
 const Taco = require('./models/taco.js');
+const Location = require('./models/location.js');
 const TacoRemindersCommand = require('./cmds/taco-reminders.js');
 
 const TIPS = 300000; //5m
 const WORK = 600000; //10m
 const OVERTIME = 1800000; //30m
-const CLEAN = 86400000; //1d
-const DAILY = 86400000; //1d
-const VOTE = 43200000; //12h
 
-const FLIPPER = 28800000; //8h
-const KARAOKE = 21600000; //6h
-const MUSIC = 14400000; //4h
-const AIRPLANE = 86400000; //1d
-const CHEF = 14400000; //4h
-
-const CHAIRS = 28800000; //8h
-const SAIL = 21600000; //6h
-const CONCERT = 14400000; //4h
-const TOURS = 86400000; //1d
-const HAMMOCK = 14400000; //4h
-
-const DELIVERY = 28800000; //8h
-const MASCOT = 21600000; //6h
-const SAMPLES = 14400000; //4h
-const BUS = 86400000; //1d
-const HAPPY = 14400000; //4h
+const TWELVE_HOURS = 43200000; //12h
+const EIGHT_HOURS = 28800000; //8h
+const SIX_HOURS = 21600000; //6h
+const FOUR_HOURS = 14400000; //4h
+const ONE_DAY = 86400000; //1d
 
 class TacoManager {
     constructor(client){
         this.client = client;
 
-        this.tips = new Discord.Collection();
-        this.work = new Discord.Collection();
-        this.overtime = new Discord.Collection();
-        this.daily = new Discord.Collection();
-        this.clean = new Discord.Collection();
-        this.vote = new Discord.Collection();
-        this.buy = new Discord.Collection();
+        this.users = new Discord.Collection();
+        this.tacoCommands = [
+            "t", "tips", "tip",
+            "w", "work",
+            "ot", "overtime",
+            "clean", "daily", "claim", "buy"
+        ];
 
-        this.flipper = new Discord.Collection();
-        this.karaoke = new Discord.Collection();
-        this.music = new Discord.Collection();
-        this.airplane = new Discord.Collection();
-        this.chef = new Discord.Collection();
+        this.notToPing = ['tips', 'work']
 
-        this.chairs = new Discord.Collection();
-        this.sail = new Discord.Collection();
-        this.concert = new Discord.Collection();
-        this.tours = new Discord.Collection();
-        this.hammock = new Discord.Collection();
+        this.tacoCommandsTime = new Discord.Collection()
+        this.tacoBuySubcommands = new Discord.Collection();
+        this.currentTacoLocations = new Discord.Collection();
 
-        this.delivery = new Discord.Collection();
-        this.mascot = new Discord.Collection();
-        this.samples = new Discord.Collection();
-        this.bus = new Discord.Collection();
-        this.happy = new Discord.Collection();
+        this.timerStorage = new Discord.Collection();
 
         this.cmdManager = this.client.commandManager;
+        this.registerSubcommands()
         this.loadCommands()
         this.run()
     }
@@ -66,13 +43,90 @@ class TacoManager {
         this.cmdManager.loadCommand(new TacoRemindersCommand(this.cmdManager))
     }
 
+    registerSubcommands(){
+        this.tacoCommandsTime.set('t', TIPS);
+        this.tacoCommandsTime.set('tip', TIPS);
+        this.tacoCommandsTime.set('tips', TIPS);
+
+        this.tacoCommandsTime.set('w', WORK);
+        this.tacoCommandsTime.set('work', WORK);
+
+        this.tacoCommandsTime.set('ot', OVERTIME);
+        this.tacoCommandsTime.set('overtime', OVERTIME);
+
+        this.tacoCommandsTime.set('clean', TWELVE_HOURS);
+        this.tacoCommandsTime.set('daily', TWELVE_HOURS);
+        this.tacoCommandsTime.set('claim', TWELVE_HOURS);
+
+        this.tacoBuySubcommands.set("shack",
+            new Discord.Collection([
+                ["flipper", {time: EIGHT_HOURS}],
+                ["karaoke", {time: SIX_HOURS}],
+                ["music", {time: FOUR_HOURS}],
+                ["airplane", {time: ONE_DAY}],
+                ["chef", {time: FOUR_HOURS}],
+            ])
+        );
+
+        this.tacoBuySubcommands.set("beach",
+            new Discord.Collection([
+                ["chairs", {time: EIGHT_HOURS}],
+                ["sail", {time: SIX_HOURS}],
+                ["concert", {time: FOUR_HOURS}],
+                ["tours", {time: ONE_DAY}],
+                ["hammock", {time: FOUR_HOURS}],
+            ])
+        );
+
+        this.tacoBuySubcommands.set("city",
+            new Discord.Collection([
+                ["delivery", {time: EIGHT_HOURS}],
+                ["mascot", {time: SIX_HOURS}],
+                ["samples", {time: FOUR_HOURS}],
+                ["bus", {time: ONE_DAY}],
+                ["happy", {time: FOUR_HOURS}],
+            ])
+        );
+    }
+
     async run(){
         this.client.on('message', message => {
-            if(message.author.bot) return;
-            
+            if(message.author.bot && message.channel.name != "taco") return
+
             if(message.content.toLowerCase().startsWith('t')){
-                if(!this.client.devMode){ this.execute(message) }
+                if(!this.client.devMode){
+                    var args = message.content.split(' ')
+                    var now = new Date().getTime()
+
+                    if(args[0]){
+                        var cmd = args[0].substring(1).toLowerCase();
+
+                        if(cmd == "l" || cmd =="location" || cmd == "locations"){
+                            var sub = args[1].toLowerCase();
+
+                            if(!sub) return
+
+                            if(sub == "shack" || sub == "beach" || sub == "city"){
+                                this.setTacoLocation(message.author.id, sub);
+                                this.currentTacoLocations.set(message.author.id, sub);
+                            }
+
+                            return
+                        }
+                    }
+
+                    this.execute(message);
+                }
             }
+        })
+
+        await this.getTacoLocations().then(datas => {
+            datas.forEach(data => {
+                var userId = data.user_id;
+                var location = data.location;
+
+                this.currentTacoLocations.set(userId, location);
+            })
         })
 
         await this.getTacoReminders().then(datas => { 
@@ -87,85 +141,11 @@ class TacoManager {
                 var user = {mention: data.mention, username: data.username}
 
                 if((time - now) >= 0){
-                    switch(type){
-                        case "overtime":
-                            this.overtime.set(userId, {time: time, channel: channel, user: user})
-                        break;
+                    var timers = new Discord.Collection();
 
-                        case "clean":
-                            this.clean.set(userId, {time: time, channel: channel, user: user})
-                        break;
+                    timers.set(type, {time: time, channel: channel, user: user});
 
-                        case "daily":
-                            this.daily.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "vote":
-                            this.vote.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "flipper":
-                            this.flipper.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "karaoke":
-                            this.karaoke.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "music":
-                            this.music.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "airplane":
-                            this.airplane.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "chef":
-                            this.chef.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        /* Beach commands */
-                        case "chairs":
-                            this.chairs.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "sail":
-                            this.sail.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "concert":
-                            this.concert.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "tours":
-                            this.tours.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "hammock":
-                            this.hammock.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        /* City commands */
-                        case "delivery":
-                            this.delivery.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "mascot":
-                            this.mascot.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "samples":
-                            this.samples.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "bus":
-                            this.bus.set(userId, {time: time, channel: channel, user: user})
-                        break;
-
-                        case "happy":
-                            this.happy.set(userId, {time: time, channel: channel, user: user})
-                        break;
-                    }
+                    this.timerStorage.set(userId, timers);
                 } else {
                     removeList.push(data._id)
                 }
@@ -173,466 +153,134 @@ class TacoManager {
 
             if(removeList.length) this.removeMany(removeList)
             setInterval(() => this.checkReminders(), 1000)
+
         }).catch(console.log)
     }
-    
+
     checkReminders(){
         var now = new Date().getTime()
 
-        this.tips.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send('**'+ user.username +'**, Tips ready!')
-                this.tips.delete(id)
+        for(let [key, timers] of this.timerStorage){
+            var userId = key;
+
+            for(let [sub, value] of timers){
+                var time = value.time;
+                var channel = value.channel;
+                var user = value.user;
+                var location = this.getLocationOfThis(sub);
+
+                var ping = '**'+ user.username +'**';
+                if(!this.notToPing.includes(sub)){
+                    ping = user.mention;
+                }
+                if((time - now) <= 0){
+                    channel.send(ping + ', '+ this.capitalizeFirstLetter(sub) +' ready! '+ location);
+                    timers.delete(sub)
+
+                    this.timerStorage.set(userId, timers);
+                    this.removeTimer(userId, sub)
+                }
             }
-        })
-
-        this.work.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send('**'+ user.username +'**, Work ready!')
-                this.work.delete(id)
-            }
-        })
-
-        this.overtime.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Overtime ready!')
-                this.overtime.delete(id)
-                this.removeTimer(id, "overtime")
-            }
-        })
-
-        this.clean.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Clean ready!')
-                this.clean.delete(id)
-                this.removeTimer(id, "clean")
-            }
-        })
-
-        this.daily.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Daily ready!')
-                this.daily.delete(id)
-                this.removeTimer(id, "daily")
-            }
-        })
-
-        this.vote.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Vote Claim ready!')
-                this.vote.delete(id)
-                this.removeTimer(id, "vote")
-            }
-        })
-
-        
-        /*
-        * Buy commands
-        */
-        this.flipper.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Flipper ready to purchase! [SHACK]')
-                this.flipper.delete(id)
-                this.removeTimer(id, "flipper")
-            }
-        })
-
-        this.karaoke.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Karaoke ready to purchase! [SHACK]')
-                this.karaoke.delete(id)
-                this.removeTimer(id, "karaoke")
-            }
-        })
-
-        this.music.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Music ready to purchase! [SHACK]')
-                this.music.delete(id)
-                this.removeTimer(id, "music")
-            }
-        })
-
-        this.airplane.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Airplane ready to purchase! [SHACK]')
-                this.airplane.delete(id)
-                this.removeTimer(id, "airplane")
-            }
-        })
-
-        this.chef.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Chef ready to purchase! [SHACK]')
-                this.chef.delete(id)
-                this.removeTimer(id, "chef")
-            }
-        })
-
-        /*
-        * Beach
-        */
-
-        this.chairs.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Chairs ready to purchase! [BEACH]')
-                this.chairs.delete(id)
-                this.removeTimer(id, "chairs")
-            }
-        })
-
-        this.sail.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Sail ready to purchase! [BEACH]')
-                this.sail.delete(id)
-                this.removeTimer(id, "sail")
-            }
-        })
-
-        this.concert.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Concert ready to purchase! [BEACH]')
-                this.concert.delete(id)
-                this.removeTimer(id, "concert")
-            }
-        })
-
-        this.tours.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Tours ready to purchase! [BEACH]')
-                this.tours.delete(id)
-                this.removeTimer(id, "tours")
-            }
-        })
-
-        this.hammock.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Hammock ready to purchase! [BEACH]')
-                this.hammock.delete(id)
-                this.removeTimer(id, "hammock")
-            }
-        })
-
-
-        this.delivery.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Delivery ready to purchase! [CITY]')
-                this.delivery.delete(id)
-                this.removeTimer(id, "delivery")
-            }
-        })
-
-        this.mascot.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Mascot ready to purchase! [CITY]')
-                this.mascot.delete(id)
-                this.removeTimer(id, "mascot")
-            }
-        })
-
-        this.samples.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Samples ready to purchase! [CITY]')
-                this.samples.delete(id)
-                this.removeTimer(id, "samples")
-            }
-        })
-
-        this.bus.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Bus ready to purchase! [CITY]')
-                this.bus.delete(id)
-                this.removeTimer(id, "bus")
-            }
-        })
-
-        this.happy.forEach((value, key, map) => {
-            var id = key;
-            var time = value.time;
-            var channel = value.channel;
-            var user = value.user;
-            
-            if((time - now) <= 0){
-                channel.send(user.mention +', Happy Hours ready to purchase! [CITY]')
-                this.happy.delete(id)
-                this.removeTimer(id, "happy")
-            }
-        })
+        }
     }
 
     execute(message){
         var args = message.content.split(' ')
         var now = new Date().getTime()
-        
-        if(message.channel.name != "taco") return
-         
+
         if(args[0]){
-            var cmd = args[0].substring(1);
+            var cmd = args[0].substring(1).toLowerCase();
             var force = (args[args.length - 1] == "-f") ? true : false;
             var channel = message.channel;
             var channel_id = channel.id;
             var user = message.author;
             var userId = user.id;
-            
-            switch(cmd){
-                case "t":
-                case "tips":
-                case "tip":
-                    if(!this.tips.has(userId) || force){
-                        this.tips.set(userId, {time: now + TIPS, channel: channel, user: {mention: user.toString(), username: user.username}})
+
+            if(!this.tacoCommands.includes(cmd)) return
+
+            for(let [key, time] of this.tacoCommandsTime){
+                if(key == this.getFullCommand(cmd)){
+                    var timers = this.timerStorage.get(userId);
+
+                    if(!timers) timers = new Discord.Collection();
+
+                    if(!timers.get(key) || force){
+                        if(!this.notToPing.includes(key)) this.addTimer(userId, key, now + time, channel_id, user);
+                        timers.set(key, {time: now + time, channel: channel, user: {mention: user.toString(), username: user.username}})
                     }
-                break;
 
-                case "w":
-                case "work":
-                    if(!this.work.has(userId) || force){
-                        this.work.set(userId, {time: now + WORK, channel: channel, user: {mention: user.toString(), username: user.username}})
-                    }
-                break;
+                    this.timerStorage.set(userId, timers)
+                }
+            }
 
-                case "ot":
-                case "overtime":
-                    if(!this.overtime.has(userId) || force){
-                        this.addTimer(userId, 'overtime', now + OVERTIME, channel_id, user)
-                        this.overtime.set(userId, {time: now + OVERTIME, channel: channel, user: {mention: user.toString(), username: user.username}})
-                    }
-                break;
+            if(cmd == "buy"){
+                var sub = args[1].toLowerCase();
+                var currentTacoLocations = this.currentTacoLocations.get(userId);
+                var locationSubCommands = this.tacoBuySubcommands.get("shack");;
 
-                case "clean":
-                    if(!this.clean.has(userId) || force){
-                        this.addTimer(userId, 'clean', now + CLEAN, channel_id, user)
-                        this.clean.set(userId, {time: now + CLEAN, channel: channel, user: {mention: user.toString(), username: user.username}})
-                    }
-                break;
+                if(currentTacoLocations){
+                    locationSubCommands = this.tacoBuySubcommands.get(currentTacoLocations);
+                }
 
-                case "daily":
-                    if(!this.daily.has(userId) || force){
-                        this.addTimer(userId, 'daily', now + DAILY, channel_id, user)
-                        this.daily.set(userId, {time: now + DAILY, channel: channel, user: {mention: user.toString(), username: user.username}})
-                    }
-                break;
+                var subCommandDetails = locationSubCommands.get(sub);
 
-                case "claim":
-                    if(!this.vote.has(userId) || force){
-                        this.addTimer(userId, 'vote', now + VOTE, channel_id, user)
-                        this.vote.set(userId, {time: now + VOTE, channel: channel, user: {mention: user.toString(), username: user.username}})
-                    }
-                break;
+                if(subCommandDetails){
+                    this.addTimer(userId, sub, now + subCommandDetails.time, channel_id, user);
 
-                case "buy":
-                    var sub = args[1].toLowerCase()
+                    var timers = this.timerStorage.get(userId);
 
-                    switch(sub){
-                        case "flipper":
-                            if(!this.flipper.has(userId) || force){
-                                this.addTimer(userId, 'flipper', now + FLIPPER, channel_id, user)
-                                this.flipper.set(userId, {time: now + FLIPPER, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
+                    if(!timers) timers = new Discord.Collection()
 
-                        case "karaoke":
-                            if(!this.karaoke.has(userId) || force){
-                                this.addTimer(userId, 'karaoke', now + KARAOKE, channel_id, user)
-                                this.karaoke.set(userId, {time: now + KARAOKE, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-                        
-                        case "music":
-                            if(!this.music.has(userId) || force){
-                                this.addTimer(userId, 'music', now + MUSIC, channel_id, user)
-                                this.music.set(userId, {time: now + MUSIC, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
+                    timers.set(sub, {time: now + subCommandDetails.time, channel: channel, user: {mention: user.toString(), username: user.username}})
 
-                        case "airplane":
-                            if(!this.airplane.has(userId) || force){
-                                this.addTimer(userId, 'airplane', now + AIRPLANE, channel_id, user)
-                                this.airplane.set(userId, {time: now + AIRPLANE, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-
-                        case "chef":
-                            if(!this.chef.has(userId) || force){
-                                this.addTimer(userId, 'chef', now + CHEF, channel_id, user)
-                                this.chef.set(userId, {time: now + CHEF, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-
-                        /* Beach commands */
-                        case "chairs":
-                            if(!this.chairs.has(userId) || force){
-                                this.addTimer(userId, 'chairs', now + CHAIRS, channel_id, user)
-                                this.chairs.set(userId, {time: now + CHAIRS, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-
-                        case "sail":
-                            if(!this.sail.has(userId) || force){
-                                this.addTimer(userId, 'sail', now + SAIL, channel_id, user)
-                                this.sail.set(userId, {time: now + SAIL, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-                        
-                        case "concert":
-                            if(!this.concert.has(userId) || force){
-                                this.addTimer(userId, 'concert', now + CONCERT, channel_id, user)
-                                this.concert.set(userId, {time: now + CONCERT, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-
-                        case "tours":
-                            if(!this.tours.has(userId) || force){
-                                this.addTimer(userId, 'tours', now + TOURS, channel_id, user)
-                                this.tours.set(userId, {time: now + TOURS, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-
-                        case "hammock":
-                            if(!this.hammock.has(userId) || force){
-                                this.addTimer(userId, 'hammock', now + HAMMOCK, channel_id, user)
-                                this.hammock.set(userId, {time: now + HAMMOCK, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-
-                        /* City commands */
-                        case "delivery":
-                            if(!this.delivery.has(userId) || force){
-                                this.addTimer(userId, 'delivery', now + DELIVERY, channel_id, user)
-                                this.delivery.set(userId, {time: now + DELIVERY, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-
-                        case "mascot":
-                            if(!this.mascot.has(userId) || force){
-                                this.addTimer(userId, 'mascot', now + MASCOT, channel_id, user)
-                                this.mascot.set(userId, {time: now + MASCOT, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-
-                        case "samples":
-                            if(!this.samples.has(userId) || force){
-                                this.addTimer(userId, 'samples', now + SAMPLES, channel_id, user)
-                                this.samples.set(userId, {time: now + SAMPLES, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-
-                        case "bus":
-                            if(!this.bus.has(userId) || force){
-                                this.addTimer(userId, 'bus', now + BUS, channel_id, user)
-                                this.bus.set(userId, {time: now + BUS, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-
-                        case "happy":
-                            if(!this.happy.has(userId) || force){
-                                this.addTimer(userId, 'happy', now + HAPPY, channel_id, user)
-                                this.happy.set(userId, {time: now + HAPPY, channel: channel, user: {mention: user.toString(), username: user.username}})
-                            }
-                        break;
-                    }
-                break;
+                    this.timerStorage.set(userId, timers);
+                } else {
+                    message.channel.send({embed: { color: 'BLUE',  description: 'Reminder not set!!\nCommand and location is not same!\nUse tl <location> first!'}});
+                }
             }
         }
+    }
+
+    capitalizeFirstLetter(string){
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    getFullCommand(cmd){
+        if(cmd == "t" || cmd == "tips" || cmd == "tip"){
+            return "tips";
+        } else if(cmd == "w" || cmd == "work"){
+            return "work";
+        } else if(cmd == "ot" || cmd == "overtime"){
+            return "overtime";
+        } else {
+            return cmd;
+        }
+    }
+
+    getLocationOfThis(cmd){
+        var shack = this.tacoBuySubcommands.get('shack');
+        var beach = this.tacoBuySubcommands.get('beach');
+        var city = this.tacoBuySubcommands.get('city');
+
+        for(let [key, value] of shack){
+            if(key == cmd){
+                return "[SHACK]";
+            }
+        }
+
+        for(let [key, value] of beach){
+            if(key == cmd){
+                return "[BEACH]";
+            }
+        }
+
+        for(let [key, value] of city){
+            if(key == cmd){
+                return "[CITY]";
+            }
+        }
+
+        return ""
     }
 
     getTacoReminders(){
@@ -646,6 +294,31 @@ class TacoManager {
                 const array = await tacos.toArray()
                 resolve(array)
             })
+        })
+    }
+
+    getTacoLocations(){
+        return new Promise((resolve, reject) => {
+            Location.collection.find({}, async (err, location) => {
+                if(err){
+                    this.client.logger.error(err)
+                    reject(err)
+                    return
+                }
+                const array = await location.toArray()
+                resolve(array)
+            })
+        })
+    }
+
+    setTacoLocation(userId, location,  callback = () => {}){
+        Location.collection.findOneAndUpdate({user_id: userId}, {$set: {location: location}}, {upsert: true}, err => {
+            if(err){
+                this.client.logger.error(err)
+                callback(true, {message: 'Failed to set taco location.'})
+                return
+            }
+            callback(false, {message: 'Successfully added location to database.'})
         })
     }
 
