@@ -7,8 +7,7 @@ const TacoManager = require('./taco/TacoManager.js');
 const LevelingManager = require('./leveling/LevelingManager.js');
 const ReminderManager = require('./reminders/ReminderManager.js');
 
-const JoinLeaveManager = require('./joinleave/JoinLeaveManager.js')
-const AddReactionsMudae = require('./add-reactions.js');
+const JoinLeaveManager = require('./joinleave/JoinLeaveManager.js');
 
 class ModuleManager {
     constructor(client){
@@ -31,8 +30,6 @@ class ModuleManager {
         this.client.gamesManager = new GamesManager(this.client)
 
         this.client.reminderManager = new ReminderManager(this.client)
-
-        this.client.addReactionsMudae = new AddReactionsMudae(this.client)
 
         this.client.joinLeaveManager = new JoinLeaveManager(this.client)
 

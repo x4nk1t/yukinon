@@ -24,7 +24,7 @@ class CommandManager{
         BotSettings.collection.findOne({name: 'status'}, async (err, status) => {
             if(err) return
             
-            await this.client.user.setStatus(status.value);
+            if(status) await this.client.user.setStatus(status.value);
         })
     }
     
