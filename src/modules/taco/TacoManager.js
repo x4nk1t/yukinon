@@ -101,7 +101,7 @@ class TacoManager {
                         var cmd = args[0].substring(1).toLowerCase();
 
                         if(cmd == "l" || cmd =="location" || cmd == "locations"){
-                            var sub = args[1].toLowerCase();
+                            var sub = args[1] ? args[1].toLowerCase() : null;
 
                             if(!sub) return
 
