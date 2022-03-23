@@ -95,8 +95,7 @@ class TacoManager {
 
             if(message.content.toLowerCase().startsWith('t')){
                 if(!this.client.devMode){
-                    var args = message.content.split(' ')
-                    var now = new Date().getTime()
+                    var args = message.content.split(' ');
 
                     if(args[0]){
                         var cmd = args[0].substring(1).toLowerCase();
@@ -216,11 +215,13 @@ class TacoManager {
             if(cmd == "buy"){
                 var sub = args[1].toLowerCase();
                 var currentTacoLocations = this.currentTacoLocations.get(userId);
-                var locationSubCommands = this.tacoBuySubcommands.get("shack");;
+                var locationSubCommands = this.tacoBuySubcommands.get("shack");
 
                 if(currentTacoLocations){
                     locationSubCommands = this.tacoBuySubcommands.get(currentTacoLocations);
                 }
+
+                if(!this.isValidSubCommand(sub)) return;
 
                 var subCommandDetails = locationSubCommands.get(sub);
 
@@ -245,6 +246,17 @@ class TacoManager {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    isValidSubCommand(sub){
+        for(let [key, location] of this.tacoBuySubcommands){
+            for(let [key2, value2] of location){
+                if(key2 == sub){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     getFullCommand(cmd){
         if(cmd == "t" || cmd == "tips" || cmd == "tip"){
             return "tips";
@@ -258,29 +270,14 @@ class TacoManager {
     }
 
     getLocationOfThis(cmd){
-        var shack = this.tacoBuySubcommands.get('shack');
-        var beach = this.tacoBuySubcommands.get('beach');
-        var city = this.tacoBuySubcommands.get('city');
-
-        for(let [key, value] of shack){
-            if(key == cmd){
-                return "[SHACK]";
+        for(let [key, location] of this.tacoBuySubcommands){
+            for(let [key2, value2] of location){
+                if(key2 == cmd){
+                    return "["+ key.toUpperCase() +"]";
+                }
             }
         }
-
-        for(let [key, value] of beach){
-            if(key == cmd){
-                return "[BEACH]";
-            }
-        }
-
-        for(let [key, value] of city){
-            if(key == cmd){
-                return "[CITY]";
-            }
-        }
-
-        return ""
+        return "";
     }
 
     getTacoReminders(){
