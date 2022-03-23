@@ -1,4 +1,5 @@
 const Command = require('../../../utils/Command.js');
+const Discord = require('discord.js');
 
 class TacoRemindersCommand extends Command{
     constructor(commandLoader){
@@ -11,11 +12,8 @@ class TacoRemindersCommand extends Command{
     }
     
     execute(message, commandArgs){
-        message.channel.send({embed: {color: 'BLUE', description: 'Command under update!'}})
-
-        return
         const embed = {}
-        const reminder = this.client.tacoManager;
+        const tacoManager = this.client.tacoManager;
         var userId = message.author.id;
         var username = message.author.username;
         
@@ -28,118 +26,50 @@ class TacoRemindersCommand extends Command{
             }
         }
         
-        var tips = reminder.tips.get(userId);
-        var work = reminder.work.get(userId);
-        var overtime = reminder.overtime.get(userId);
-        var clean = reminder.clean.get(userId);
-        var daily = reminder.daily.get(userId);
-        var vote = reminder.vote.get(userId);
-
-        var flipper = reminder.flipper.get(userId);
-        var karaoke = reminder.karaoke.get(userId);
-        var music = reminder.music.get(userId);
-        var airplane = reminder.airplane.get(userId);
-        var chef = reminder.chef.get(userId);
-
-        var chairs = reminder.chairs.get(userId);
-        var sail = reminder.sail.get(userId);
-        var concert = reminder.concert.get(userId);
-        var tours = reminder.tours.get(userId);
-        var hammock = reminder.hammock.get(userId);
-        
-        var delivery = reminder.delivery.get(userId);
-        var mascot = reminder.mascot.get(userId);
-        var samples = reminder.samples.get(userId);
-        var bus = reminder.bus.get(userId);
-        var happy = reminder.happy.get(userId);
-        
         var description = '';
+        var timerStorage = tacoManager.timerStorage;
 
-        if(tips){
-            description += "**Tips:** "+ this.formatTime(tips.time) +"\n";
-        }
-        if(work){
-            description += "**Work:** "+ this.formatTime(work.time) +"\n";
-        }
-        if(overtime){
-            description += "**Overtime:** "+ this.formatTime(overtime.time) +"\n";
-        }
-        if(clean){
-            description += "**Clean:** "+ this.formatTime(clean.time) +"\n";
-        }
-        if(daily){
-            description += "**Daily:** "+ this.formatTime(daily.time) +"\n";
-        }
-        if(vote){
-            description += "**Vote:** "+ this.formatTime(vote.time) +"\n";
-        }
+        var timers = timerStorage.get(userId);
 
-        if(description != "") description += '\n';
+        if(timers){
+            var locationMap = new Discord.Collection();
+            for(let [key, value] of timers){
+                var location = tacoManager.getLocationOfThis(key).toLowerCase();
 
-        if(flipper){
-            description += "**Flipper:** "+ this.formatTime(flipper.time) +"\n";
-        }
+                if(location == '') {
+                    var locMap = locationMap.get('blank');
+                    if(!locMap) locationMap.set('blank', [])
+                    value.boost = key;
+                    locationMap.get('blank').push(value)
+                } else {
+                    var locMap = locationMap.get('notblank');
+                    if(!locMap) locationMap.set('notblank', [])
+                    value.boost = key;
+                    locationMap.get('notblank').push(value)
+                }
+            }
+            var locations = ['blank', 'notblank'];
+            var isFirst = true;
 
-        if(karaoke){
-            description += "**Karaoke:** "+ this.formatTime(karaoke.time) +"\n";
-        }
+            locations.forEach(loc => {
+                if(loc == "notblank" && isFirst) {
+                    description += '\n';
+                    isFirst = false;
+                }
 
-        if(music){
-            description += "**Music:** "+ this.formatTime(music.time) +"\n";
-        }
+                var details = locationMap.get(loc);
 
-        if(airplane){
-            description += "**Airplane:** "+ this.formatTime(airplane.time) +"\n";
-        }
+                if(!details) return;
 
-        if(chef){
-            description += "**Chef:** "+ this.formatTime(chef.time) +"\n";
-        }
+                details.forEach(detail => {
+                    var boost = detail.boost;
+                    var time = detail.time;
 
-        /* Beach Commands */
-        if(chairs){
-            description += "**Chairs:** "+ this.formatTime(chairs.time) +"\n";
-        }
-
-        if(sail){
-            description += "**Sail:** "+ this.formatTime(sail.time) +"\n";
-        }
-
-        if(concert){
-            description += "**Concert:** "+ this.formatTime(concert.time) +"\n";
-        }
-
-        if(tours){
-            description += "**Tours:** "+ this.formatTime(tours.time) +"\n";
-        }
-
-        if(hammock){
-            description += "**Hammock:** "+ this.formatTime(hammock.time) +"\n";
-        }
-
-        /* City commands */
-        if(delivery){
-            description += "**Delivery:** "+ this.formatTime(delivery.time) +"\n";
-        }
-
-        if(mascot){
-            description += "**Mascot:** "+ this.formatTime(mascot.time) +"\n";
-        }
-
-        if(samples){
-            description += "**Samples:** "+ this.formatTime(samples.time) +"\n";
-        }
-
-        if(bus){
-            description += "**Bus:** "+ this.formatTime(bus.time) +"\n";
-        }
-
-        if(happy){
-            description += "**Happy Hours:** "+ this.formatTime(happy.time) +"\n";
-        }
-        
-        if(description == ''){
-            description = "N/A";
+                    description += "**"+ tacoManager.capitalizeFirstLetter(boost) +":** " + this.formatTime(time) + "\n";
+                })
+            })
+        } else {
+            description = "There are no reminders!";
         }
         
         embed.title = username +'\'s taco reminders'

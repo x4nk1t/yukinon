@@ -94,7 +94,7 @@ class TacoManager {
             if(message.author.bot && message.channel.name != "taco") return
 
             if(message.content.toLowerCase().startsWith('t')){
-                if(!this.client.devMode){
+                //if(!this.client.devMode){
                     var args = message.content.split(' ');
 
                     if(args[0]){
@@ -115,7 +115,7 @@ class TacoManager {
                     }
 
                     this.execute(message);
-                }
+                //}
             }
         })
 
@@ -140,7 +140,9 @@ class TacoManager {
                 var user = {mention: data.mention, username: data.username}
 
                 if((time - now) >= 0){
-                    var timers = new Discord.Collection();
+                    var timers = this.timerStorage.get(userId);
+
+                    if(!timers) timers = new Discord.Collection();
 
                     timers.set(type, {time: time, channel: channel, user: user});
 
@@ -149,7 +151,6 @@ class TacoManager {
                     removeList.push(data._id)
                 }
             })
-
             if(removeList.length) this.removeMany(removeList)
             setInterval(() => this.checkReminders(), 1000)
 
@@ -167,13 +168,16 @@ class TacoManager {
                 var channel = value.channel;
                 var user = value.user;
                 var location = this.getLocationOfThis(sub);
+                var locationFormat = "";
+
+                if(!location != '') locationFormat = '['+ location +']';
 
                 var ping = '**'+ user.username +'**';
                 if(!this.notToPing.includes(sub)){
                     ping = user.mention;
                 }
                 if((time - now) <= 0){
-                    channel.send(ping + ', '+ this.capitalizeFirstLetter(sub) +' ready! '+ location);
+                    channel.send(ping + ', '+ this.capitalizeFirstLetter(sub) +' ready! '+ locationFormat);
                     timers.delete(sub)
 
                     this.timerStorage.set(userId, timers);
@@ -273,7 +277,7 @@ class TacoManager {
         for(let [key, location] of this.tacoBuySubcommands){
             for(let [key2, value2] of location){
                 if(key2 == cmd){
-                    return "["+ key.toUpperCase() +"]";
+                    return key.toUpperCase();
                 }
             }
         }
