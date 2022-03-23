@@ -170,7 +170,7 @@ class TacoManager {
                 var location = this.getLocationOfThis(sub);
                 var locationFormat = "";
 
-                if(!location != '') locationFormat = '['+ location +']';
+                if(location != '') locationFormat = '['+ location +']';
 
                 var ping = '**'+ user.username +'**';
                 if(!this.notToPing.includes(sub)){
