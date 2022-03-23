@@ -94,7 +94,7 @@ class TacoManager {
             if(message.author.bot && message.channel.name != "taco") return
 
             if(message.content.toLowerCase().startsWith('t')){
-                //if(!this.client.devMode){
+                if(!this.client.devMode){
                     var args = message.content.split(' ');
 
                     if(args[0]){
@@ -115,7 +115,7 @@ class TacoManager {
                     }
 
                     this.execute(message);
-                //}
+                }
             }
         })
 
