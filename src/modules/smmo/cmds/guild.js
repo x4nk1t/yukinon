@@ -26,7 +26,7 @@ class Guild extends Command{
                     const data = response.data;
                     
                     if(data.error == 'guild not found'){
-                        message.channel.send({embed: {color: 'BLUE', description: 'Guild not found!'}})
+                        message.channel.send({embeds: [{color: 'BLUE', description: 'Guild not found!'}]})
                         return
                     }
                     var leaderData;
@@ -50,11 +50,11 @@ class Guild extends Command{
                             { name: 'Tag', value: `\`${data.tag}\``, inline: true },
                             { name: 'EXP', value: data.exp.toLocaleString(), inline: true },
                             { name: 'PvP', value: data.passive == 0 ? 'Yes' : 'No', inline: true },
-                            { name: 'Total Members', value: membersCount, inline: true }
+                            { name: 'Total Members', value: membersCount.toString(), inline: true }
                         ]
                     }
 
-                    message.channel.send({embed: embed})
+                    message.channel.send({embeds: [embed]})
                 })
         } else {
             this.sendUsage(message)

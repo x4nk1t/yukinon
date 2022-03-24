@@ -22,7 +22,7 @@ class Leaderboard extends Command {
 
         const lb = leaderboard.map(e => `${e.position}. <@${e.userID}> - **Level ${e.level}** - **XP: ${e.xp.toLocaleString()}**`); 
 
-        message.channel.send({embed: {color: 'BLUE', description: `**${message.guild.name}'s Leaderboard**:\n\n${lb.join("\n\n")}`}});
+        message.channel.send({embeds: [{color: 'BLUE', description: `**${message.guild.name}'s Leaderboard**:\n\n${lb.join("\n\n")}`}]});
     }
 }
 

@@ -35,10 +35,10 @@ class AnimeChannel extends Command{
                             embed.description = 'Something went wrong while removing '+ channel.toString()
                         }
                         
-                        message.channel.send({embed: embed})
+                        message.channel.send({embeds: [embed]})
                     } else {
                         embed.description = ((channel.id == message.channel.id) ? 'This' : channel.toString()) +' is not an anime channel.';
-                        message.channel.send({embed: embed})
+                        message.channel.send({embeds: [embed]})
                     }
                 } else {
                     if(!this.isAnimeChannel(channel.id)){                    
@@ -50,10 +50,10 @@ class AnimeChannel extends Command{
                             embed.description = 'Something went wrong while adding '+ channel.toString()
                         }
                         
-                        message.channel.send({embed: embed})
+                        message.channel.send({embeds: [embed]})
                     } else {
                         embed.description = ((channel.id == message.channel.id) ? 'This' : channel.toString()) +' is already an anime channel. You don\'t have to do it twice.';
-                        message.channel.send({embed: embed})
+                        message.channel.send({embeds: [embed]})
                     }
                 }
                 return
@@ -64,7 +64,7 @@ class AnimeChannel extends Command{
             } else {
                 embed.description = 'This is not an anime channel';
             }
-            message.channel.send({embed: embed})
+            message.channel.send({embeds: [embed]})
         }
     }
     

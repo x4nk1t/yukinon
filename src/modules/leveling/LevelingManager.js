@@ -22,7 +22,7 @@ class LevelingManager {
     }
 
     run() {
-        this.client.on("message", async (message) => {
+        this.client.on("messageCreate", async (message) => {
             if (!message.guild) return;
             if (message.author.bot) return;
             if (message.content.startsWith(this.cmdManager.prefix)) return;
@@ -40,12 +40,14 @@ class LevelingManager {
                 
                 const user = await Levels.fetch(message.author.id, message.guild.id);
 
-                const levelEmbed = new Discord.MessageEmbed()
-                    .setColor('BLUE')
-                    .setTitle('New Level!')
-                    .setDescription(`**GG** ${message.author}, you just leveled up to level **${user.level}**! 🥳🥳`)
-
-                const sendEmbed = await message.channel.send(levelEmbed)
+                const levelEmbed = {
+                    embeds: [{
+                        color: 'BLUE',
+                        title: 'New Level!',
+                        description: `**GG** ${message.author}, you just leveled up to level **${user.level}**! 🥳🥳`
+                    }]
+                }
+                message.channel.send(levelEmbed)
             }
         });
     }

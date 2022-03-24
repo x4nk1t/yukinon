@@ -21,7 +21,7 @@ class User extends Command{
                 if(profile) {
                     id = profile.ingame_id;
                 } else {
-                    message.channel.send({embed: {color: 'BLUE', description: mention.toString() +' haven\'t linked their account yet!'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: mention.toString() +' haven\'t linked their account yet!'}]})
                     return
                 }
             }
@@ -31,13 +31,13 @@ class User extends Command{
                         const data = response.data;
                         
                         if(data.error == 'user not found'){
-                            message.channel.send({embed: {color: 'BLUE', description: 'User not found.'}})
+                            message.channel.send({embeds: [{color: 'BLUE', description: 'User not found.'}]})
                             return
                         }
 
                         const embed =  manager.profileEmbed(message, data)
 
-                        message.channel.send({embed: embed})
+                        message.channel.send({embeds: [embed]})
                     }).catch(err => {
                         console.error(err)
                         message.channel.send({color: 'BLUE', description: 'Something went wrong. Try again later.'})

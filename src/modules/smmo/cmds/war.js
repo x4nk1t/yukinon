@@ -55,11 +55,11 @@ class War extends Command{
         }
 
         if(action == "list"){
-            message.channel.send({embed: {
+            message.channel.send({embeds: [{
                 title: 'Your guild target list',
                 color: 'BLUE',
                 description: list.guilds_id.join(", ")
-            }})
+            }]})
             return
         }
 
@@ -97,15 +97,15 @@ class War extends Command{
             }
         })
 
-        message.channel.send({embed: embed})
+        message.channel.send({embeds: [embed]})
     }
 
     embed(message){
         return {
-            embed: {
+            embeds: [{
                 color: 'BLUE',
                 description: message
-            }
+            }]
         }
     }
 }

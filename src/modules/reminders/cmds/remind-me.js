@@ -20,7 +20,7 @@ class RemindMe extends Command{
             const reminder = commandArgs.join(' ')
 
             if(isNaN(time) && isNaN(parseFloat(time))){
-                message.channel.send({embed: {color: 'BLUE', description: 'Invalid time!\nMake sure time is in following format: 1d4h5m1s'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: 'Invalid time!\nMake sure time is in following format: 1d4h5m1s'}]})
                 return
             }
         
@@ -28,9 +28,9 @@ class RemindMe extends Command{
             const add = await manager.addReminder(message.author.id, reminder, timeAt, message.channel.id)
 
             if(add){
-                message.channel.send({embed: {color: 'BLUE', description: message.author.toString() +', Reminder set successfully!'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: message.author.toString() +', Reminder set successfully!'}]})
             } else {
-                message.channel.send({embed: {color: 'BLUE', description: message.author.toString() +', Something went wrong! Try again in few seconds!'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: message.author.toString() +', Something went wrong! Try again in few seconds!'}]})
             }
         } else {
             this.sendUsage(message)

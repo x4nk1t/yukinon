@@ -21,7 +21,7 @@ class AnimeReleaseCommand extends Command {
             footer: {text: 'Requested by '+ message.author.username + ' • Page (1 / '+ (lastPage + 1) +')', icon_url: message.author.displayAvatarURL()}
         }
         
-        const sent = await message.channel.send({embed: embed})
+        const sent = await message.channel.send({embeds: [embed]})
         
         if(!this.client.animeManager.episodes.length || lastPage == 1) return
         
@@ -50,7 +50,7 @@ class AnimeReleaseCommand extends Command {
             }
             embed.description = this.getPage(page);
             embed.footer = {text: 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +' / '+ (lastPage + 1) +')', icon_url: message.author.displayAvatarURL()}
-            sent.edit({embed: embed})
+            sent.edit({embeds: [embed]})
         })
     }
     

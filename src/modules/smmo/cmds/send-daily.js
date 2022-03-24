@@ -16,7 +16,7 @@ class SendDaily extends Command{
         const profile = manager.profiles.get(user_id)
         
         if(profile == null){
-            message.channel.send({embed: {color: 'BLUE', description: 'You must link your profile first!'}})
+            message.channel.send({embeds: [{color: 'BLUE', description: 'You must link your profile first!'}]})
             return
         }
 
@@ -31,7 +31,7 @@ class SendDaily extends Command{
         }
 
         await this.updateDaily(profile)
-        message.channel.send({embed: {color: 'BLUE', description: message.author.toString() +', You **'+ will_wont +'** receive daily stats in your DM!'}})
+        message.channel.send({embeds: [{color: 'BLUE', description: message.author.toString() +', You **'+ will_wont +'** receive daily stats in your DM!'}]})
     }
 
     updateDaily(profile){

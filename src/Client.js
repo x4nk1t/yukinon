@@ -37,7 +37,7 @@ class Client extends Discord.Client{
     registerEvents(){
         this.on('ready', () => this.start())
         
-        this.on('message', message => {
+        this.on('messageCreate', message => {
             if(message.author.bot) return
             
             if(message.content.toLowerCase().startsWith(this.commandManager.prefix)){

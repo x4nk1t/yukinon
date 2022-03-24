@@ -70,11 +70,11 @@ class AnimeManager {
                         if(trackings.length){
                             trackings.forEach(tr => {
                                 if(tr == id){
-                                    channel.send({embed: embed})
+                                    channel.send({embeds: [embed]})
                                 }
                             })
                         } else {
-                            channel.send({embed: embed})
+                            channel.send({embeds: [embed]})
                         }
                     })
                     
@@ -117,7 +117,7 @@ class AnimeManager {
     
     removeAnimeChannel(channel_id){
         return new Promise((resolve, reject) => {
-            Channels.collection.removeOne({channel_id: channel_id}, (err, channels) => {
+            Channels.collection.findOneAndDelete({channel_id: channel_id}, (err, channels) => {
                 if(err){
                     this.client.logger.error(err)
                     resolve(false)

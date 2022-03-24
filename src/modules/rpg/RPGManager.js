@@ -189,7 +189,7 @@ class RPGManager {
     }
     
     run(){
-        this.client.on('message', message => {
+        this.client.on('messageCreate', message => {
             if(message.author.bot) return;
             
             if(message.content.toLowerCase().startsWith('rpg')){
@@ -395,7 +395,7 @@ class RPGManager {
     }
     
     removeMany(options, callback = () => {}){
-        Timer.collection.removeMany({
+        Timer.collection.deleteMany({
             _id: {
                 $in: options
             }

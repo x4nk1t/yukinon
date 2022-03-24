@@ -239,7 +239,7 @@ class SMMOManager {
                             ]
                         }
     
-                        user.send({embed: embed})
+                        user.send({embeds: [embed]})
                     }
                 }
     

@@ -28,12 +28,12 @@ class WhatAnime extends Command{
                 image_link = commandArgs[0];
             } else {
                 embed.description = 'URL not valid.';
-                message.channel.send({embed: embed})
+                message.channel.send({embeds: [embed]})
                 return
             }
         } else {
             embed.description = 'You must atleast provide an attachment or a image url.';
-            message.channel.send({embed: embed})
+            message.channel.send({embeds: [embed]})
             return
         }
         
@@ -41,7 +41,7 @@ class WhatAnime extends Command{
             if(error){
                 embed.description = json.message
                 
-                message.channel.send({embed: embed})
+                message.channel.send({embeds: [embed]})
                 return
             }
             
@@ -89,7 +89,7 @@ class WhatAnime extends Command{
                     {name: '\u200b', value: '*Note: Results might not be accurate.*'}
                 ]
                 embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.displayAvatarURL()}
-                message.channel.send({embed: embed})
+                message.channel.send({embeds: [embed]})
             })
         })
     }

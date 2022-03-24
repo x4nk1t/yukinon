@@ -39,10 +39,10 @@ class Help extends Command{
                     }
                 })
                 if(command == ''){
-                    message.channel.send({embed: {color: 'RED', description: 'Command not found!'}})
+                    message.channel.send({embeds: [{color: 'RED', description: 'Command not found!'}]})
                 } else {
                     message.channel.send({
-                        embed: {
+                        embeds: [{
                             title: `${command.options.name} command`,
                             color: 'BLUE',
                             fields: [
@@ -52,7 +52,7 @@ class Help extends Command{
                                 {name: 'Aliases', value: command.options.aliases.join(', ')},
                                 {name: 'Guild Only', value: command.options.guildOnly ? 'Yes' : 'No'},
                             ]
-                        }
+                        }]
                     })
                 }
                 return
@@ -62,7 +62,7 @@ class Help extends Command{
         const lastPage = Math.floor(this.commandContent.length / this.commandPerPage);
         
         if(page > lastPage || page < 0){
-            message.channel.send({embed: {color: 'BLUE', description: 'Total Page: '+ (lastPage + 1)}})
+            message.channel.send({embeds: [{color: 'BLUE', description: 'Total Page: '+ (lastPage + 1)}]})
             return
         }
 
@@ -73,7 +73,7 @@ class Help extends Command{
             footer: {text: `Requested by ${message.author.username} • Page (${page + 1}/${(lastPage + 1)})`, icon_url: message.author.displayAvatarURL()}
         }
 
-        const firstPage = await message.channel.send({embed: embed})
+        const firstPage = await message.channel.send({embeds: [embed]})
         const emojis = ['⏪', '◀️', '▶️' ,'⏩']
 
         emojis.forEach(emoji => firstPage.react(emoji))
@@ -107,7 +107,7 @@ class Help extends Command{
                 footer: {text: `Requested by ${message.author.username} • Page (${page + 1}/${lastPage + 1})`, icon_url: message.author.displayAvatarURL()}
             }
 
-            firstPage.edit({embed: embed2})
+            firstPage.edit({embeds: [embed2]})
         })
     }
 

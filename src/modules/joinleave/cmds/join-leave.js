@@ -16,7 +16,7 @@ class JoinLeaveCommand extends Command{
         const guild = message.guild;
         const joinLeave = manager.joinLeaveChannels.get(guild.id);
 
-        if(!message.member.hasPermission('MANAGE_GUILD')){
+        if(!message.member.permissionsIn(message.channel).has('MANAGE_GUILD')){
             message.channel.send(this.embed('You don\'t have permission to use this command!'))
             return
         }
@@ -44,6 +44,7 @@ class JoinLeaveCommand extends Command{
                     manager.joinLeaveChannels.delete(guild.id)
                     manager.removeGuildChannel(guild.id)
                     message.channel.send(this.embed('Removed this guild join leave message channel.'))
+                    return
                 }
                 
                 message.channel.send(this.embed('This guild does not have join leave channel.'))
@@ -54,10 +55,10 @@ class JoinLeaveCommand extends Command{
     }
 
     embed(message){
-        return {embed: {
+        return {embeds: [{
             color: 'BLUE',
             description: message
-        }}
+        }]}
     }
 }
 

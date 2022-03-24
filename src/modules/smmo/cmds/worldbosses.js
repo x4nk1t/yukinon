@@ -16,7 +16,7 @@ class WorldBosses extends Command {
         var description = '';
 
         if(!bosses.length){
-            message.channel.send({embed: {color: 'BLUE', description: 'There are no world bosses.'}})
+            message.channel.send({embeds: [{color: 'BLUE', description: 'There are no world bosses.'}]})
             return
         }
 
@@ -33,7 +33,7 @@ class WorldBosses extends Command {
         })
 
         if(description == ''){
-            message.channel.send({embed: {color: 'BLUE', description: 'There are no world bosses.'}})
+            message.channel.send({embeds: [{color: 'BLUE', description: 'There are no world bosses.'}]})
             return
         }
 
@@ -48,7 +48,7 @@ class WorldBosses extends Command {
             }
         }
 
-        message.channel.send({embed: embed})
+        message.channel.send({embeds: [embed]})
     }
 }
 

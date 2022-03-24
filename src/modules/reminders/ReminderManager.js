@@ -106,7 +106,7 @@ class ReminderManager {
 
     removeMany(options){
         return new Promise((resolve, reject) => {
-            Reminder.collection.removeMany({
+            Reminder.collection.deleteMany({
                 _id: {
                     $in: options
                 }

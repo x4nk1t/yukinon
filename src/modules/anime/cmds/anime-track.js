@@ -17,7 +17,7 @@ class TrackAnime extends Command{
             
             if(message.mentions.channels.first() && commandArgs[0] == message.mentions.channels.first().toString()){
                 if(!this.isAnimeChannel(message.mentions.channels.first().id)){
-                    message.channel.send({embed: {color: 'BLUE', description: message.mentions.channels.first().toString() +' is not an anime channel.'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: message.mentions.channels.first().toString() +' is not an anime channel.'}]})
                     return
                 }
                 
@@ -37,9 +37,9 @@ class TrackAnime extends Command{
                 if(action == 'clear'){
                     const clear = await this.clearTrack(channel.id)
                     if(clear){
-                        message.channel.send({embed: {color: 'BLUE', description: 'Successfully cleared '+ channel.toString() +'\'s tracking list.'}})
+                        message.channel.send({embeds: [{color: 'BLUE', description: 'Successfully cleared '+ channel.toString() +'\'s tracking list.'}]})
                     } else {
-                        message.channel.send({embed: {color: 'BLUE', description: 'Something went wrong while clearing '+ channel.toString() +'\'s tracking list.'}})
+                        message.channel.send({embeds: [{color: 'BLUE', description: 'Something went wrong while clearing '+ channel.toString() +'\'s tracking list.'}]})
                     }
                     return
                 }
@@ -55,50 +55,50 @@ class TrackAnime extends Command{
             }
             
             if(!this.isAnimeChannel(channel.id)){
-                message.channel.send({embed: {color: 'BLUE', description: ((channel.id == message.channel.id) ? 'This' : channel.toString()) +' is not an anime channel.'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: ((channel.id == message.channel.id) ? 'This' : channel.toString()) +' is not an anime channel.'}]})
                 return
             }
             
             if(action == 'clear'){
                 const clear = await this.clearTrack(channel.id)
                 if(clear){
-                    message.channel.send({embed: {color: 'BLUE', description: 'Successfully cleared this channel\'s tracking list.'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'Successfully cleared this channel\'s tracking list.'}]})
                 } else {
-                    message.channel.send({embed: {color: 'BLUE', description: 'Something went wrong while clearing this channel\'s tracking list.'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'Something went wrong while clearing this channel\'s tracking list.'}]})
                 }
             }
             
             if(!anime_id){
-                message.channel.send({embed: {color: 'BLUE', description: 'Anime ID must be integer.'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: 'Anime ID must be integer.'}]})
                 return
             }
             
             if(action == 'add') {
                 if(this.isInTracking(channel.id, anime_id)){
-                     message.channel.send({embed: {color: 'BLUE', description: 'Anime '+ anime_id +' is already being tracked.'}})
+                     message.channel.send({embeds: [{color: 'BLUE', description: 'Anime '+ anime_id +' is already being tracked.'}]})
                      return           
                 }
                 const add = await this.addTrack(channel.id, anime_id)
                 if(add){
-                    message.channel.send({embed: {color: 'BLUE', description: 'Successfully added '+ this.linkId(anime_id) +' to the list.'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'Successfully added '+ this.linkId(anime_id) +' to the list.'}]})
                 } else {
-                    message.channel.send({embed: {color: 'BLUE', description: 'Something went wrong while adding '+ this.linkId(anime_id) +' to the list.'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'Something went wrong while adding '+ this.linkId(anime_id) +' to the list.'}]})
                 }
             } else if(action == 'remove'){
                 if(!this.isInTracking(channel.id, anime_id)){
-                     message.channel.send({embed: {color: 'BLUE', description: 'Anime '+ anime_id +' is not being tracked.'}})
+                     message.channel.send({embeds: [{color: 'BLUE', description: 'Anime '+ anime_id +' is not being tracked.'}]})
                      return           
                 }
                 const remove = await this.removeTrack(channel.id, anime_id)
                 if(remove){
-                    message.channel.send({embed: {color: 'BLUE', description: 'Successfully removed '+ this.linkId(anime_id) +' from the list.'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'Successfully removed '+ this.linkId(anime_id) +' from the list.'}]})
                 } else {
-                    message.channel.send({embed: {color: 'BLUE', description: 'Something went wrong while removing '+ this.linkId(anime_id) +' from the list.'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'Something went wrong while removing '+ this.linkId(anime_id) +' from the list.'}]})
                 }
             }
         } else {
             if(!this.isAnimeChannel(channel.id)){
-                message.channel.send({embed: {color: 'BLUE', description: 'This is not an anime channel.'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: 'This is not an anime channel.'}]})
                 return
             }
             this.sendTrackingEmbed(channel, message)
@@ -129,11 +129,11 @@ class TrackAnime extends Command{
                 }
                 
                 message.channel.send({
-                    embed: {
+                    embeds: [{
                         title: '#'+ channel.name +' tracking list',
                         color: 'BLUE',
                         description: description
-                    }
+                    }]
                 })
             }
         })

@@ -23,7 +23,7 @@ class Simulate extends Command{
                 const profile = manager.profiles.get(message.author.id)
 
                 if(!profile){
-                    message.channel.send({embed: {color: 'BLUE', description: 'You must link your account first. OR you can use `!sim <your id> <player id>`'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'You must link your account first. OR you can use `!sim <your id> <player id>`'}]})
                     return
                 } else {
                     p1 = profile.ingame_id;
@@ -32,19 +32,19 @@ class Simulate extends Command{
             }
 
             if(p1 == p2){
-                message.channel.send({embed: {color: 'BLUE', description: 'You cannot simulate pvp between same player.'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: 'You cannot simulate pvp between same player.'}]})
                 return
             }
 
             if(this.isValidInt(p1) && this.isValidInt(p2)){
                 manager.sendRequest('post', '/player/info/'+ p1).then(response => {
                     if(response.data.error && response.data.error == 'user not found'){
-                        message.channel.send({embed: {color: 'BLUE', description: 'User with id **'+ p1 +'** not found.'}})
+                        message.channel.send({embeds: [{color: 'BLUE', description: 'User with id **'+ p1 +'** not found.'}]})
                         return
                     }
                     manager.sendRequest('post', '/player/info/'+ p2).then(response2 => {
                         if(response2.data.error && response2.data.error == 'user not found'){
-                            message.channel.send({embed: {color: 'BLUE', description: 'User with id '+ p2 +' not found.'}})
+                            message.channel.send({embeds: [{color: 'BLUE', description: 'User with id '+ p2 +' not found.'}]})
                             return
                         }
                         const battles = []
@@ -56,7 +56,7 @@ class Simulate extends Command{
                             battles.push(this.simulatePVP(p1_data, p2_data))
                         }
 
-                        message.channel.send({embed: this.battleEmbed(battles)})
+                        message.channel.send({embeds: [this.battleEmbed(battles)]})
                     })
                 })
             }

@@ -33,7 +33,7 @@ class GuildMembers extends Command{
 
                 if(guildData.error && guildData.error == 'guild not found'){
                     notFound = true;
-                    message.channel.send({embed: {color: 'BLUE', description: 'Guild not found!'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'Guild not found!'}]})
                     return
                 }
             })
@@ -44,7 +44,7 @@ class GuildMembers extends Command{
                 membersData = membersResponse.data;
             })
             
-            var firstPage = await message.channel.send({embed: {color: 'BLUE', description: 'This might take some time. Please wait.'}})
+            var firstPage = await message.channel.send({embeds: [{color: 'BLUE', description: 'This might take some time. Please wait.'}]})
 
             var title = '(Count '+ membersData.length +')'
 
@@ -68,7 +68,7 @@ class GuildMembers extends Command{
                 },
             }
 
-            await firstPage.edit({embed: embed})
+            await firstPage.edit({embeds: [embed]})
 
             if(lastPage <= 1) return
 
@@ -76,7 +76,7 @@ class GuildMembers extends Command{
                 embed.description = this.getPage(page, membersData, attackMode)
                 embed.footer.text = 'Requested by '+ message.author.username + ' • Page ('+ (page + 1) +'/'+ (lastPageFloor + 1) +')'
 
-                await firstPage.edit({embed: embed})
+                await firstPage.edit({embeds: [embed]})
             })
         } else {
             this.sendUsage(message)

@@ -43,10 +43,10 @@ class Emojis extends Command{
 
             embed.description = description;
 
-            message.channel.send({embed: embed})
+            message.channel.send({embeds: [embed]})
         } else {
             embed.description = 'This guild doesn\'t have any emojis.';
-            message.channel.send({embed: embed})
+            message.channel.send({embeds: [embed]})
         }
     }
 }

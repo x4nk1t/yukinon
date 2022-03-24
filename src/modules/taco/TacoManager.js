@@ -90,7 +90,7 @@ class TacoManager {
     }
 
     async run(){
-        this.client.on('message', message => {
+        this.client.on('messageCreate', message => {
             if(message.author.bot && message.channel.name != "taco") return
 
             if(message.content.toLowerCase().startsWith('t')){
@@ -206,13 +206,13 @@ class TacoManager {
                     var timers = this.timerStorage.get(userId);
 
                     if(!timers) timers = new Discord.Collection();
-
-                    if(!timers.get(key) || force){
+                    
+                    if(!timers.has(key) || force){
                         if(!this.notToPing.includes(key)) this.addTimer(userId, key, now + time, channel_id, user);
                         timers.set(key, {time: now + time, channel: channel, user: {mention: user.toString(), username: user.username}})
+                        
+                        this.timerStorage.set(userId, timers);
                     }
-
-                    this.timerStorage.set(userId, timers)
                 }
             }
 
@@ -230,17 +230,16 @@ class TacoManager {
                 var subCommandDetails = locationSubCommands.get(sub);
 
                 if(subCommandDetails){
-                    this.addTimer(userId, sub, now + subCommandDetails.time, channel_id, user);
-
                     var timers = this.timerStorage.get(userId);
 
                     if(!timers) timers = new Discord.Collection()
 
-                    timers.set(sub, {time: now + subCommandDetails.time, channel: channel, user: {mention: user.toString(), username: user.username}})
+                    if(!timers.has(sub) || force){
+                        this.addTimer(userId, sub, now + subCommandDetails.time, channel_id, user);
+                        timers.set(sub, {time: now + subCommandDetails.time, channel: channel, user: {mention: user.toString(), username: user.username}})
 
-                    this.timerStorage.set(userId, timers);
-                } else {
-                    message.channel.send({embed: { color: 'BLUE',  description: 'Reminder not set!!\nCommand and location is not same!\nUse tl <location> first!'}});
+                        this.timerStorage.set(userId, timers);
+                    }
                 }
             }
         }
@@ -335,7 +334,7 @@ class TacoManager {
     }
     
     removeMany(options, callback = () => {}){
-        Taco.collection.removeMany({
+        Taco.collection.deleteMany({
             _id: {
                 $in: options
             }

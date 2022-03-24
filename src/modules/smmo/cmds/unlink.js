@@ -15,7 +15,7 @@ class Unlink extends Command{
         const d = manager.profiles.get(message.author.id)
 
         if(d == null){
-            message.channel.send({embed: {color: 'BLUE', description: 'You haven\'t linked your account yet!'}})
+            message.channel.send({embeds: [{color: 'BLUE', description: 'You haven\'t linked your account yet!'}]})
             return
         }
         
@@ -23,12 +23,12 @@ class Unlink extends Command{
 
         SMMO.collection.removeOne({user_id: message.author.id}, err => {
             if(err){
-                message.channel.send({embed: {color: 'BLUE', description: 'Something went wrong.'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: 'Something went wrong.'}]})
                 return
             }
             manager.profiles.delete(message.author.id)
             manager.profile_stats.delete(message.author.id)
-            message.channel.send({embed: {color: 'BLUE', description: 'Successfully unlinked your account.'}})
+            message.channel.send({embeds: [{color: 'BLUE', description: 'Successfully unlinked your account.'}]})
         })
     }
 }

@@ -77,7 +77,7 @@ class TacoRemindersCommand extends Command{
         embed.description = description
         embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.displayAvatarURL()}
         
-        message.channel.send({embed: embed})
+        message.channel.send({embeds: [embed]})
     }
     
     formatTime(time_in_ms){

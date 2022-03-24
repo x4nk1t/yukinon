@@ -15,17 +15,17 @@ class ReloadBoss extends Command{
 
         if(this.client.authorizedUsers.includes(message.author.id)){
             if(manager.worldboss.length){
-                message.channel.send({embed: {color: 'BLUE', description: 'There are still bosses left. No need to reload.'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: 'There are still bosses left. No need to reload.'}]})
             } else {
                 await manager.loadAllBosses()
                 if(manager.worldboss.length){
-                    message.channel.send({embed: {color: 'BLUE', description: 'Bosses reloaded. Use `!wb` to check!'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'Bosses reloaded. Use `!wb` to check!'}]})
                 } else {
-                    message.channel.send({embed: {color: 'BLUE', description: 'There are no bosses this week. New bosses are available at Monday UTC 2PM'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'There are no bosses this week. New bosses are available at Monday UTC 2PM'}]})
                 }
             }
         } else {
-            message.channel.send({embed: {color: 'BLUE', description: 'You are not authorized to use this command.'}})
+            message.channel.send({embeds: [{color: 'BLUE', description: 'You are not authorized to use this command.'}]})
         }
     }
 }

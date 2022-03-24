@@ -21,10 +21,11 @@ class Stats extends Command{
             fields: [
                 { name: 'Ping', value: (sent.createdTimestamp - message.createdTimestamp) +'ms', inline: true },
                 { name: 'Uptime', value: this.getUptime(), inline: true },
-                {name: 'Memory usage', value: used +'MB /'+ total + ' MB'}
+                { name: 'Memory usage', value: used +'MB /'+ total + ' MB'}
             ]
         }
-        sent.edit({content: '', embed: embed});
+        
+        sent.edit({content: '\n', embeds: [embed]});
     }
     
     getUptime(){

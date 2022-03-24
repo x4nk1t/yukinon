@@ -17,7 +17,7 @@ class Eval extends Command{
             const evalContent = split.join(' ')
 
             if(evalContent.toLowerCase().includes('token')){
-                message.channel.send({embed: {color: 'BLUE', description: 'Cannot parse content with **token** word.'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: 'Cannot parse content with **token** word.'}]})
                 return
             }
 
@@ -31,7 +31,7 @@ class Eval extends Command{
                 message.channel.send(`\`ERROR\` \`\`\`xl\n${this.clean(err)}\n\`\`\``)
             }
         } else {
-            message.channel.send({embed: {description: 'You don\'t have permission for this command. <:pooh:789404954430668821>', color: 'BLUE'}})
+            message.channel.send({embeds: [{description: 'You don\'t have permission for this command. <:pooh:789404954430668821>', color: 'BLUE'}]})
         }
     }
 

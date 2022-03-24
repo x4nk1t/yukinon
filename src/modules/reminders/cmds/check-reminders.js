@@ -45,9 +45,9 @@ class CheckReminder extends Command{
                     }
                 }
 
-                message.channel.send({embed: embed})
+                message.channel.send({embeds: [embed]})
             } else {
-                message.channel.send({embed: {color: 'BLUE', description: 'Make sure you\'re using right id from `'+ this.prefix +'cr` \n **Note:** You cannot view others reminders.'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: 'Make sure you\'re using right id from `'+ this.prefix +'cr` \n **Note:** You cannot view others reminders.'}]})
             }
         } else {
             const id = message.author.id;
@@ -61,9 +61,9 @@ class CheckReminder extends Command{
                     
                     description += `${this.shortText(reminder.reminder)} - In ${this.formatTime(inMS)} [ID: ${reminder._id}]\n`;
                 })
-                message.channel.send({embed: {color: 'BLUE', title: message.author.username +'\'s Reminders', description: description, footer: {text: 'You can get reminder detail with `'+ this.prefix +'cr <id>` command'}}})
+                message.channel.send({embeds: [{color: 'BLUE', title: message.author.username +'\'s Reminders', description: description, footer: {text: 'You can get reminder detail with `'+ this.prefix +'cr <id>` command'}}]})
             } else {
-                message.channel.send({embed: {color: 'BLUE', description: 'You don\'t have any reminders.'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: 'You don\'t have any reminders.'}]})
             }
         }
     }

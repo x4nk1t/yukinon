@@ -17,7 +17,7 @@ class Link extends Command{
         if(commandArgs[0]){
             const d = manager.profiles.get(message.author.id)
             if(d != null){
-                message.channel.send({embed: {color: 'BLUE', description: 'You have already linked your account!'}})
+                message.channel.send({embeds: [{color: 'BLUE', description: 'You have already linked your account!'}]})
                 return
             }
             
@@ -29,7 +29,7 @@ class Link extends Command{
                         const data = response.data;
                         
                         if(data.error == 'user not found'){
-                            message.channel.send({embed: {color: 'BLUE', description: 'User not found.'}})
+                            message.channel.send({embeds: [{color: 'BLUE', description: 'User not found.'}]})
                             return
                         }
 
@@ -38,11 +38,11 @@ class Link extends Command{
 
                         SMMO.collection.insertOne({user_id: message.author.id, ingame_id: id, send_daily: 0}, err => {
                             if(err){
-                                message.channel.send({embed: {color: 'BLUE', description: 'Something went wrong.'}})
+                                message.channel.send({embeds: [{color: 'BLUE', description: 'Something went wrong.'}]})
                                 return
                             }
                             manager.profiles.set(message.author.id, {user_id: message.author.id, ingame_id: id, send_daily: 0})
-                            message.channel.send({embed: {color: 'BLUE', description: 'Successfully linked your account.'}})
+                            message.channel.send({embeds: [{color: 'BLUE', description: 'Successfully linked your account.'}]})
                         })
                     })
             } else {

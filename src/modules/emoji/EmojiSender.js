@@ -6,7 +6,7 @@ class EmojiSender {
     }
     
     run(){
-        this.client.on('message', message => {
+        this.client.on('messageCreate', message => {
             if(message.author.bot || !message.guild) return
             
             var content = message.content;

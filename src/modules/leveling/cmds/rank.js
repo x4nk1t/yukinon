@@ -18,9 +18,9 @@ class Rank extends Command{
 
         const user = await Levels.fetch(target.id, message.guild.id);
         
-        if (!user) return message.channel.send({embed: {color: 'BLUE', description: "Seems like this user has not earned any xp so far."}});
+        if (!user) return message.channel.send({embeds: [{color: 'BLUE', description: "Seems like this user has not earned any xp so far."}]});
         
-        message.channel.send({embed: {color: 'BLUE', description: `**${target}** is currently **level ${user.level}** with **${user.xp} XP**.`}});
+        message.channel.send({embeds: [{color: 'BLUE', description: `**${target}** is currently **level ${user.level}** with **${user.xp} XP**.`}]});
     }
 }
 

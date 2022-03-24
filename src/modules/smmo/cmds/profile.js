@@ -14,7 +14,7 @@ class Profile extends Command{
         const d = manager.profiles.get(message.author.id)
 
         if(d == null){
-            message.channel.send({embed: {color: 'BLUE', description: 'You must link your account first!'}})
+            message.channel.send({embeds: [{color: 'BLUE', description: 'You must link your account first!'}]})
             return
         }
 
@@ -25,13 +25,13 @@ class Profile extends Command{
                 const data = response.data;
                 
                 if(data.error == 'user not found'){
-                    message.channel.send({embed: {color: 'BLUE', description: 'User not found.'}})
+                    message.channel.send({embeds: [{color: 'BLUE', description: 'User not found.'}]})
                     return
                 }
 
                 const embed =  manager.profileEmbed(message, data)
 
-                message.channel.send({embed: embed})
+                message.channel.send({embeds: [embed]})
             }).catch(err => {
                 console.error(err)
                 message.channel.send({color: 'BLUE', description: 'Something went wrong. Try again later.'})

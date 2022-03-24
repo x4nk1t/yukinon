@@ -14,7 +14,7 @@ class MyStats extends Command{
         const d = manager.profiles.get(message.author.id)
 
         if(d == null){
-            message.channel.send({embed: {color: 'BLUE', description: 'You must linked your account first!'}})
+            message.channel.send({embeds: [{color: 'BLUE', description: 'You must linked your account first!'}]})
             return
         }
         
@@ -26,14 +26,14 @@ class MyStats extends Command{
                     const data = response.data;
                     
                     if(data.error == 'user not found'){
-                        message.channel.send({embed: {color: 'BLUE', description: 'User not found.'}})
+                        message.channel.send({embeds: [{color: 'BLUE', description: 'User not found.'}]})
                         return
                     }
                     
                     const stats = manager.profile_stats.get(id);
 
                     if(stats == null || stats.level == 0){
-                        message.channel.send({embed: {color: 'BLUE', description: 'It takes a day to generate your stats if you just linked your account!'}})
+                        message.channel.send({embeds: [{color: 'BLUE', description: 'It takes a day to generate your stats if you just linked your account!'}]})
                         return
                     }
 
@@ -52,7 +52,7 @@ class MyStats extends Command{
                         ]
                     }
 
-                    message.channel.send({embed: embed})
+                    message.channel.send({embeds: [embed]})
                 })
         } else {
             this.sendUsage(message)
