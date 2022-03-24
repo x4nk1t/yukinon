@@ -54,8 +54,8 @@ class TacoManager {
         this.tacoCommandsTime.set('ot', OVERTIME);
         this.tacoCommandsTime.set('overtime', OVERTIME);
 
-        this.tacoCommandsTime.set('clean', TWELVE_HOURS);
-        this.tacoCommandsTime.set('daily', TWELVE_HOURS);
+        this.tacoCommandsTime.set('clean', ONE_DAY);
+        this.tacoCommandsTime.set('daily', ONE_DAY);
         this.tacoCommandsTime.set('claim', TWELVE_HOURS);
 
         this.tacoBuySubcommands.set("shack",
