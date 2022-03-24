@@ -18,7 +18,7 @@ class TacoRemindersCommand extends Command{
         var username = message.author.username;
         
         if(message.mentions.users.first()){
-            var member = message.guild.member(message.mentions.users.first())
+            var member = message.guild.members.cache.get(message.mentions.users.first().id);
             
             if(member) {
                 userId = member.user.id;

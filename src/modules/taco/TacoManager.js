@@ -349,7 +349,7 @@ class TacoManager {
     }
     
     removeTimer(userId, type, callback = () => {}){
-        Taco.collection.removeOne({user_id: userId, type: type}, err => {
+        Taco.collection.findOneAndDelete({user_id: userId, type: type}, err => {
             if(err){
                 this.client.logger.error(err)
                 callback(true, {message: 'Failed to remove timer.'})

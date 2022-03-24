@@ -48,7 +48,7 @@ class AnimeManager {
             var cover = episode.cover;
             var airingAt = episode.airingAt;
             var difference = airingAt - now;
-            
+
             if(difference > 0){
                 setTimeout(() => {
                     var embed = {
@@ -57,7 +57,7 @@ class AnimeManager {
                         thumbnail: {url: cover},
                         fields: [
                             {name: 'Title', value: title, inline: true},
-                            {name: 'Episode', value: episode_num, inline: true},
+                            {name: 'Episode', value: episode_num.toString(), inline: true},
                             {name: 'AniList', value: url}
                         ],
                         timestamp: new Date(),

@@ -410,7 +410,7 @@ class RPGManager {
     }
     
     removeTimer(userId, type, callback = () => {}){
-        Timer.collection.removeOne({user_id: userId, type: type}, err => {
+        Timer.collection.findOneAndDelete({user_id: userId, type: type}, err => {
             if(err){
                 this.client.logger.error(err)
                 callback(true, {message: 'Failed to remove timer.'})
