@@ -26,18 +26,13 @@ class Help extends Command{
             })
         }
         var page = 0;
+        var arg = commandArgs[0] ? commandArgs[0].toLowerCase() : null;
 
-        if(commandArgs[0]){
-            if(!isNaN(commandArgs[0]) && !isNaN(parseFloat(commandArgs[0]))){
-                page = commandArgs[0] - 1;
+        if(arg){
+            if(!isNaN(arg) && !isNaN(parseFloat(arg))){
+                page = arg - 1;
             } else {
-                var command = '';
-                this.commandLoader.commands.some(cmd => {
-                    if(cmd.options.name.toLowerCase() == commandArgs[0].toLowerCase()){
-                        command = cmd;
-                        return
-                    }
-                })
+                var command = this.commandLoader.getCommand(arg)
                 if(command == ''){
                     message.channel.send({embeds: [{color: 'RED', description: 'Command not found!'}]})
                 } else {
