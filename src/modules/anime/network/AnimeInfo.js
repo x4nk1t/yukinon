@@ -8,7 +8,7 @@ class AnimeInfo {
     getDetails(anilist_id, callback){
         const manager = this.client.animeManager;
 
-        const query = `query($id: Int){Media(id: $id){id,title {userPreferred},coverImage {extraLarge},source,episodes,status,meanScore,siteUrl}}`
+        const query = `query($id: Int){Media(id: $id){id,idMal,title {english, romaji},coverImage {extraLarge},source,episodes,status,meanScore,siteUrl}}`
 
         const options = manager.optionBuilder({query: query, variables: {id: anilist_id}})
 

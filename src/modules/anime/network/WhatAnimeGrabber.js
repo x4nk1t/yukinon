@@ -3,7 +3,7 @@ const axios = require('axios');
 class WhatAnimeGrabber {
     constructor(client){
         this.client = client;
-        this.baseUrl = 'https://trace.moe/api/search?url=';
+        this.baseUrl = 'https://api.trace.moe/search?url=';
     }
     
     getDetails(url, callback){

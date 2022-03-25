@@ -45,34 +45,32 @@ class WhatAnime extends Command{
                 return
             }
             
-            const mal_id = json.docs[0].mal_id;
-            const anilist_id = json.docs[0].anilist_id;
-            const title_english = json.docs[0].title_english || 'N/A';
-            const title_romaji = json.docs[0].title_romaji || 'N/A';
+            const anilist_id = json.result[0].anilist;
             
             this.animeInfo.getDetails(anilist_id, data => {
                 if(data == null){
-                    embed.title = title_romaji
+                    embed.title = 'Click here for more info!'
                     embed.color = 'BLUE'
                     embed.url = 'https://anilist.co/anime/'+ anilist_id
                     embed.thumbnail = {url: commandArgs[0]}
                     embed.fields = [
-                        {name: 'English', value: title_english, inline: true},
-                        {name: 'MAL', value: 'https://myanimelist.net/anime/'+ mal_id},
                         {name: 'AniList', value: 'https://anilist.co/anime/'+ anilist_id},
-                        {name: '\u200b', value: '*Note: Could not load full data due to some error.*'}
+                        {name: '\u200b', value: '*Could not load full data due to some error.*'}
                     ]
                     embed.footer = {text: 'Requested by '+ message.author.username, icon_url: message.author.displayAvatarURL()}
                     message.channel.send({embed: embed})
                     return
                 }
                 
-                const imageUrl = data.coverImage.extraLarge
-                const source = data.source
-                const episodes = data.episodes || 'N/A'
-                const airing = data.status == "RELEASING" ? 'Yes' : 'No'
-                const score = (data.meanScore / 10).toFixed(2)
-                const url = data.siteUrl
+                const title_english = data.title.english ? data.title.english.toString() : 'N/A';
+                const title_romaji = data.title.romaji ? data.title.romaji.toString() : 'N/A';
+                const mal_id = data.idMal ? data.idMal.toString() : "N/A";
+                const imageUrl = data.coverImage.extraLarge ? data.coverImage.extraLarge.toString() : "N/A";
+                const source = data.source ? data.source.toString() : "N/A";
+                const episodes = (data.episodes || 'N/A').toString();
+                const airing = data.status == "RELEASING" ? 'Yes' : 'No';
+                const score = (data.meanScore / 10).toFixed(2);
+                const url = data.siteUrl.toString();
                 
                 embed.title = title_romaji
                 embed.color = 'BLUE'
