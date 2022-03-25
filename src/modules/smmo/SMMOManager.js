@@ -231,11 +231,11 @@ class SMMOManager {
                             url: 'https://web.simple-mmo.com/user/view/'+ id,
                             title: 'Your daily stats',
                             fields: [
-                                {name: 'Level', value: level - stats.level, inline: true},
-                                {name: 'Steps', value: steps - stats.steps, inline: true},
-                                {name: 'NPC Kills', value: npc_kills - stats.npc_kills, inline: true},
-                                {name: 'User Kills', value: user_kills - stats.user_kills, inline: true},
-                                {name: 'Quests Complete', value: quests_complete - stats.quests_complete, inline: true}
+                                {name: 'Level', value: (level - stats.level).toString(), inline: true},
+                                {name: 'Steps', value: (steps - stats.steps).toString(), inline: true},
+                                {name: 'NPC Kills', value: (npc_kills - stats.npc_kills).toString(), inline: true},
+                                {name: 'User Kills', value: (user_kills - stats.user_kills).toString(), inline: true},
+                                {name: 'Quests Complete', value: (quests_complete - stats.quests_complete).toString(), inline: true}
                             ]
                         }
     
