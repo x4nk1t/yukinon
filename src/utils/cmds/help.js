@@ -1,4 +1,5 @@
-const Command = require('../Command.js')
+const Command = require('../Command.js');
+const Functions = require('../../Functions.js')
 
 class Help extends Command{
     constructor(commandLoader){
@@ -69,32 +70,7 @@ class Help extends Command{
         }
 
         const firstPage = await message.channel.send({embeds: [embed]})
-        const emojis = ['⏪', '◀️', '▶️' ,'⏩']
-
-        emojis.forEach(emoji => firstPage.react(emoji))
-
-        const reactionCollector = firstPage.createReactionCollector((reaction, user) => emojis.includes(reaction.emoji.name) && !user.bot, { time: 60000 })
-        reactionCollector.on('collect', reaction => {
-            reaction.users.remove(message.author)
-
-            switch(reaction.emoji.name){
-                case emojis[0]:
-                    page = 0;
-                break;
-
-                case emojis[1]:
-                    page = (page == 0) ? 0 : page - 1;
-                break;
-
-                case emojis[2]:
-                    page = (page == lastPage) ? lastPage : page + 1;
-                break;
-
-                case emojis[3]:
-                    page = lastPage;
-                break;
-            }
-
+        Functions.createReactionCollector(message, firstPage, lastPage, (page) => {
             var embed2 = {
                 title: 'Yukino Commands',
                 color: 'BLUE',
