@@ -193,9 +193,9 @@ class RPGManager {
             if(message.author.bot) return;
             
             if(message.content.toLowerCase().startsWith('rpg')){
-                //if(!this.client.devMode){
+                if(!this.client.devMode){
                     this.execute(message)
-                //}
+                }
             }
         })
         
