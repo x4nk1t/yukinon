@@ -112,6 +112,41 @@ class TacoManager {
 
                             return
                         }
+
+                        if(cmd == "buy"){
+                            var boosts = args[1] ? args[1].toLowerCase() : null;
+                            var all = args[2] ? args[2].toLowerCase() : null;
+
+                            var user = message.author;
+                            var userId = user.id;
+
+                            if(!boosts && !all) return
+
+                            if(boosts == "boosts" && all == "all"){
+                                var location = this.currentTacoLocations.get(userId);
+
+                                if(!location) return
+
+                                var subCommands = this.tacoBuySubcommands.get(location);
+                                for(let [boost, value] of subCommands){
+                                    var channel = message.channel;
+                                    var channel_id = channel.id;
+
+                                    var now = new Date().getTime();
+                                    var time = value.time;
+                                    var timers = this.timerStorage.get(userId);
+
+                                    if(!timers) timers = new Discord.Collection();
+
+                                    if(!timers.has(boost)){
+                                        this.addTimer(userId, boost, now + time, channel_id, user);
+                                        timers.set(boost, {time: now + time, channel: channel, user: {mention: user.toString(), username: user.username}})
+                                        this.timerStorage.set(userId, timers);
+                                    }
+
+                                }
+                            }
+                        }
                     }
 
                     this.execute(message);
