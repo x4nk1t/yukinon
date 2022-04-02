@@ -301,10 +301,14 @@ class TacoManager {
     getFullCommand(cmd){
         if(cmd == "t" || cmd == "tips" || cmd == "tip"){
             return "tips";
-        } else if(cmd == "w" || cmd == "work"){
+        } else if(cmd == "w" || cmd == "work" || cmd == "cook"){
             return "work";
         } else if(cmd == "ot" || cmd == "overtime"){
             return "overtime";
+        } else if(cmd == "d" || cmd == "daily"){
+            return "daily";
+        } else if(cmd == "claim" || cmd == "reward"){
+            return "claim";
         } else {
             return cmd;
         }
