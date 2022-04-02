@@ -50,13 +50,16 @@ class TacoManager {
 
         this.tacoCommandsTime.set('w', WORK);
         this.tacoCommandsTime.set('work', WORK);
+        this.tacoCommandsTime.set('cook', WORK);
 
         this.tacoCommandsTime.set('ot', OVERTIME);
         this.tacoCommandsTime.set('overtime', OVERTIME);
 
         this.tacoCommandsTime.set('clean', ONE_DAY);
         this.tacoCommandsTime.set('daily', ONE_DAY);
+        this.tacoCommandsTime.set('d', ONE_DAY);
         this.tacoCommandsTime.set('claim', TWELVE_HOURS);
+        this.tacoCommandsTime.set('reward', TWELVE_HOURS);
 
         this.tacoBuySubcommands.set("shack",
             new Discord.Collection([
