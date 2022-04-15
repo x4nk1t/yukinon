@@ -22,7 +22,8 @@ class TacoManager {
             "t", "tips", "tip",
             "w", "work",
             "ot", "overtime",
-            "clean", "daily", "claim", "buy"
+            "d", "daily",
+            "clean", "claim", "buy"
         ];
 
         this.notToPing = ['tips', 'work']
