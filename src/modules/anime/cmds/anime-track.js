@@ -5,7 +5,7 @@ class TrackAnime extends Command{
         super(commandLoader, {
             name: "anime-track",
             description: "Track/Untrack an anime in a channel.",
-            usage: "<add|remove|clear> [channel] <anime_id>",
+            usage: "<add|remove|clear> <anime_id>",
             aliases: ['track'],
             permissions: ['MANAGE_CHANNELS']
         });
@@ -14,47 +14,12 @@ class TrackAnime extends Command{
     async execute(message, commandArgs){
         var channel = message.channel
         if(commandArgs[0]){
-            const action = commandArgs[0].toLowerCase()
-            
-            if(message.mentions.channels.first() && commandArgs[0] == message.mentions.channels.first().toString()){
-                if(!this.isAnimeChannel(message.mentions.channels.first().id)){
-                    message.channel.send({embeds: [{color: 'BLUE', description: message.mentions.channels.first().toString() +' is not an anime channel.'}]})
-                    return
-                }
-                
-                this.sendTrackingEmbed(message.mentions.channels.first(), message)
-                return
-            }
-            
+            const action = commandArgs[0].toLowerCase()            
             if(action != 'add' && action != 'remove' && action != 'clear'){
                 this.sendUsage(message)
                 return
             }
-            
-            var anime_id = ''
-            if(message.mentions.channels.first() && commandArgs[1] == message.mentions.channels.first().toString()) {
-                channel = message.mentions.channels.first()
-                
-                if(action == 'clear'){
-                    const clear = await this.clearTrack(channel.id)
-                    if(clear){
-                        message.channel.send({embeds: [{color: 'BLUE', description: 'Successfully cleared '+ channel.toString() +'\'s tracking list.'}]})
-                    } else {
-                        message.channel.send({embeds: [{color: 'BLUE', description: 'Something went wrong while clearing '+ channel.toString() +'\'s tracking list.'}]})
-                    }
-                    return
-                }
-                
-                if(commandArgs[2]){
-                    anime_id = parseInt(commandArgs[2])
-                } else {
-                    this.sendUsage(message)
-                    return
-                }
-            } else {
-                anime_id = parseInt(commandArgs[1])
-            }
-            
+
             if(!this.isAnimeChannel(channel.id)){
                 message.channel.send({embeds: [{color: 'BLUE', description: ((channel.id == message.channel.id) ? 'This' : channel.toString()) +' is not an anime channel.'}]})
                 return
@@ -67,7 +32,15 @@ class TrackAnime extends Command{
                 } else {
                     message.channel.send({embeds: [{color: 'BLUE', description: 'Something went wrong while clearing this channel\'s tracking list.'}]})
                 }
+                return
             }
+
+            if(!commandArgs[1]){
+                this.sendUsage(message);
+                return
+            }
+            
+            var anime_id = parseInt(commandArgs[1]);
             
             if(!anime_id){
                 message.channel.send({embeds: [{color: 'BLUE', description: 'Anime ID must be integer.'}]})
@@ -76,7 +49,7 @@ class TrackAnime extends Command{
             
             if(action == 'add') {
                 if(this.isInTracking(channel.id, anime_id)){
-                     message.channel.send({embeds: [{color: 'BLUE', description: 'Anime '+ anime_id +' is already being tracked.'}]})
+                     message.channel.send({embeds: [{color: 'BLUE', description: this.linkId(anime_id) +' is already being tracked.'}]})
                      return           
                 }
                 const add = await this.addTrack(channel.id, anime_id)
@@ -87,7 +60,7 @@ class TrackAnime extends Command{
                 }
             } else if(action == 'remove'){
                 if(!this.isInTracking(channel.id, anime_id)){
-                     message.channel.send({embeds: [{color: 'BLUE', description: 'Anime '+ anime_id +' is not being tracked.'}]})
+                     message.channel.send({embeds: [{color: 'BLUE', description: this.linkId(anime_id) +' is not being tracked.'}]})
                      return           
                 }
                 const remove = await this.removeTrack(channel.id, anime_id)
@@ -223,7 +196,7 @@ class TrackAnime extends Command{
     }
     
     linkId(anime_id){
-        return 'Anime ['+ anime_id +'](https://anilist.co/anime/'+ anime_id + ')';
+        return 'Anime with id ['+ anime_id +'](https://anilist.co/anime/'+ anime_id + ')';
     }
     
     shortText(text, length = 30) {

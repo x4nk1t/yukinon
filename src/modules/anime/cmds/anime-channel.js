@@ -5,7 +5,7 @@ class AnimeChannel extends Command{
         super(commandLoader, {
             name: "anime-channel",
             description: "Get releases in a channel.",
-            usage: "<add|remove> [channel]",
+            usage: "<add|remove>",
             aliases: ['channel'],
             permissions: ['MANAGE_CHANNELS']
         });
@@ -16,11 +16,6 @@ class AnimeChannel extends Command{
         var embed = {color: 'BLUE'}
         if(commandArgs[0]){
             if(commandArgs[0] == 'add' || commandArgs[0] == 'remove'){
-                if(commandArgs[1]){
-                    channel = message.mentions.channels.first()
-                    if(!channel) channel = message.channel
-                }
-                
                 if(commandArgs[0] == 'remove'){
                     if(this.isAnimeChannel(channel.id)){
                         const remove = this.client.animeManager.removeAnimeChannel(channel.id);
