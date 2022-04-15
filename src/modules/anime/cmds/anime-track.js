@@ -6,7 +6,8 @@ class TrackAnime extends Command{
             name: "anime-track",
             description: "Track/Untrack an anime in a channel.",
             usage: "<add|remove|clear> [channel] <anime_id>",
-            aliases: ['track']
+            aliases: ['track'],
+            permissions: ['MANAGE_CHANNELS']
         });
     }
     

@@ -16,7 +16,8 @@ class Command {
             aliases: options.aliases || [],
             usage: options.usage || '',
             enabled: (options.enabled == undefined || options.enabled == true) ? true : false,
-            showInHelp: (options.showInHelp == undefined || options.showInHelp == true) ? true : false
+            showInHelp: (options.showInHelp == undefined || options.showInHelp == true) ? true : false,
+            permissions: options.permissions || []
         }
     }
     

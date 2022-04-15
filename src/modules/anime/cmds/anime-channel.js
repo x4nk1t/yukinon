@@ -6,7 +6,8 @@ class AnimeChannel extends Command{
             name: "anime-channel",
             description: "Get releases in a channel.",
             usage: "<add|remove> [channel]",
-            aliases: ['channel']
+            aliases: ['channel'],
+            permissions: ['MANAGE_CHANNELS']
         });
     }
     
