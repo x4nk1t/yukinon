@@ -7,7 +7,6 @@ class ChangeStatus extends Command{
             name: "change-status",
             description: "Change status of bot.",
             aliases: ['cs'],
-            guildOnly: true,
             showInHelp: false
         });
 

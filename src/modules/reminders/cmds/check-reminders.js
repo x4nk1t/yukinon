@@ -6,8 +6,7 @@ class CheckReminder extends Command{
             name: "check-reminders",
             description: "Check your reminders.",
             aliases: ['cr'],
-            usage: '[reminder id]',
-            guildOnly: false
+            usage: '[reminder id]'
         });
     }
 

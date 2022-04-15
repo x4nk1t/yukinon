@@ -5,8 +5,7 @@ class Emojis extends Command{
         super(commandLoader, {
             name: "emojis",
             description: "Returns emoji list of this server.",
-            aliases: ['emjs'],
-            guildOnly: true
+            aliases: ['emjs']
         });
     }
 

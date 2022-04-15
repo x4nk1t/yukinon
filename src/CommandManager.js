@@ -41,8 +41,8 @@ class CommandManager{
         var command = this.getCommand(commandName)
 
         if(command != null){
-            if(command.options.guildOnly && !message.guild){
-                message.channel.send({embed: {color: 'BLUE', decription: 'You must be in guild to use this command.'}})
+            if(!message.guild){
+                message.channel.send({embed: {color: 'BLUE', decription: 'You must be in guild to use commands.'}})
                 return;
             }
 

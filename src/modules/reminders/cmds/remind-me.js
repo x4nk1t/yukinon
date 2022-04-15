@@ -6,8 +6,7 @@ class RemindMe extends Command{
             name: "remind-me",
             description: "Set a reminder.",
             aliases: ['rm'],
-            usage: '<time> <reminder>',
-            guildOnly: false
+            usage: '<time> <reminder>'
         });
     }
 

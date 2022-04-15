@@ -6,8 +6,7 @@ class Leaderboard extends Command {
         super(commandLoader, {
             name: "leaderboard",
             description: "Check leaderboard of this guild.",
-            aliases: ['lb'],
-            guildOnly: true
+            aliases: ['lb']
         });
     }
 

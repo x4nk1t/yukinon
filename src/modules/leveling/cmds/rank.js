@@ -6,8 +6,7 @@ class Rank extends Command{
         super(commandLoader, {
             name: "rank",
             description: "Check your rank in this server",
-            aliases: ['r'],
-            guildOnly: true
+            aliases: ['r']
         });
     }
 
