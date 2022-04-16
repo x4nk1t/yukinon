@@ -180,6 +180,7 @@ class TacoManager {
             })
 
             this.checkSauceMarket()
+            setInterval(() => this.checkSauceMarket(), 1800000); //Every 30 minutes
         })
 
         await this.getTacoLocations().then(datas => {
@@ -313,10 +314,6 @@ class TacoManager {
         var nextRequestTimestamp = this.nextSauceMarketUpdateTimestamp;
         
         if(!nextRequestTimestamp) nextRequestTimestamp = await this.getNextSauceMarketUpdateTimestamp()
-        
-        if(!nextRequestTimestamp){
-            nextRequestTimestamp = now;
-        }
 
         if((nextRequestTimestamp - now) <= 0){
             const sauceMarketData = await this.getSauceMarket();
@@ -352,11 +349,11 @@ class TacoManager {
 
             this.sauceChannels.forEach(async (value, key) => {
                 const channel_id = key;
-                const channel = await this.client.channels.fetch(channel_id)
+                const channel = await this.client.channels.fetch(channel_id).catch(err => {})
                 if(channel) channel.send({embeds: [embed]}).catch(err => {})
             })
 
-            await this.setNextSauceMarketUpdateTimestamp()
+            await this.setNextSauceMarketUpdateTimestamp();
         }
     }
 
