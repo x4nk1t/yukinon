@@ -1,7 +1,12 @@
 const Discord = require('discord.js');
+const axios = require('axios');
+
 const Taco = require('./models/taco.js');
 const Location = require('./models/location.js');
+const Sauces = require('./models/sauce.js')
 const TacoRemindersCommand = require('./cmds/taco-reminders.js');
+const SauceMarketCommand = require('./cmds/sauce-market.js')
+const botSettings = require('../../utils/models/bot-settings.js');
 
 const TIPS = 300000; //5m
 const WORK = 600000; //10m
@@ -34,7 +39,14 @@ class TacoManager {
 
         this.timerStorage = new Discord.Collection();
 
+        this.sauceChannels = new Discord.Collection();
+        this.nextSauceMarketUpdateTimestamp = null;
+
+        this.upArrow = '<:green_arrow_up:964683055761612860>';
+        this.downArrow = ':small_red_triangle_down:';
+
         this.cmdManager = this.client.commandManager;
+
         this.registerSubcommands()
         this.loadCommands()
         this.run()
@@ -42,6 +54,7 @@ class TacoManager {
     
     loadCommands(){
         this.cmdManager.loadCommand(new TacoRemindersCommand(this.cmdManager))
+        this.cmdManager.loadCommand(new SauceMarketCommand(this.cmdManager))
     }
 
     registerSubcommands(){
@@ -156,6 +169,17 @@ class TacoManager {
                     this.execute(message);
                 }
             }
+        })
+
+        await this.getSauceChannels().then(datas => {
+            datas.forEach(data => {
+                var channel_id = data.channel_id;
+                var last_updated = data.last_updated;
+
+                this.sauceChannels.set(channel_id, {last_updated: last_updated});
+            })
+
+            this.checkSauceMarket()
         })
 
         await this.getTacoLocations().then(datas => {
@@ -282,6 +306,165 @@ class TacoManager {
                 }
             }
         }
+    }
+
+    async checkSauceMarket(){
+        var now = new Date().getTime();
+        var nextRequestTimestamp = this.nextSauceMarketUpdateTimestamp;
+        
+        if(!nextRequestTimestamp) nextRequestTimestamp = await this.getNextSauceMarketUpdateTimestamp()
+        
+        if(!nextRequestTimestamp){
+            nextRequestTimestamp = now;
+        }
+
+        if((nextRequestTimestamp - now) <= 0){
+            const sauceMarketData = await this.getSauceMarket();
+
+            const embed = {
+                color: 'BLUE',
+                author: {
+                    name: 'Sauce Market',
+                },
+                fields: [
+                    {
+                        name: 'Salsa',
+                        value: this.getSauceEmbedValue(sauceMarketData, 'salsa')
+                    },
+                    {
+                        name: 'Hotsauce',
+                        value: this.getSauceEmbedValue(sauceMarketData, 'hotsauce')
+                    },
+                    {
+                        name: 'Guacamole',
+                        value: this.getSauceEmbedValue(sauceMarketData, 'guacamole')
+                    },
+                    {
+                        name: 'Pico',
+                        value: this.getSauceEmbedValue(sauceMarketData, 'pico')
+                    },
+                    {
+                        name: 'Chipotle',
+                        value: this.getSauceEmbedValue(sauceMarketData, 'chipotle')
+                    }
+                ]
+            }
+
+            this.sauceChannels.forEach(async (value, key) => {
+                const channel_id = key;
+                const channel = await this.client.channels.fetch(channel_id)
+                if(channel) channel.send({embeds: [embed]}).catch(err => {})
+            })
+
+            await this.setNextSauceMarketUpdateTimestamp()
+        }
+    }
+
+    getSauceEmbedValue(marketData, sauce){
+        var sauceData;
+        switch(sauce){
+            case 'salsa':
+                sauceData = marketData.salsa;
+            break;
+            case 'hotsauce':
+                sauceData = marketData.hotsauce;
+            break;
+            case 'guacamole':
+                sauceData = marketData.guacamole;
+            break;
+            case 'pico':
+                sauceData = marketData.pico;
+            break;
+            case 'chipotle':
+                sauceData = marketData.chipotle;
+            break;
+        }
+
+        var lastPrice = "";
+        const priceDiff = sauceData.price - sauceData.history[0];
+
+        if(priceDiff >= 0){
+            lastPrice = `${this.upArrow} +$${priceDiff}`;
+        } else {
+            const positiveNumber = priceDiff.toString().replace("-", "");
+            lastPrice = `${this.downArrow} -$${positiveNumber}`;
+        }
+
+        return `$${sauceData.price} | ${lastPrice}\nVol: ${sauceData.volume.toLocaleString()}`;
+    }
+
+    getNextSauceMarketUpdateTimestamp(){
+        return new Promise((resolve, reject) => {
+            botSettings.collection.findOne({name: 'nextSauceMarketUpdateTimestamp'}, async (err, data) => {
+                if(err) reject('not found')
+                
+                if(data) resolve(data.value)
+            })
+        })
+    }
+
+    setNextSauceMarketUpdateTimestamp(){
+        const now = new Date().getTime() + 3600000;
+        return new Promise((resolve, reject) => {
+            botSettings.collection.findOneAndUpdate({name: 'nextSauceMarketUpdateTimestamp'}, {$set: {value: now}}, {upsert: true}, err => {
+                if(err){
+                    this.client.logger.error(err)
+                    reject(true, {message: 'Failed to set taco location.'})
+                    return
+                }
+                resolve(false, {message: 'Successfully updated sauce market timestamp.'})
+            })
+        })
+    }
+
+    getSauceMarket(){
+        return new Promise((resolve, reject) => {
+            axios.get('https://tacoshack.online/api/saucemarket', {headers: {token: 123}}).then(ret => {
+                resolve(ret.data)
+            }).catch(err => {
+                reject(err)
+            })
+        });
+    }
+
+    getSauceChannels(){
+        return new Promise((resolve, reject) => {
+            Sauces.collection.find({}, async (err, sauces) => {
+                if(err){
+                    this.client.logger.error(err)
+                    reject(err)
+                    return
+                }
+                const array = await sauces.toArray()
+                resolve(array)
+            })
+        })
+    }
+
+    addSauceChannel(channel_id){
+        return new Promise((resolve, reject) => {
+            Sauces.collection.findOneAndUpdate({channel_id: channel_id}, {$set: {last_updated: new Date().getTime()}}, {upsert: true}, err => {
+                if(err){
+                    this.client.logger.error(err)
+                    resolve(false)
+                    return
+                }
+                resolve(true)
+            })
+        })
+    }
+
+    removeSauceChannel(channel_id){
+        return new Promise((resolve, reject) => {
+            Sauces.collection.findOneAndDelete({channel_id: channel_id}, err => {
+                if(err){
+                    this.client.logger.error(err)
+                    resolve(false)
+                    return
+                }
+                resolve(true)
+            })
+        })
     }
 
     capitalizeFirstLetter(string){
