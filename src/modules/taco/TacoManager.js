@@ -179,8 +179,7 @@ class TacoManager {
                 this.sauceChannels.set(channel_id, {last_updated: last_updated});
             })
 
-            this.checkSauceMarket()
-            setInterval(() => this.checkSauceMarket(), 1800000); //Every 30 minutes
+            this.setSauceMarketTimeout()
         })
 
         await this.getTacoLocations().then(datas => {
@@ -309,52 +308,61 @@ class TacoManager {
         }
     }
 
-    async checkSauceMarket(){
-        var now = new Date().getTime();
-        var nextRequestTimestamp = this.nextSauceMarketUpdateTimestamp;
+    setSauceMarketTimeout(){
+        const now = new Date();
+        const time = now.getTime();
         
-        if(!nextRequestTimestamp) nextRequestTimestamp = await this.getNextSauceMarketUpdateTimestamp()
+        var refreshTime = (new Date(new Date().setUTCHours(now.getUTCHours(),10))).getTime()
 
-        if((nextRequestTimestamp - now) <= 0){
-            const sauceMarketData = await this.getSauceMarket();
-
-            const embed = {
-                color: 'BLUE',
-                author: {
-                    name: 'Sauce Market',
-                },
-                fields: [
-                    {
-                        name: 'Salsa',
-                        value: this.getSauceEmbedValue(sauceMarketData, 'salsa')
-                    },
-                    {
-                        name: 'Hotsauce',
-                        value: this.getSauceEmbedValue(sauceMarketData, 'hotsauce')
-                    },
-                    {
-                        name: 'Guacamole',
-                        value: this.getSauceEmbedValue(sauceMarketData, 'guacamole')
-                    },
-                    {
-                        name: 'Pico',
-                        value: this.getSauceEmbedValue(sauceMarketData, 'pico')
-                    },
-                    {
-                        name: 'Chipotle',
-                        value: this.getSauceEmbedValue(sauceMarketData, 'chipotle')
-                    }
-                ]
-            }
-
-            this.sauceChannels.forEach(async (value, key) => {
-                const channel_id = key;
-                const channel = await this.client.channels.fetch(channel_id).catch(err => {})
-                if(channel) channel.send({embeds: [embed]}).catch(err => {})
-            })
-
-            await this.setNextSauceMarketUpdateTimestamp();
+        if(now.getUTCMinutes() >= 10){
+            refreshTime = (new Date(new Date().setUTCHours(now.getUTCHours() + 1,10))).getTime()
         }
+
+        const diff = (refreshTime - time)
+
+        setTimeout(async () => {
+            await this.sendSauceMarket()
+            this.setRefreshTimeout()
+        }, diff)
+    }
+
+    async sendSauceMarket(){
+        const sauceMarketData = await this.getSauceMarket();
+
+        const embed = {
+            color: 'BLUE',
+            author: {
+                name: 'Sauce Market',
+            },
+            fields: [
+                {
+                    name: 'Salsa',
+                    value: this.getSauceEmbedValue(sauceMarketData, 'salsa')
+                },
+                {
+                    name: 'Hotsauce',
+                    value: this.getSauceEmbedValue(sauceMarketData, 'hotsauce')
+                },
+                {
+                    name: 'Guacamole',
+                    value: this.getSauceEmbedValue(sauceMarketData, 'guacamole')
+                },
+                {
+                    name: 'Pico',
+                    value: this.getSauceEmbedValue(sauceMarketData, 'pico')
+                },
+                {
+                    name: 'Chipotle',
+                    value: this.getSauceEmbedValue(sauceMarketData, 'chipotle')
+                }
+            ]
+        }
+
+        this.sauceChannels.forEach(async (value, key) => {
+            const channel_id = key;
+            const channel = await this.client.channels.fetch(channel_id).catch(err => {})
+            if(channel) channel.send({embeds: [embed]}).catch(err => {})
+        })
     }
 
     getSauceEmbedValue(marketData, sauce){
@@ -388,30 +396,6 @@ class TacoManager {
         }
 
         return `$${sauceData.price} | ${lastPrice}\nVol: ${sauceData.volume.toLocaleString()}`;
-    }
-
-    getNextSauceMarketUpdateTimestamp(){
-        return new Promise((resolve, reject) => {
-            botSettings.collection.findOne({name: 'nextSauceMarketUpdateTimestamp'}, async (err, data) => {
-                if(err) reject('not found')
-                
-                if(data) resolve(data.value)
-            })
-        })
-    }
-
-    setNextSauceMarketUpdateTimestamp(){
-        const now = new Date().getTime() + 3600000;
-        return new Promise((resolve, reject) => {
-            botSettings.collection.findOneAndUpdate({name: 'nextSauceMarketUpdateTimestamp'}, {$set: {value: now}}, {upsert: true}, err => {
-                if(err){
-                    this.client.logger.error(err)
-                    reject(true, {message: 'Failed to set taco location.'})
-                    return
-                }
-                resolve(false, {message: 'Successfully updated sauce market timestamp.'})
-            })
-        })
     }
 
     getSauceMarket(){
