@@ -49,7 +49,7 @@ class CommandManager{
             const permissions = command.options.permissions;
 
             if(!message.member.permissionsIn(message.channel).has(permissions)){
-                message.channel.send({embeds: [{color: 'BLUE', description: `You don't have all permissions to use this command.`}]});
+                message.channel.send({embeds: [{color: 'BLUE', description: `You don't have required permissions to use this command.`}]});
                 return
             }
 
