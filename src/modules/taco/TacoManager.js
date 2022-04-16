@@ -40,7 +40,6 @@ class TacoManager {
         this.timerStorage = new Discord.Collection();
 
         this.sauceChannels = new Discord.Collection();
-        this.nextSauceMarketUpdateTimestamp = null;
 
         this.upArrow = '<:green_arrow_up:964683055761612860>';
         this.downArrow = ':small_red_triangle_down:';
