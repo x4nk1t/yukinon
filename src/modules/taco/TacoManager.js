@@ -178,7 +178,7 @@ class TacoManager {
                 this.sauceChannels.set(channel_id, {last_updated: last_updated});
             })
 
-            this.setSauceMarketTimeout()
+            setInterval(() => {this.checkSauceMarket()}, 60 * 1000); //Run every minute
         })
 
         await this.getTacoLocations().then(datas => {
@@ -307,25 +307,11 @@ class TacoManager {
         }
     }
 
-    setSauceMarketTimeout(){
-        const now = new Date();
-        const time = now.getTime();
-        
-        var refreshTime = (new Date(new Date().setUTCHours(now.getUTCHours(),10))).getTime()
+    async checkSauceMarket(){
+        const minute = new Date().getUTCMinutes();
 
-        if(now.getUTCMinutes() >= 10){
-            refreshTime = (new Date(new Date().setUTCHours(now.getUTCHours() + 1,10))).getTime()
-        }
+        if(minute != 10) return;
 
-        const diff = (refreshTime - time)
-
-        setTimeout(async () => {
-            await this.sendSauceMarket()
-            this.setRefreshTimeout()
-        }, diff)
-    }
-
-    async sendSauceMarket(){
         const sauceMarketData = await this.getSauceMarket();
 
         const embed = {
