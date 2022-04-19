@@ -178,6 +178,7 @@ class TacoManager {
                 this.sauceChannels.set(channel_id, {last_updated: last_updated});
             })
 
+            this.checkSauceMarket()
             setInterval(() => {this.checkSauceMarket()}, 60 * 1000); //Run every minute
         })
 
