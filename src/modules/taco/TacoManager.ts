@@ -352,7 +352,7 @@ class TacoManager {
 
     async checkSauceMarket(){
         const minute = new Date().getUTCMinutes();
-
+        
         if(minute != 10) return;
 
         const sauceMarketData: MarketDataInterface = await this.getSauceMarket();
@@ -439,7 +439,7 @@ class TacoManager {
     getSauceChannels(){
         return new Promise((resolve, reject) => {
             const cursor = Sauces.collection.find({});
-            return cursor.toArray();
+            resolve(cursor.toArray());
         })
     }
 
