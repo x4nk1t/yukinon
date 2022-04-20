@@ -2,10 +2,10 @@
   "name": "yukinon-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "./dist/app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run build && node --enable-source-maps dist/app.js",
+    "build": "tsc --project tsconfig.json"
   },
   "author": "x4nk1t",
   "license": "ISC",
@@ -13,5 +13,8 @@
     "axios": "^0.26.1",
     "discord.js": "^13.6.0",
     "mongoose": "^6.2.8"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3"
   }
 }
