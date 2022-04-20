@@ -46,21 +46,19 @@ class ReminderManager {
         const toRemove: string[] = [];
         this.reminders = arr;
 
-        arr.forEach((reminder: any) => {
+        this.reminders.forEach((reminder: any, index: number) => {
             const id = reminder._id;
             const time = reminder.time;
             const diff = (time - new Date().getTime())
 
-            if(diff > 0){ 
-                if(diff < 172800000){
-                    const timeout = setTimeout(() => {
-                        this.sendReminder(reminder)
-                    }, diff)
+            if(diff > 0 && diff < 172800000){
+                const timeout = setTimeout(() => {
+                    this.sendReminder(reminder)
+                }, diff)
 
-                    this.remindersTimeout.set(id, timeout)
-                }
+                this.remindersTimeout.set(id, timeout);
             } else {
-                this.sendReminder(reminder)
+                this.reminders.splice(index, 1);
                 toRemove.push(id)
             }
         })
