@@ -20,7 +20,7 @@ class RemindMe extends Command{
 
             const reminder = commandArgs.join(' ')
 
-            if(isNaN(time) && isNaN(parseFloat(String(time)))){
+            if(time == 0){
                 message.channel.send({embeds: [{color: 'BLUE', description: 'Invalid time!\nMake sure time is in following format: 1d4h5m1s'}]})
                 return
             }
@@ -72,6 +72,7 @@ class RemindMe extends Command{
                 default:
                     try{
                         var num = parseInt(str)
+                        if(isNaN(num)) return
                         currentBuffer += num
                     } catch {
                         return null
