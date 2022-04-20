@@ -1,13 +1,14 @@
 import { Collection, Snowflake, TextChannel } from 'discord.js';
 
-import RemindMeCommand from './cmds/remind-me.js';
-import CheckReminderCommand from './cmds/check-reminders.js';
+import RemindMeCommand from './cmds/remind-me';
+import CheckReminderCommand from './cmds/check-reminders';
+import DeleteReminderCommand from './cmds/delete-reminder';
 
-import Reminders from './models/reminder.js';
-import Client from '../../Client.js';
-import CommandManager from '../../CommandManager.js';
+import Reminders from './models/reminder';
+import Client from '../../Client';
+import CommandManager from '../../CommandManager';
 
-interface ReminderInterface{
+export interface ReminderInterface{
     _id?: string;
     time: number;
     user_id: string;
@@ -33,8 +34,9 @@ class ReminderManager {
     }
 
     loadCommands(){
-        this.commandManager.loadCommand(new RemindMeCommand(this.commandManager))
-        this.commandManager.loadCommand(new CheckReminderCommand(this.commandManager))
+        this.commandManager.loadCommand(new RemindMeCommand(this.commandManager));
+        this.commandManager.loadCommand(new CheckReminderCommand(this.commandManager));
+        this.commandManager.loadCommand(new DeleteReminderCommand(this.commandManager));
     }
 
     async run(){
@@ -101,7 +103,7 @@ class ReminderManager {
                 }
                 const id = response?.insertedId;
 
-                obj._id = String(id);
+                obj._id = id;
                 this.reminders.push(obj)
 
                 const diff = (time - new Date().getTime())
