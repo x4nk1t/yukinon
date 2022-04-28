@@ -3,9 +3,11 @@ import axios from 'axios';
 
 import Taco from './models/taco';
 import TacoLocation from './models/location';
+import DMWhen from './models/sauce-dm';
 import Sauces from './models/sauce';
 import TacoRemindersCommand from './cmds/taco-reminders';
 import SauceMarketCommand from './cmds/sauce-market';
+import DMWhenCommand from './cmds/dm-when';
 import Client from '../../Client';
 import CommandManager from '../../CommandManager';
 
@@ -32,11 +34,11 @@ interface SauceChannelInterface{
 }
 
 interface MarketDataInterface{
-    salsa: { price: number; history: number[]; volume: string };
-    hotsauce: { price: number; history: number[]; volume: string };
-    guacamole: { price: number; history: number[]; volume: string };
-    pico: { price: number; history: number[]; volume: string };
-    chipotle: { price: number; history: number[]; volume: string };
+    salsa: { price: number; history: number[]; volume: number };
+    hotsauce: { price: number; history: number[]; volume: number };
+    guacamole: { price: number; history: number[]; volume: number };
+    pico: { price: number; history: number[]; volume: number };
+    chipotle: { price: number; history: number[]; volume: number };
 }
 
 interface TacoReminderInterface{
@@ -47,6 +49,13 @@ interface TacoReminderInterface{
     mention: string;
     username: string;
     _id: string;
+}
+
+export interface SauceDMInterface{
+    user_id: Snowflake;
+    highlow: String;
+    sauce: String;
+    amount: Number;
 }
 
 class TacoManager {
@@ -61,6 +70,7 @@ class TacoManager {
     upArrow: string;
     downArrow: string;
     commandManager: CommandManager;
+    dmWhens: Discord.Collection<Snowflake, SauceDMInterface[]>;
 
     constructor(client: Client){
         this.client = client;
@@ -82,6 +92,7 @@ class TacoManager {
         this.timerStorage = new Discord.Collection();
 
         this.sauceChannels = new Discord.Collection();
+        this.dmWhens = new Discord.Collection();
 
         this.upArrow = '<:green_arrow_up:964683055761612860>';
         this.downArrow = ':small_red_triangle_down:';
@@ -96,6 +107,7 @@ class TacoManager {
     loadCommands(){
         this.commandManager.loadCommand(new TacoRemindersCommand(this.commandManager))
         this.commandManager.loadCommand(new SauceMarketCommand(this.commandManager))
+        this.commandManager.loadCommand(new DMWhenCommand(this.commandManager))
     }
 
     registerSubcommands(){
@@ -210,6 +222,18 @@ class TacoManager {
                     this.execute(message);
                 }
             }
+        })
+
+        await this.getDMWhens().then((datas: any) => {
+            datas.forEach((data: SauceDMInterface) => {
+                var existingData: SauceDMInterface[] = [];
+
+                if(this.dmWhens.get(data.user_id)) existingData = this.dmWhens.get(data.user_id)!;
+
+                existingData.push(data);
+
+                this.dmWhens.set(data.user_id, existingData);
+            })
         })
 
         await this.getSauceChannels().then((datas: any) => {
@@ -357,6 +381,8 @@ class TacoManager {
 
         const sauceMarketData: MarketDataInterface = await this.getSauceMarket();
 
+        this.dmWhen(sauceMarketData);
+
         const embed: MessageEmbedOptions = {
             color: 'BLUE',
             author: {
@@ -393,8 +419,39 @@ class TacoManager {
         })
     }
 
+    dmWhen(sauceMarketData: MarketDataInterface){
+        this.dmWhens.forEach(async value => {
+            value.forEach(async whens => {
+                const user_id = whens.user_id;
+                const highlow = whens.highlow;
+                const amount = whens.amount;
+                const sauce = whens.sauce;
+
+                if(highlow == "low"){
+                    for(const [key, value] of Object.entries(sauceMarketData)){
+                        if(value.price <= amount){
+                            const user = await this.client.users.fetch(user_id);
+                            const embed: MessageEmbedOptions = {color: 'BLUE', description: 'Current price of **'+ key +'** is **$'+ value.price + '**!! Buy it now!!'};
+                            user.send({embeds: [embed]});
+                        }
+                    }
+                } else {
+                    for(const [key, value] of Object.entries(sauceMarketData)){
+                        if(key == sauce){
+                            if(value.price >= amount){
+                                const user = await this.client.users.fetch(user_id);
+                                const embed: MessageEmbedOptions = {color: 'BLUE', description: 'Current price of **'+ key +'** is **$'+ value.price + '**!! Sell it now!!'};
+                                user.send({embeds: [embed]});
+                            }
+                        }
+                    }
+                }
+            })
+        })
+    }
+
     getSauceEmbedValue(marketData: MarketDataInterface, sauce: string){
-        var sauceData!: { price: number; history: number[]; volume: string};
+        var sauceData!: { price: number; history: number[]; volume: number};
         switch(sauce){
             case 'salsa':
                 sauceData = marketData.salsa;
@@ -459,6 +516,39 @@ class TacoManager {
     removeSauceChannel(channel_id: any){
         return new Promise((resolve, reject) => {
             Sauces.collection.findOneAndDelete({channel_id: channel_id}, err => {
+                if(err){
+                    this.client.logger.error(String(err))
+                    resolve(false)
+                    return
+                }
+                resolve(true)
+            })
+        })
+    }
+
+    getDMWhens(){
+        return new Promise((resolve, reject) => {
+            const cursor = DMWhen.collection.find({});
+            resolve(cursor.toArray());
+        })
+    }
+
+    addDMWhens(user_id: Snowflake, highlow: string, sauce: string, amount: number, ){
+        return new Promise((resolve, reject) => {
+            DMWhen.collection.findOneAndUpdate({user_id: user_id, highlow: highlow, sauce: sauce}, {$set: {amount: amount}}, {upsert: true}, err => {
+                if(err){
+                    this.client.logger.error(String(err))
+                    resolve(false)
+                    return
+                }
+                resolve(true)
+            })
+        })
+    }
+
+    removeDMWhens(user_id: Snowflake, highlow: string, sauce: string){
+        return new Promise((resolve, reject) => {
+            DMWhen.collection.findOneAndDelete({user_id: user_id, highlow: highlow, sauce: sauce}, err => {
                 if(err){
                     this.client.logger.error(String(err))
                     resolve(false)
