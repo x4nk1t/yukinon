@@ -102,6 +102,8 @@ class DMWhenCommand extends Command{
 
             await manager.addDMWhens(user_id, highlow, "all", amount);
             manager.dmWhens.set(user_id, existingData);
+
+            message.channel.send({embeds: [embed]});
         } else {
             this.sendUsage(message)
         }
