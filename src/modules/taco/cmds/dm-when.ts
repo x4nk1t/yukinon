@@ -44,7 +44,7 @@ class DMWhenCommand extends Command{
 
             const embed: MessageEmbedOptions = {
                 color: 'BLUE',
-                description: 'Will dm you when the '+ sauce +' price is higher than '+ amount +'!'
+                description: 'Will dm you when the **'+ sauce +'** price is higher than '+ amount +'!'
             };
 
             var existingData = manager.dmWhens.get(user_id);
@@ -79,7 +79,7 @@ class DMWhenCommand extends Command{
 
             const embed: MessageEmbedOptions = {
                 color: 'BLUE',
-                description: 'Will dm you when the sauce price is lower than '+ amount +'!'
+                description: 'Will dm you when the **one sauce** price is lower than **$'+ amount +'**!'
             };
 
             var existingData = manager.dmWhens.get(user_id);

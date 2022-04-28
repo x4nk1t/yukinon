@@ -53,8 +53,8 @@ interface TacoReminderInterface{
 
 export interface SauceDMInterface{
     user_id: Snowflake;
-    highlow: String;
-    sauce: String;
+    highlow: string;
+    sauce: string;
     amount: Number;
 }
 
@@ -442,6 +442,8 @@ class TacoManager {
                                 const user = await this.client.users.fetch(user_id);
                                 const embed: MessageEmbedOptions = {color: 'BLUE', description: 'Current price of **'+ key +'** is **$'+ value.price + '**!! Sell it now!!'};
                                 user.send({embeds: [embed]});
+
+                                this.removeDMWhens(user_id, highlow, sauce);
                             }
                         }
                     }
