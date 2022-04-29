@@ -1,9 +1,8 @@
 import {Schema, model} from 'mongoose';
 
-const channels = new Schema({
+const animechannels = new Schema({
     channel_id: {type: Number, required: true},
-    tracking: {type: [Number], require: true},
     last_updated: {type: Number, required: true}
 })
 
-export default model('channels', channels, 'channels');
+export default model('animechannels', animechannels, 'animechannels');

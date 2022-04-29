@@ -5,7 +5,6 @@ import CommandManager from "../../CommandManager";
 import AnimeReleaseCMD from './cmds/anime-release';
 import WhatAnime from './cmds/what-anime';
 import AnimeChannel from './cmds/anime-channel';
-import TrackAnime from './cmds/anime-track';
 
 import Channels from './models/channels';
 import fetch from 'node-fetch';
@@ -21,7 +20,6 @@ interface EpisodesInterface {
 
 interface AnimeInterface{
     channel_id: Snowflake;
-    tracking: number[];
     last_updated?: number;
 }
 
@@ -60,7 +58,6 @@ class AnimeManager {
         this.commandManager.loadCommand(new AnimeReleaseCMD(this.commandManager))
         this.commandManager.loadCommand(new WhatAnime(this.commandManager))
         this.commandManager.loadCommand(new AnimeChannel(this.commandManager))
-        this.commandManager.loadCommand(new TrackAnime(this.commandManager))
     }
     
     setTimeouts(){
@@ -89,18 +86,10 @@ class AnimeManager {
                     }
                     
                     this.animeChannels.forEach(ch => {
-                        var channel = this.client.channels.cache.get(ch.channel_id)
-                        var trackings = ch.tracking
-                        
-                        if(trackings.length){
-                            trackings.forEach(tr => {
-                                if(tr == id){
-                                    (channel as TextChannel).send({embeds: [embed]})
-                                }
-                            })
-                        } else {
-                            (channel as TextChannel).send({embeds: [embed]})
-                        }
+                        var channel = this.client.channels.cache.get(ch.channel_id);
+                    
+                        if(channel instanceof TextChannel)
+                            channel.send({embeds: [embed]})
                     })
                     
                     this.episodes.splice(this.episodes.indexOf(episode), 1)
@@ -122,7 +111,7 @@ class AnimeManager {
     
     addAnimeChannel(channel_id: any){
         return new Promise((resolve, reject) => {
-            Channels.collection.findOneAndUpdate({channel_id: channel_id, tracking: []}, {$set: {last_updated: new Date().getTime()}}, {upsert: true}, (err: any) => {
+            Channels.collection.findOneAndUpdate({channel_id: channel_id}, {$set: {last_updated: new Date().getTime()}}, {upsert: true}, (err: any) => {
                 if(err){
                     this.client.logger.error(err)
                     resolve(false)
@@ -136,19 +125,6 @@ class AnimeManager {
     removeAnimeChannel(channel_id: any){
         return new Promise((resolve, reject) => {
             Channels.collection.findOneAndDelete({channel_id: channel_id}, (err: any, channels: any) => {
-                if(err){
-                    this.client.logger.error(err)
-                    resolve(false)
-                    return
-                }
-                resolve(true)
-            })
-        })
-    }
-    
-    updateTracking(channel_id: any, tracking: any){
-        return new Promise((resolve, reject) => {
-            Channels.collection.findOneAndUpdate({channel_id: channel_id}, {$set: { tracking: tracking, last_updated: new Date().getTime()}},(err: any, channels: any) => {
                 if(err){
                     this.client.logger.error(err)
                     resolve(false)
