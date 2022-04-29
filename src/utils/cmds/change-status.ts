@@ -26,12 +26,11 @@ class ChangeStatus extends Command{
 
             this.client.user!.setStatus(status)
             
-            botSettings.collection.findOneAndUpdate({name: 'status'}, {$set: {value: status}}, err => {
+            botSettings.collection.findOneAndUpdate({name: 'status'}, {$set: {value: status}}, {upsert: true}, err => {
                 if(err) console.log(err);
             })
 
             await message.react('✅');
-            setTimeout(() => { message.delete() }, 1000);
         }
     }
 }
