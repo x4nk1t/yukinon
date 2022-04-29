@@ -1,8 +1,10 @@
-import { Message, MessageEmbedOptions } from 'discord.js';
+import { Message, MessageEmbedOptions, Snowflake } from 'discord.js';
 import CommandManager from '../../../CommandManager';
 import Command from '../../../utils/Command';
 
 class Coinflip extends Command{
+    coinEmojiId: Snowflake;
+
     constructor(commandManager: CommandManager){
         super(commandManager, {
             name: "coinflip",
@@ -10,6 +12,8 @@ class Coinflip extends Command{
             usage: "[head|tail]",
             aliases: ['coin', 'cf']
         });
+
+        this.coinEmojiId = "969584520024178708";
     }
     
     execute(message: Message, commandArgs: string[]){        
@@ -29,31 +33,34 @@ class Coinflip extends Command{
             }
             
             var flip = this.flip()
-            embed.description = 'Flipping coin....';
+            embed.image = {url: this.client.emojis.resolve(this.coinEmojiId)?.url};
             message.channel.send({embeds: [embed]}).then((sent: Message) => {
+                embed.image = {}
+                if(flip == ht){
+                    embed.color = 'GREEN'
+                    embed.description = 'Its a **'+ flip +'**. You Won!'
+                    embed.footer = {text: 'Coin flipped by '+ message.author.username}
+                } else {
+                    embed.color = 'RED'
+                    embed.description = 'Its a **'+ flip +'**. You Lost!'
+                    embed.footer = {text: 'Coin flipped by '+ message.author.username}
+                }
+
                 setTimeout(() => {
-                    if(flip == ht){
-                        embed.color = 'GREEN'
-                        embed.description = 'Its a **'+ flip +'**. You Won!'
-                        embed.footer = {text: 'Coin flipped by '+ message.author.username}
-                    } else {
-                        embed.color = 'RED'
-                        embed.description = 'Its a **'+ flip +'**. You Lost!'
-                        embed.footer = {text: 'Coin flipped by '+ message.author.username}
-                    }
                     sent.edit({embeds: [embed]})
-                }, 1300)
+                }, 1500)
             })
         } else {
-            embed.description = 'Flipping coin....';
+            embed.image = {url: this.client.emojis.resolve(this.coinEmojiId)?.url};
             message.channel.send({embeds: [embed]}).then((sent: Message) => {
                 embed.color = 'BLUE'
                 embed.description = 'Its a **'+ this.flip() +'**.'
                 embed.footer = {text: 'Coin flipped by '+ message.author.username}
+                embed.image = {}
                 
                 setTimeout(() => {
                     sent.edit({embeds: [embed]})
-                }, 1300)
+                }, 1500)
             })
         }
     }
