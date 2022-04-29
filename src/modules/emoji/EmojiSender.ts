@@ -44,16 +44,10 @@ class EmojiSender {
                 return
             }
 
-            emojis.some(emoji => {
-                if(content.toLowerCase() == emoji.name?.toLowerCase()){
-                    var animated = ''
-                    if(emoji.animated){
-                        animated = 'a'
-                    }
-                    message.channel.send('<'+ animated +':'+ emoji.name +':'+ emoji.id +'>')
-                    return false;
+            emojis.forEach(emoji => {
+                if(content.toLowerCase() == emoji.name!.toLowerCase()){
+                    message.channel.send(emoji.toString())
                 }
-                return true;
             })
         })
     }
