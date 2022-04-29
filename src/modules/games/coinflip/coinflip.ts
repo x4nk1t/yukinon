@@ -33,7 +33,7 @@ class Coinflip extends Command{
             }
             
             var flip = this.flip()
-            embed.image = {url: this.client.emojis.resolve(this.coinEmojiId)?.url};
+            embed.description = this.client.emojis.resolve(this.coinEmojiId)?.toString();
             message.channel.send({embeds: [embed]}).then((sent: Message) => {
                 embed.image = {}
                 if(flip == ht){
@@ -51,7 +51,7 @@ class Coinflip extends Command{
                 }, 1500)
             })
         } else {
-            embed.image = {url: this.client.emojis.resolve(this.coinEmojiId)?.url};
+            embed.description = this.client.emojis.resolve(this.coinEmojiId)?.toString();
             message.channel.send({embeds: [embed]}).then((sent: Message) => {
                 embed.color = 'BLUE'
                 embed.description = 'Its a **'+ this.flip() +'**.'
