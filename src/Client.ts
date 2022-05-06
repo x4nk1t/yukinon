@@ -5,7 +5,7 @@ import Logger from './utils/Logger';
 import CommandManager from './CommandManager';
 import AnimeManager from "./modules/anime/AnimeManager";
 import EmojiSender from "./modules/emoji/EmojiSender";
-import GamesManager from "./modules/games/GamesManager";
+import GamesManager from "./modules/fun/GamesManager";
 import JoinLeaveManager from "./modules/joinleave/JoinLeaveManager";
 import LevelingManager from "./modules/leveling/LevelingManager";
 import ReminderManager from "./modules/reminders/ReminderManager";
