@@ -23,12 +23,12 @@ class Help extends Command{
     async execute(message: Message, commandArgs: string[]){
         if(!this.commandContent.length){
             this.commandManager.commands.sort((a,b) => {
-                    if(a.options.name > b.options.name) return 1;
-                    if(b.options.name > a.options.name) return -1;
+                    if(a.name > b.name) return 1;
+                    if(b.name > a.name) return -1;
                     return 0
                 }).each(command => {
-                    if(command.options.showInHelp){
-                        this.commandContent.push({name: command.options.name, value: command.options.description, inline: false});
+                    if(command.showInHelp){
+                        this.commandContent.push({name: command.name, value: command.description, inline: false});
                     }
             })
         }
@@ -43,13 +43,13 @@ class Help extends Command{
                 if(command){
                     message.channel.send({
                         embeds: [{
-                            title: `${command.options.name} command`,
+                            title: `${command.name} command`,
                             color: 'BLUE',
                             fields: [
-                                {name: 'Command Name', value: command.options.name},
-                                {name: 'Description', value: command.options.description},
-                                {name: 'Usage', value: command.options.name +' '+ command.options.usage},
-                                {name: 'Aliases', value: command.options.aliases.join(', ')},
+                                {name: 'Command Name', value: command.name},
+                                {name: 'Description', value: command.description},
+                                {name: 'Usage', value: command.name +' '+ command.usage},
+                                {name: 'Aliases', value: command.aliases.join(', ')},
                             ]
                         }]
                     })

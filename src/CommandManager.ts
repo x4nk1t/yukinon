@@ -53,7 +53,7 @@ class CommandManager{
                 return;
             }
 
-            const permissions = command.options.permissions || [];
+            const permissions = command.permissions || [];
 
             if(!message.member?.permissionsIn(message.channel.id).has(permissions)){
                 message.channel.send({embeds: [{color: 'BLUE', description: `You don't have required permissions to use this command.`}]});
@@ -79,7 +79,7 @@ class CommandManager{
             this.client.logger.error(`Couldn't load ${name}. Reason: Already loaded.`);
             return;
         }
-        commandClass.options.aliases.forEach(alias => {
+        commandClass.aliases.forEach(alias => {
             this.aliases.set(alias, commandClass);
         })
         this.commands.set(name, commandClass);
@@ -87,14 +87,14 @@ class CommandManager{
     }
     
     unloadCommand(commandClass: Command){
-        commandClass.options.aliases.forEach(alias => {
+        commandClass.aliases.forEach(alias => {
             this.aliases.delete(alias);
         })
-        this.commands.delete(commandClass.options.name);
+        this.commands.delete(commandClass.name);
     }
     
     loadCommand(commandClass: Command){
-        this.registerCommand(commandClass.options.name, commandClass);
+        this.registerCommand(commandClass.name, commandClass);
     }
 }
 
